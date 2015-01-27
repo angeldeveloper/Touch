@@ -407,6 +407,7 @@
 				100D30BD1A77D207008F3FBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		100D30BE1A77D207008F3FBF /* Build configuration list for PBXNativeTarget "TouchTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +416,7 @@
 				100D30C01A77D207008F3FBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
