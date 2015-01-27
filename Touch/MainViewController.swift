@@ -12,35 +12,39 @@ class MainViewController: UIViewController {
     
     var screenWidth, screenHeight : CGFloat!
     
-    let consLabelCountdownTimerCenterX : CGFloat = 90.0 // percentage of screen
-    let consLabelCountdownTimerCenterY : CGFloat = 5.0 // percentage of screen
+    let consButtonCountdownTimerCenterX : CGFloat = 90.0 // percentage of screen
+    let consButtonCountdownTimerCenterY : CGFloat = 5.0 // percentage of screen
     
     let consLabelApplicationTitleCenterX : CGFloat = 50.0 // percentage of screen
     let consLabelApplicationTitleCenterY : CGFloat = 20.0 // percentage of screen
     
     let consLabelGameStats1CenterX : CGFloat = 20.0 //
-    let consLabelGameStats1CenterY : CGFloat = 90.0 //
+    let consLabelGameStats1CenterY : CGFloat = 92.0 //
     
     let consLabelGameStats2CenterX : CGFloat = 40.0 //
-    let consLabelGameStats2CenterY : CGFloat = 90.0 //
+    let consLabelGameStats2CenterY : CGFloat = 92.0 //
     
     let consLabelGameStats3CenterX : CGFloat = 60.0 //
-    let consLabelGameStats3CenterY : CGFloat = 90.0 //
+    let consLabelGameStats3CenterY : CGFloat = 92.0 //
     
     let consLabelGameStats4CenterX : CGFloat = 80.0 //
-    let consLabelGameStats4CenterY : CGFloat = 90.0 //
+    let consLabelGameStats4CenterY : CGFloat = 92.0 //
 
-    
     var buttonPlay: UIButton!
     
     var labelApplicationTitle: UILabel!
     var labelAction: UILabel!
-    var labelCountdownTimer: UILabel!
+
+    var buttonCountdownTimer: UIButton!
     
     var labelGameStats1, labelGameStats2, labelGameStats3, labelGameStats4: UILabel!
     
     var view4 : UIView!
     
+    var timerCount = 0
+    var timerRunning = false
+    var myTimer = NSTimer()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -54,9 +58,24 @@ class MainViewController: UIViewController {
 
     override func viewDidAppear(animated: Bool) {
         createUIElements()
+        playTouched(NSObject)
     }
     
-    func createUIElements () -> () {
+    func startTimer() {
+        if false == timerRunning {
+                myTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("Counting"), userInfo: nil, repeats: true)
+                timerRunning = true
+        }
+    }
+    
+    func Counting() {
+        timerCount += 1
+        buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
+        //buttonCountdownTimer.titleLabel?.text = "\(timerCount)"
+        //buttonCountdownTimer.titleLabel?.sizeToFit()
+    }
+    
+    func createUIElements() {
         
         buttonPlay = UIButton()
         buttonPlay.setTitle("PLAY", forState: UIControlState.Normal)
@@ -89,27 +108,25 @@ class MainViewController: UIViewController {
         labelAction.textAlignment = NSTextAlignment.Center
         labelAction.layer.cornerRadius = 5
         labelAction.frame = CGRectMake(labelAction.frame.origin.x, labelAction.frame.origin.y,
-            screenWidth * 0.01 * 98, screenHeight * 0.01 * 10)
+            screenWidth * 0.01 * 90, screenHeight * 0.01 * 5)
         
         labelAction.layer.backgroundColor = UIColor.redColor().CGColor
         labelAction.center = CGPointMake(self.view.center.x, self.view.center.y/3)
         labelAction.alpha = 0.0
         self.view.addSubview(labelAction)
 
+        buttonCountdownTimer = UIButton()
+        buttonCountdownTimer.setTitle("0", forState: UIControlState.Normal)
+        buttonCountdownTimer.sizeToFit()
+        buttonCountdownTimer.backgroundColor = UIColor.blueColor()
+        buttonCountdownTimer.frame = CGRectMake(buttonCountdownTimer.frame.origin.x, buttonCountdownTimer.frame.origin.y,
+                                                buttonCountdownTimer.frame.width * 0.01 * 150, buttonCountdownTimer.frame.height * 0.01 * 100)
+        buttonCountdownTimer.layer.cornerRadius = 5.0
+        buttonCountdownTimer.center = CGPointMake(screenWidth * 0.01 * consButtonCountdownTimerCenterX, screenHeight * 0.01 * consButtonCountdownTimerCenterY)
+        buttonCountdownTimer.addTarget(self, action: "countdownTimerTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonCountdownTimer.alpha = 0.0
+        self.view.addSubview(buttonCountdownTimer)
         
-        labelCountdownTimer = UILabel()
-        labelCountdownTimer.text = "XXX"
-        labelCountdownTimer.sizeToFit()
-        labelCountdownTimer.textAlignment = NSTextAlignment.Center
-        labelCountdownTimer.layer.cornerRadius = 2
-        labelCountdownTimer.frame = CGRectMake(labelCountdownTimer.frame.origin.x, labelCountdownTimer.frame.origin.y,
-            self.view.bounds.width * 0.01 * 10, self.view.bounds.height * 0.01 * 5)
-        
-        labelCountdownTimer.layer.backgroundColor = UIColor.redColor().CGColor
-        labelCountdownTimer.center = CGPointMake(screenWidth * 0.01 * consLabelCountdownTimerCenterX, screenHeight * 0.01 * consLabelCountdownTimerCenterY)
-        labelCountdownTimer.alpha = 0.0
-        self.view.addSubview(labelCountdownTimer)
-
         labelGameStats1 = makeGameStatsLabel()
         labelGameStats1.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats1CenterX, screenHeight * 0.01 * consLabelGameStats1CenterY)
         self.view.addSubview(labelGameStats1)
@@ -125,16 +142,19 @@ class MainViewController: UIViewController {
         labelGameStats4 = makeGameStatsLabel()
         labelGameStats4.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats4CenterX, screenHeight * 0.01 * consLabelGameStats4CenterY)
         self.view.addSubview(labelGameStats4)
-}
+        
+        
+        createGameElementsForThisRound()
+    }
 
     func makeGameStatsLabel() -> (UILabel) {
         var tempLabel = UILabel()
-        tempLabel.text = "XXX"
+        tempLabel.text = "0"
         tempLabel.sizeToFit()
         tempLabel.textAlignment = NSTextAlignment.Center
-        tempLabel.layer.cornerRadius = 2
+        tempLabel.layer.cornerRadius = 5
         tempLabel.frame = CGRectMake(tempLabel.frame.origin.x, tempLabel.frame.origin.y,
-            tempLabel.frame.size.width * 1.1, tempLabel.frame.size.height * 1.1)
+            tempLabel.frame.size.width * 2.0, tempLabel.frame.size.height * 1.3)
         tempLabel.layer.backgroundColor = UIColor.redColor().CGColor
         tempLabel.alpha = 0.0
         return tempLabel
@@ -151,9 +171,14 @@ class MainViewController: UIViewController {
         
         NSLog("self.view.bounds.width : \(self.view.bounds.width)")
         NSLog("self.view.bounds.height: \(self.view.bounds.height)")
+    
         
     }
-
+    
+    @IBAction func countdownTimerTouched(sender: AnyObject) {
+        NSLog("Timer touched")
+    }
+    
     @IBAction func playTouched(sender: AnyObject) {
     
         //fadeOutView(buttonPlay)
@@ -184,7 +209,8 @@ class MainViewController: UIViewController {
         UIView.animateWithDuration(3.0, animations: {
             
             self.labelAction.alpha = 1.0
-            self.labelCountdownTimer.alpha = 1.0
+            //self.labelCountdownTimer.alpha = 1.0
+            self.buttonCountdownTimer.alpha = 1.0
 
             
             self.labelGameStats1.alpha = 1.0
@@ -195,6 +221,8 @@ class MainViewController: UIViewController {
             }, completion: {_ in
                 NSLog("completed fade in game play elements.")
 
+                self.startTimer()
+                
 //                NSThread.sleepForTimeInterval(4.0)
 //                NSLog("Slept for 4 seconds")
 //
@@ -264,6 +292,46 @@ class MainViewController: UIViewController {
                 self.fadeInGamePlayElements()
         })
     }
+
+    func createGameElementsForThisRound() {
+        // create and add one circle to UI
+        let circleLayer = CAShapeLayer()
+        circleLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 100, 100)).CGPath
+        circleLayer.strokeColor = UIColor.whiteColor().CGColor
+        circleLayer.lineWidth = 5
+        circleLayer.fillColor = UIColor.blueColor().CGColor
+        circleLayer.frame.origin = CGPointMake(50, 150)
+        self.view.layer.addSublayer(circleLayer)
+
+        let circleLayer2 = CAShapeLayer()
+        circleLayer2.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 50, 50)).CGPath
+        circleLayer2.strokeColor = UIColor.whiteColor().CGColor
+        circleLayer2.lineWidth = 5
+        circleLayer2.fillColor = UIColor.greenColor().CGColor
+        circleLayer2.frame.origin = CGPointMake(150, 250)
+        self.view.layer.addSublayer(circleLayer2)
+
+        let circleLayer3 = CAShapeLayer()
+        circleLayer3.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 200, 200)).CGPath
+        circleLayer3.strokeColor = UIColor.whiteColor().CGColor
+        circleLayer3.lineWidth = 5
+        circleLayer3.fillColor = UIColor.redColor().CGColor
+        circleLayer3.frame.origin = CGPointMake(250, 350)
+        self.view.layer.addSublayer(circleLayer3)
+
+    }
+    
+    func createOneGameElement()->() {
+//        let circleLayer = CAShapeLayer()
+//        circleLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 25, 25)).CGPath
+//        circleLayer.strokeColor = UIColor.whiteColor().CGColor
+//        circleLayer.lineWidth = 5
+//        circleLayer.fillColor = UIColor.clearColor().CGColor
+
+        //return circleLayer
+    }
+    
+    
 }
 
 
