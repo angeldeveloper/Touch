@@ -9,6 +9,48 @@
 import UIKit
 
 class MainViewController: UIViewController {
+
+    // Game Over Elements
+    
+    var labelGameOver: UILabel!
+    let consLabelGameOverCenterX : CGFloat = 50.0 // percentage of screen
+    let consLabelGameOverCenterY : CGFloat = 30.0 // percentage of screen
+    
+    var labelObjectsTouched: UILabel!
+    let consLabelObjectsTouchedCenterX : CGFloat = 20.0 // percentage of screen
+    let consLabelObjectsTouchedCenterY : CGFloat = 40.0 // percentage of screen
+
+    var labelObjectsTouchedValue: UILabel!
+    let consLabelObjectsTouchedValueCenterX : CGFloat = 60.0 // percentage of screen
+    let consLabelObjectsTouchedValueCenterY : CGFloat = 40.0 // percentage of screen
+    
+    var labelSpeed: UILabel!
+    let consLabelSpeedCenterX : CGFloat = 20.0 // percentage of screen
+    let consLabelSpeedCenterY : CGFloat = 50.0 // percentage of screen
+    
+    var labelSpeedValue: UILabel!
+    let consLabelSpeedValueCenterX : CGFloat = 40.0 // percentage of screen
+    let consLabelSpeedValueCenterY : CGFloat = 50.0 // percentage of screen
+
+    var labelScore: UILabel!
+    let consLabelScoreCenterX : CGFloat = 20.0 // percentage of screen
+    let consLabelScoreCenterY : CGFloat = 60.0 // percentage of screen
+    
+    var labelScoreValue: UILabel!
+    let consLabelScoreValueCenterX : CGFloat = 40.0 // percentage of screen
+    let consLabelScoreValueCenterY : CGFloat = 60.0 // percentage of screen
+    
+    var buttonTryAgain: UIButton!
+    let consButtonTryAgainCenterX : CGFloat = 50.0 // percentage of screen
+    let consButtonTryAgainCenterY : CGFloat = 70.0 // percentage of screen
+    
+    var buttonQuit: UIButton!
+    let consButtonQuitCenterX : CGFloat = 50.0 // percentage of screen
+    let consButtonQuitCenterY : CGFloat = 80.0 // percentage of screen
+    
+
+    // =====
+    var arrayGameElements = [AnyObject]()
     
     var screenWidth, screenHeight : CGFloat!
     
@@ -73,6 +115,20 @@ class MainViewController: UIViewController {
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         //buttonCountdownTimer.titleLabel?.text = "\(timerCount)"
         //buttonCountdownTimer.titleLabel?.sizeToFit()
+        
+        // game over in 5 seconds for testing only
+        if 2 == timerCount {
+            // game over
+            myTimer.invalidate()
+            NSLog("Game Over this round")
+
+            removeElements()
+            
+            removeGameElements()
+            
+            createGameOverElements()
+        }
+        
     }
     
     func createUIElements() {
@@ -206,7 +262,7 @@ class MainViewController: UIViewController {
 
     func fadeInGamePlayElements () -> () {
         
-        UIView.animateWithDuration(3.0, animations: {
+        UIView.animateWithDuration(1.0, animations: {
             
             self.labelAction.alpha = 1.0
             //self.labelCountdownTimer.alpha = 1.0
@@ -301,7 +357,7 @@ class MainViewController: UIViewController {
         circleLayer.lineWidth = 5
         circleLayer.fillColor = UIColor.blueColor().CGColor
         circleLayer.frame.origin = CGPointMake(50, 150)
-        self.view.layer.addSublayer(circleLayer)
+//        self.view.layer.addSublayer(circleLayer)
 
         let circleLayer2 = CAShapeLayer()
         circleLayer2.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 50, 50)).CGPath
@@ -309,7 +365,7 @@ class MainViewController: UIViewController {
         circleLayer2.lineWidth = 5
         circleLayer2.fillColor = UIColor.greenColor().CGColor
         circleLayer2.frame.origin = CGPointMake(150, 250)
-        self.view.layer.addSublayer(circleLayer2)
+//        self.view.layer.addSublayer(circleLayer2)
 
         let circleLayer3 = CAShapeLayer()
         circleLayer3.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 200, 200)).CGPath
@@ -317,8 +373,31 @@ class MainViewController: UIViewController {
         circleLayer3.lineWidth = 5
         circleLayer3.fillColor = UIColor.redColor().CGColor
         circleLayer3.frame.origin = CGPointMake(250, 350)
-        self.view.layer.addSublayer(circleLayer3)
+//        self.view.layer.addSublayer(circleLayer3)
 
+        arrayGameElements.append(circleLayer)
+        arrayGameElements.append(circleLayer2)
+        arrayGameElements.append(circleLayer3)
+
+        for obj in arrayGameElements {
+            self.view.layer.addSublayer(obj as CAShapeLayer)
+        }
+    }
+    
+    func removeElements () {
+        
+        self.labelAction.alpha = 0.0
+        self.buttonCountdownTimer.alpha = 0.0
+        
+    }
+    
+    
+    func removeGameElements() {
+        for obj in arrayGameElements {
+            (obj as CAShapeLayer).removeFromSuperlayer()
+        }
+        
+        arrayGameElements.removeAll(keepCapacity: true)
     }
     
     func createOneGameElement()->() {
@@ -331,6 +410,127 @@ class MainViewController: UIViewController {
         //return circleLayer
     }
     
+    
+    func createGameOverElements() {
+        
+        var labelGameOver: UILabel!
+        
+        var labelObjectsTouched: UILabel!
+        var labelObjectsTouchedValue: UILabel!
+        
+        var labelSpeed: UILabel!
+        var labelSpeedValue: UILabel!
+        
+        var labelScore: UILabel!
+        var labelScoreValue: UILabel!
+        
+        var buttonTryAgain: UIButton!
+        var buttonQuit: UIButton!
+
+        
+        labelGameOver = createLabelGameOver()
+        labelGameOver.text = "Game Over"
+        labelGameOver.sizeToFit()
+        labelGameOver.center = CGPointMake(screenWidth * 0.01 * consLabelGameOverCenterX, screenHeight * 0.01 * consLabelGameOverCenterY)
+        self.view.addSubview(labelGameOver)
+
+        labelObjectsTouched = createLabelGameOver()
+        labelObjectsTouched.text = "Objects Touched"
+        labelObjectsTouched.sizeToFit()
+//        labelObjectsTouched.textAlignment = NSTextAlignment.Center
+//        labelObjectsTouched.layer.cornerRadius = 15
+//        labelObjectsTouched.frame = CGRectMake(labelObjectsTouched.frame.origin.x, labelObjectsTouched.frame.origin.y,
+//            labelObjectsTouched.frame.width * 2, labelObjectsTouched.frame.height * 2)
+//        
+//        labelObjectsTouched.layer.backgroundColor = UIColor.brownColor().CGColor
+        labelObjectsTouched.center = CGPointMake(screenWidth * 0.01 * consLabelObjectsTouchedCenterX, screenHeight * 0.01 * consLabelObjectsTouchedCenterY)
+        self.view.addSubview(labelObjectsTouched)
+        
+        labelObjectsTouchedValue = createLabelGameOver()
+        labelObjectsTouchedValue.text = "0"
+        labelObjectsTouchedValue.sizeToFit()
+        labelObjectsTouchedValue.center = CGPointMake(screenWidth * 0.01 * consLabelObjectsTouchedValueCenterX, screenHeight * 0.01 * consLabelObjectsTouchedValueCenterY)
+        self.view.addSubview(labelObjectsTouchedValue)
+        
+        labelSpeed = createLabelGameOver()
+        labelSpeed.text = "Speed"
+        labelSpeed.sizeToFit()
+        labelSpeed.center = CGPointMake(screenWidth * 0.01 * consLabelSpeedCenterX, screenHeight * 0.01 * consLabelSpeedCenterY)
+        self.view.addSubview(labelSpeed)
+
+        labelSpeedValue = createLabelGameOver()
+        labelSpeedValue.text = "0"
+        labelSpeedValue.sizeToFit()
+        labelSpeedValue.center = CGPointMake(screenWidth * 0.01 * consLabelSpeedValueCenterX, screenHeight * 0.01 * consLabelSpeedValueCenterY)
+        self.view.addSubview(labelSpeedValue)
+
+        labelScore = createLabelGameOver()
+        labelScore.text = "Score"
+        labelScore.sizeToFit()
+        labelScore.center = CGPointMake(screenWidth * 0.01 * consLabelScoreCenterX, screenHeight * 0.01 * consLabelScoreCenterY)
+        self.view.addSubview(labelScore)
+        
+        labelScoreValue = createLabelGameOver()
+        labelScoreValue.text = "0"
+        labelScoreValue.sizeToFit()
+        labelScoreValue.center = CGPointMake(screenWidth * 0.01 * consLabelScoreValueCenterX, screenHeight * 0.01 * consLabelScoreValueCenterY)
+        self.view.addSubview(labelScoreValue)
+
+        buttonTryAgain = createButtonGameOver()
+        buttonTryAgain.setTitle("Try Again", forState: UIControlState.Normal)
+        buttonTryAgain.sizeToFit()
+        buttonTryAgain.center = CGPointMake(screenWidth * 0.01 * consButtonTryAgainCenterX, screenHeight * 0.01 * consButtonTryAgainCenterY)
+        buttonTryAgain.addTarget(self, action: "tryAgainTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(buttonTryAgain)
+        
+        buttonQuit = createButtonGameOver()
+        buttonQuit.setTitle("Quit", forState: UIControlState.Normal)
+        buttonQuit.sizeToFit()
+        buttonQuit.center = CGPointMake(screenWidth * 0.01 * consButtonQuitCenterX, screenHeight * 0.01 * consButtonQuitCenterY)
+        buttonQuit.addTarget(self, action: "quitTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(buttonQuit)
+        
+    }
+    
+    func tryAgainTouched(sender: AnyObject) {
+        NSLog("try again touched")
+    }
+    
+    func quitTouched(sender: AnyObject) {
+        NSLog("quit touched")
+    }
+    
+    func createButtonGameOver()->(UIButton) {
+     
+        var buttonTemp = UIButton()
+        buttonTemp.setTitle("Temp", forState: UIControlState.Normal)
+        buttonTemp.sizeToFit()
+        buttonTemp.backgroundColor = UIColor.blueColor()
+//        buttonTemp.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlay.frame.width*2, buttonPlay.frame.height*2)
+        buttonTemp.layer.cornerRadius = 15.0
+//        buttonTemp.center = CGPointMake(self.view.center.x, self.view.center.y)
+//        buttonTemp.addTarget(self, action: "playTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+
+        return buttonTemp
+    }
+    
+    func createLabelGameOver () -> (UILabel) {
+        var labelReturnObject = UILabel()
+        labelReturnObject.textAlignment = NSTextAlignment.Center
+        labelReturnObject.layer.cornerRadius = 15
+        
+        labelReturnObject.text = "Temp"
+        labelReturnObject.sizeToFit()
+        labelReturnObject.frame = CGRectMake(
+            labelReturnObject.frame.origin.x,
+            labelReturnObject.frame.origin.y,
+            labelReturnObject.frame.width * 2,
+            labelReturnObject.frame.height * 2)
+        
+        labelReturnObject.layer.backgroundColor = UIColor.brownColor().CGColor
+
+        return labelReturnObject
+    }
     
 }
 
