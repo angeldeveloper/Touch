@@ -10,8 +10,70 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+    // ################################################################################
+    // Common Elements
+    
     var offscreenXValue: CGFloat = -300.0
     var offscreenYValue: CGFloat = -300.0
+    
+    var screenWidth, screenHeight : CGFloat!
+
+    var view4 : UIView!
+    
+    var timerCount = 0
+    var timerRunning = false
+    var myTimer = NSTimer()
+    
+    // ################################################################################
+    
+    
+    // ################################################################################
+    // Main Screen Elements
+    
+    var labelApplicationTitle: UILabel!
+    let consLabelApplicationTitleCenterX_MainScreen : CGFloat = 50.0 // percentage of screen
+    let consLabelApplicationTitleCenterY_MainScreen : CGFloat = 20.0 // percentage of screen
+    let consLabelApplicationTitleCenterX_GamePlayScreen : CGFloat = 20.0 // percentage of screen
+    let consLabelApplicationTitleCenterY_GamePlayScreen : CGFloat = 10.0 // percentage of screen
+    
+    var buttonPlay: UIButton!
+    let consButtonPlayCenterX : CGFloat = 50.0 // percentage of screen
+    let consButtonPlayCenterY : CGFloat = 50.0 // percentage of screen
+    
+    // ################################################################################
+    
+
+    // ################################################################################
+    // Game Play Elements
+    var labelAction: UILabel!
+    let consLabelActionCenterX : CGFloat = 50.0 // percentage of screen
+    let consLabelActionCenterY : CGFloat = 10.0 // percentage of screen
+
+    var arrayGameElements = [CAShapeLayer]()
+    var arrayGameElementsPlacement = [CGPoint]()
+    
+    let consLabelGameStats1CenterX : CGFloat = 20.0 //
+    let consLabelGameStats1CenterY : CGFloat = 92.0 //
+    
+    let consLabelGameStats2CenterX : CGFloat = 40.0 //
+    let consLabelGameStats2CenterY : CGFloat = 92.0 //
+    
+    let consLabelGameStats3CenterX : CGFloat = 60.0 //
+    let consLabelGameStats3CenterY : CGFloat = 92.0 //
+    
+    let consLabelGameStats4CenterX : CGFloat = 80.0 //
+    let consLabelGameStats4CenterY : CGFloat = 92.0 //
+    
+    var buttonCountdownTimer: UIButton!
+    let consButtonCountdownTimerCenterX : CGFloat = 90.0 // percentage of screen
+    let consButtonCountdownTimerCenterY : CGFloat = 5.0 // percentage of screen
+    
+    //    let consLabelApplicationTitleCenterX : CGFloat = 50.0 // percentage of screen
+    //    let consLabelApplicationTitleCenterY : CGFloat = 20.0 // percentage of screen
+    
+    var labelGameStats1, labelGameStats2, labelGameStats3, labelGameStats4: UILabel!
+    
+    // ################################################################################
     
     // ################################################################################
     // Game Over Elements
@@ -23,7 +85,7 @@ class MainViewController: UIViewController {
     var labelObjectsTouched: UILabel!
     let consLabelObjectsTouchedCenterX : CGFloat = 20.0 // percentage of screen
     let consLabelObjectsTouchedCenterY : CGFloat = 40.0 // percentage of screen
-
+    
     var labelObjectsTouchedValue: UILabel!
     let consLabelObjectsTouchedValueCenterX : CGFloat = 60.0 // percentage of screen
     let consLabelObjectsTouchedValueCenterY : CGFloat = 40.0 // percentage of screen
@@ -35,7 +97,7 @@ class MainViewController: UIViewController {
     var labelSpeedValue: UILabel!
     let consLabelSpeedValueCenterX : CGFloat = 40.0 // percentage of screen
     let consLabelSpeedValueCenterY : CGFloat = 50.0 // percentage of screen
-
+    
     var labelScore: UILabel!
     let consLabelScoreCenterX : CGFloat = 20.0 // percentage of screen
     let consLabelScoreCenterY : CGFloat = 60.0 // percentage of screen
@@ -54,65 +116,19 @@ class MainViewController: UIViewController {
     
     // ################################################################################
 
+    
     // ################################################################################
-    // Main Screen Elements
-    
-    var labelApplicationTitle: UILabel!
-    let consLabelApplicationTitleCenterX_MainScreen : CGFloat = 50.0 // percentage of screen
-    let consLabelApplicationTitleCenterY_MainScreen : CGFloat = 20.0 // percentage of screen
-    let consLabelApplicationTitleCenterX_GamePlayScreen : CGFloat = 20.0 // percentage of screen
-    let consLabelApplicationTitleCenterY_GamePlayScreen : CGFloat = 10.0 // percentage of screen
+    // Game Paused Elements
 
-    var buttonPlay: UIButton!
-    let consButtonPlayCenterX : CGFloat = 50.0 // percentage of screen
-    let consButtonPlayCenterY : CGFloat = 50.0 // percentage of screen
-
-    // ################################################################################
-
-    // ################################################################################
-    // Game Play Elements
-    var labelAction: UILabel!
-    let consLabelActionCenterX : CGFloat = 50.0 // percentage of screen
-    let consLabelActionCenterY : CGFloat = 10.0 // percentage of screen
-
-    var arrayGameElements = [AnyObject]()
-    
-    let consLabelGameStats1CenterX : CGFloat = 20.0 //
-    let consLabelGameStats1CenterY : CGFloat = 92.0 //
-    
-    let consLabelGameStats2CenterX : CGFloat = 40.0 //
-    let consLabelGameStats2CenterY : CGFloat = 92.0 //
-    
-    let consLabelGameStats3CenterX : CGFloat = 60.0 //
-    let consLabelGameStats3CenterY : CGFloat = 92.0 //
-    
-    let consLabelGameStats4CenterX : CGFloat = 80.0 //
-    let consLabelGameStats4CenterY : CGFloat = 92.0 //
+    var buttonResume: UIButton!
+    let consButtonResumeCenterX : CGFloat = 50.0 // percentage of screen
+    let consButtonResumeCenterY : CGFloat = 70.0 // percentage of screen
     
     // ################################################################################
     
-    var screenWidth, screenHeight : CGFloat!
     
-    let consButtonCountdownTimerCenterX : CGFloat = 90.0 // percentage of screen
-    let consButtonCountdownTimerCenterY : CGFloat = 5.0 // percentage of screen
-    
-//    let consLabelApplicationTitleCenterX : CGFloat = 50.0 // percentage of screen
-//    let consLabelApplicationTitleCenterY : CGFloat = 20.0 // percentage of screen
-    
-
-    var buttonCountdownTimer: UIButton!
-    
-    var labelGameStats1, labelGameStats2, labelGameStats3, labelGameStats4: UILabel!
-    
-    var view4 : UIView!
-    
-    var timerCount = 0
-    var timerRunning = false
-    var myTimer = NSTimer()
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         var screen: UIScreen = UIScreen.mainScreen()
         var fullScreenRect: CGRect = screen.bounds
@@ -125,8 +141,6 @@ class MainViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         createUIElementsOffScreen()
 
-        //playTouched(NSObject)
-        
         animateIntoMainScreen()
     }
     
@@ -162,6 +176,62 @@ class MainViewController: UIViewController {
 //            createGameOverElements()
 //        }
         
+    }
+    
+    func startGameLoop() {
+        
+        
+        // create elements for this round
+        createGameElementsForThisRound()
+        
+        // make the elements visible
+        // animate the elements also
+        
+        var iCount = 0
+        while (iCount < arrayGameElements.count) {
+            arrayGameElements[0].frame.origin = arrayGameElementsPlacement[iCount]
+            arrayGameElements[0].opacity = 0
+            iCount++
+        }
+        
+//        buttonPlay.alpha = 0.0
+//        buttonPlay.center = CGPointMake(screenWidth * 0.01 * consButtonPlayCenterX, screenHeight * 0.01 * consButtonPlayCenterY)
+//        
+//        labelApplicationTitle.alpha = 0.0
+//        labelApplicationTitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleCenterX_MainScreen, screenHeight * 0.01 * consLabelApplicationTitleCenterY_MainScreen)
+//       
+        
+        for obj in arrayGameElements {
+            self.view.layer.addSublayer(obj)
+        }
+
+        UIView.animateWithDuration(1.0, animations: {
+
+            var iCount = 0
+            while (iCount < self.arrayGameElements.count) {
+                self.arrayGameElements[0].opacity = 1
+                iCount++
+            }
+            
+
+//            self.buttonPlay.alpha = 1.0
+//            self.labelApplicationTitle.alpha = 1.0
+            
+            }, completion: {_ in
+                NSLog("")
+        })
+
+        
+        
+        // then wait for the touch
+        
+        // when touch
+        // win or loss, change the points, etc
+        
+        // remove current elements
+        
+        // LOOP AGAIN
+
     }
     
     func createUIElementsOffScreen() {
@@ -241,8 +311,6 @@ class MainViewController: UIViewController {
         labelGameStats4.center = CGPointMake(-100, -100)
         self.view.addSubview(labelGameStats4)
         
-        
-        createGameElementsForThisRound()
     }
 
     func makeGameStatsLabel() -> (UILabel) {
@@ -318,11 +386,6 @@ class MainViewController: UIViewController {
 
     
     
-//    func fadeInGamePlayElements () -> () {
-//        
-//    }
-//    
-
     func fadeOutGamePlayScreen() -> () {
         
     }
@@ -354,6 +417,7 @@ class MainViewController: UIViewController {
         self.view4.hidden = true
     }
 
+    // ################################################################################
     // ################################################################################
     // Animation Functions
     
@@ -435,6 +499,7 @@ class MainViewController: UIViewController {
     }
 
     // ################################################################################
+    // ################################################################################
     
     
     
@@ -458,6 +523,7 @@ class MainViewController: UIViewController {
 
     
     func createGameElementsForThisRound() {
+        
         // create and add one circle to UI
         let circleLayer = CAShapeLayer()
         circleLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 100, 100)).CGPath
@@ -490,9 +556,14 @@ class MainViewController: UIViewController {
         arrayGameElements.append(circleLayer2)
         arrayGameElements.append(circleLayer3)
 
-        for obj in arrayGameElements {
-            self.view.layer.addSublayer(obj as CAShapeLayer)
-        }
+        arrayGameElementsPlacement.append(CGPointMake( 50, 150))
+        arrayGameElementsPlacement.append(CGPointMake(150, 250))
+        arrayGameElementsPlacement.append(CGPointMake(250, 350))
+        
+        
+//        for obj in arrayGameElements {
+//            self.view.layer.addSublayer(obj as CAShapeLayer)
+//        }
     }
     
     func removeElements () {
