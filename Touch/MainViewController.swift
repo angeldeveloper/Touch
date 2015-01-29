@@ -73,6 +73,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     var viewGameElement09, viewGameElement10, viewGameElement11, viewGameElement12 : UIView!
     var viewGameElement13, viewGameElement14, viewGameElement15, viewGameElement16 : UIView!
     
+    // Can I make an array of 16 elements here and have the same functionality???
+    
+    
     
     let consLabelGameStats1CenterX : CGFloat = 20.0 //
     let consLabelGameStats1CenterY : CGFloat = 92.0 //
@@ -439,6 +442,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         self.view4.hidden = true
     }
 
+    
+    
+    
     // ################################################################################
     // ################################################################################
     // Animation Functions
@@ -460,6 +466,32 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 NSLog("CAME TO MAIN SCREEN")
                 self.playTouched(UIView)
         })
+        
+        /*
+        UIView.animateWithDuration(duration: NSTimeInterval, animations: { () -> Void in
+        <#code#>
+        })
+        
+        UIView.animateWithDuration(duration: NSTimeInterval, animations: { () -> Void in
+        <#code#>
+        }, completion: { (Bool) -> Void in
+        <#code#>
+        })
+        
+        UIView.animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval, options: UIViewAnimationOptions, animations: { () -> Void in
+        <#code#>
+        }, completion: { (Bool) -> Void in
+        <#code#>
+        })
+        
+        UIView.animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: { () -> Void in
+        <#code#>
+        }, completion: { (Bool) -> Void in
+        <#code#>
+        })
+        
+        */
+        
     }
     
     func animateOutofMainScreen () -> () {
@@ -686,6 +718,136 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
+
+        // use key frame animation to make new elements on screen
+        // from 0 size to actual size in 3 seconds.
+        elementsAnimateIn()
+
+//        UIView.animateKeyframesWithDuration(3, delay: 0.0, options: <#UIViewKeyframeAnimationOptions#>, animations: <#() -> Void##() -> Void#>, completion: <#((Bool) -> Void)?##(Bool) -> Void#>)
+//        
+//        //UIViewAnimationOptions
+//        
+//        // animate the new 16 elements into the screen.
+//        // trying the transform animation,
+//        UIView.animateWithDuration(3.0, animations: {
+//            self.viewGameElement01.alpha = 1.0
+////            self.viewGameElement02.alpha = 1.0
+////            self.viewGameElement03.alpha = 1.0
+////            self.viewGameElement04.alpha = 1.0
+//            
+//        })
+//        
+        
+        
+    }
+    
+    func elementsAnimateIn () -> () {
+
+        let originalFrame = viewGameElement01.frame
+        
+        
+        // squish the view to very very small size
+        viewGameElement01.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement02.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement03.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement04.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement05.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement06.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement07.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement08.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement09.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement10.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement11.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement12.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement13.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement14.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement15.transform = CGAffineTransformMakeScale(0, 0)
+        viewGameElement16.transform = CGAffineTransformMakeScale(0, 0)
+
+        viewGameElement01.alpha = 1.0
+        viewGameElement02.alpha = 1.0
+        viewGameElement03.alpha = 1.0
+        viewGameElement04.alpha = 1.0
+        viewGameElement05.alpha = 1.0
+        viewGameElement06.alpha = 1.0
+        viewGameElement07.alpha = 1.0
+        viewGameElement08.alpha = 1.0
+        viewGameElement09.alpha = 1.0
+        viewGameElement10.alpha = 1.0
+        viewGameElement11.alpha = 1.0
+        viewGameElement12.alpha = 1.0
+        viewGameElement13.alpha = 1.0
+        viewGameElement14.alpha = 1.0
+        viewGameElement15.alpha = 1.0
+        viewGameElement16.alpha = 1.0
+
+        var additiveDelay       = 0.05
+        var animationDuration   = 0.15
+        
+        UIView.animateWithDuration(animationDuration, delay: 0 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement01.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 1 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement02.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 2 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement03.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 3 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement04.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 4 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement05.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 5 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement06.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 6 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement07.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 7 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement08.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 8 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement09.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 9 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement10.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 10 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement11.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 11 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement12.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 12 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement13.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 13 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement14.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 14 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement15.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
+        UIView.animateWithDuration(animationDuration, delay: 15 * additiveDelay, options: .CurveEaseOut, animations: {
+            self.viewGameElement16.transform = CGAffineTransformIdentity
+            }, completion: {_ in
+        })
     }
 
     func handleTap(recognizer: UITapGestureRecognizer) {
@@ -723,6 +885,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         } else if recognizer.view === viewGameElement16 {
             println("User has tapped Element 16")
         }
+        
     }
     
 
@@ -732,7 +895,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         var tempElement = UIView(frame: CGRectMake(e_details.x_offset, e_details.y_offset, e_details.width, e_details.height))
         
         tempElement.backgroundColor = UIColor.blueColor()
-        tempElement.alpha = 1.0
+        tempElement.alpha = 0.0 // it is not visible when created, you will need to animated it.
         
         // MAKING the LAYER
         // create and add Shape to the UI, can be circle square or triangle
