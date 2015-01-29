@@ -10,6 +10,14 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+    class ElementDetails : NSObject {
+        var x_offset : CGFloat = 0
+        var y_offset : CGFloat = 0
+        var width    : CGFloat = 0
+        var height   : CGFloat = 0
+    }
+    
+    
     // ################################################################################
     // Common Elements
     
@@ -51,6 +59,16 @@ class MainViewController: UIViewController {
 
     var arrayGameElements = [CAShapeLayer]()
     var arrayGameElementsPlacement = [CGPoint]()
+    
+    // instead of array, use hard coding 3 elements on the screen.
+    // you can hide what is not required or move them off screen
+    // later this 3 can be increased to make the game more complex.
+
+    var viewGameElement01, viewGameElement02, viewGameElement03, viewGameElement04 : UIView!
+    var viewGameElement05, viewGameElement06, viewGameElement07, viewGameElement08 : UIView!
+    var viewGameElement09, viewGameElement10, viewGameElement11, viewGameElement12 : UIView!
+    var viewGameElement13, viewGameElement14, viewGameElement15, viewGameElement16 : UIView!
+    
     
     let consLabelGameStats1CenterX : CGFloat = 20.0 //
     let consLabelGameStats1CenterY : CGFloat = 92.0 //
@@ -127,6 +145,7 @@ class MainViewController: UIViewController {
     // ################################################################################
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -187,13 +206,13 @@ class MainViewController: UIViewController {
         // make the elements visible
         // animate the elements also
         
-        var iCount = 0
-        while (iCount < arrayGameElements.count) {
-            arrayGameElements[0].frame.origin = arrayGameElementsPlacement[iCount]
-            arrayGameElements[0].opacity = 0
-            iCount++
-        }
-        
+//        var iCount = 0
+//        while (iCount < arrayGameElements.count) {
+//            arrayGameElements[0].frame.origin = arrayGameElementsPlacement[iCount]
+//            arrayGameElements[0].opacity = 0
+//            iCount++
+//        }
+//        
 //        buttonPlay.alpha = 0.0
 //        buttonPlay.center = CGPointMake(screenWidth * 0.01 * consButtonPlayCenterX, screenHeight * 0.01 * consButtonPlayCenterY)
 //        
@@ -201,27 +220,27 @@ class MainViewController: UIViewController {
 //        labelApplicationTitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleCenterX_MainScreen, screenHeight * 0.01 * consLabelApplicationTitleCenterY_MainScreen)
 //       
         
-        for obj in arrayGameElements {
-            self.view.layer.addSublayer(obj)
-        }
-
-        UIView.animateWithDuration(1.0, animations: {
-
-            var iCount = 0
-            while (iCount < self.arrayGameElements.count) {
-                self.arrayGameElements[0].opacity = 1
-                iCount++
-            }
-            
-
-//            self.buttonPlay.alpha = 1.0
-//            self.labelApplicationTitle.alpha = 1.0
-            
-            }, completion: {_ in
-                NSLog("")
-        })
-
-        
+//        for obj in arrayGameElements {
+//            self.view.layer.addSublayer(obj)
+//        }
+//
+//        UIView.animateWithDuration(1.0, animations: {
+//
+//            var iCount = 0
+//            while (iCount < self.arrayGameElements.count) {
+//                self.arrayGameElements[0].opacity = 1
+//                iCount++
+//            }
+//            
+//
+////            self.buttonPlay.alpha = 1.0
+////            self.labelApplicationTitle.alpha = 1.0
+//            
+//            }, completion: {_ in
+//                NSLog("")
+//        })
+//
+//        
         
         // then wait for the touch
         
@@ -436,6 +455,7 @@ class MainViewController: UIViewController {
             
             }, completion: {_ in
                 NSLog("CAME TO MAIN SCREEN")
+                self.playTouched(UIView)
         })
     }
     
@@ -491,6 +511,9 @@ class MainViewController: UIViewController {
             
             }, completion: {_ in
                 NSLog("CAME TO GAME PLAY SCREEN")
+                
+                self.startGameLoop()
+                
         })
     }
     
@@ -524,46 +547,151 @@ class MainViewController: UIViewController {
     
     func createGameElementsForThisRound() {
         
+        println(__FUNCTION__)
+
+        // I am trying 4 X 4 matrix having 16 elements of equal sizes in the version 0.01
+        // then maybe later I can complicate things
+        let sizeElement01_Width : CGFloat = 25.0
+        let sizeElement01_Height :CGFloat = 25.0 // this will not be used, 25% of width will be used as height
+
+        
+        // calculation of top left for first element
+        var Y_offset = ( screenHeight - screenWidth ) / 2
+        
+        let pointTopLeftElement01 = CGPointMake(0, Y_offset)
+        
+        // We have 3 elements (as of now, this can always change) added to this view
+        // they may or may not be visible
+        // these are the elements you can play with for the game
+        
+        // frame gives the location and size of the view
+        // first two gives the beginning point, top left point AND NOT CENTER
+        // second two gives the width and height in points (not pixels)
+        
+        //// width is used twice with intention
+       
+//        // all in points, NOT in percentages
+//        var elementDetailsObj = ElementDetails()
+//        
+//        elementDetailsObj.x_offset = pointTopLeftElement01.x
+//        elementDetailsObj.y_offset = pointTopLeftElement01.y
+//        elementDetailsObj.width = screenWidth * 0.01 * sizeElement01_Width
+//        elementDetailsObj.height = screenWidth * 0.01 * sizeElement01_Width
+//        
+//        viewGameElement01 = makeGameElementWithDetails(elementDetailsObj)
+//        
+//        self.view.addSubview(viewGameElement01)
+        
+        for i in 0..<4 {
+            println("i is \(i)")
+            for j in 0..<4 {
+                println("j is \(j)")
+                var elementDetailsObj = ElementDetails()
+                
+                elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * 25))
+                elementDetailsObj.y_offset = (CGFloat(i) * (screenWidth * 0.01 * 25)) + (screenHeight - screenWidth)/2
+                elementDetailsObj.width = screenWidth * 0.01 * sizeElement01_Width
+                elementDetailsObj.height = screenWidth * 0.01 * sizeElement01_Width
+                
+                if 0 == i {
+                    switch j {
+                    case 0:
+                        viewGameElement01 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement01)
+                    case 1:
+                        viewGameElement02 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement02)
+                    case 2:
+                        viewGameElement03 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement03)
+                    case 3:
+                        viewGameElement04 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement04)
+                    default:
+                        println("default case i == 0")
+                    }
+                } else if 1 == i {
+                    switch j {
+                    case 0:
+                        viewGameElement05 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement05)
+                    case 1:
+                        viewGameElement06 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement06)
+                    case 2:
+                        viewGameElement07 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement07)
+                    case 3:
+                        viewGameElement08 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement08)
+                    default:
+                        println("default case i == 1")
+                    }
+                } else if 2 == i {
+                    switch j {
+                    case 0:
+                        viewGameElement09 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement09)
+                    case 1:
+                        viewGameElement10 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement10)
+                    case 2:
+                        viewGameElement11 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement11)
+                    case 3:
+                        viewGameElement12 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement12)
+                    default:
+                        println("default case i == 2")
+                    }
+                } else if 3 == i {
+                    switch j {
+                    case 0:
+                        viewGameElement13 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement13)
+                    case 1:
+                        viewGameElement14 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement14)
+                    case 2:
+                        viewGameElement15 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement15)
+                    case 3:
+                        viewGameElement16 = makeGameElementWithDetails(elementDetailsObj)
+                        self.view.addSubview(viewGameElement16)
+                    default:
+                        println("default case i == 3")
+                    }
+                }
+            }
+        }
+        
+
+    }
+    
+    
+    func makeGameElementWithDetails (e_details: ElementDetails) -> (UIView) {
+        
+        var tempElement = UIView(frame: CGRectMake(e_details.x_offset, e_details.y_offset, e_details.width, e_details.height))
+        
+        tempElement.backgroundColor = UIColor.blueColor()
+        tempElement.alpha = 1.0
+        
+        // MAKING the CIRCLE
         // create and add one circle to UI
-        let circleLayer = CAShapeLayer()
-        circleLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 100, 100)).CGPath
-        circleLayer.strokeColor = UIColor.whiteColor().CGColor
-        circleLayer.lineWidth = 5
-        circleLayer.fillColor = UIColor.blueColor().CGColor
-        //circleLayer.frame.origin = CGPointMake(50, 150)
-        circleLayer.frame.origin = CGPointMake(-300, -300)
-//        self.view.layer.addSublayer(circleLayer)
-
-        let circleLayer2 = CAShapeLayer()
-        circleLayer2.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 50, 50)).CGPath
-        circleLayer2.strokeColor = UIColor.whiteColor().CGColor
-        circleLayer2.lineWidth = 5
-        circleLayer2.fillColor = UIColor.greenColor().CGColor
-        //circleLayer2.frame.origin = CGPointMake(150, 250)
-        circleLayer2.frame.origin = CGPointMake(-300, -300)
-//        self.view.layer.addSublayer(circleLayer2)
-
-        let circleLayer3 = CAShapeLayer()
-        circleLayer3.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 200, 200)).CGPath
-        circleLayer3.strokeColor = UIColor.whiteColor().CGColor
-        circleLayer3.lineWidth = 5
-        circleLayer3.fillColor = UIColor.redColor().CGColor
-        //circleLayer3.frame.origin = CGPointMake(250, 350)
-        circleLayer3.frame.origin = CGPointMake(-300, -300)
-//        self.view.layer.addSublayer(circleLayer3)
-
-        arrayGameElements.append(circleLayer)
-        arrayGameElements.append(circleLayer2)
-        arrayGameElements.append(circleLayer3)
-
-        arrayGameElementsPlacement.append(CGPointMake( 50, 150))
-        arrayGameElementsPlacement.append(CGPointMake(150, 250))
-        arrayGameElementsPlacement.append(CGPointMake(250, 350))
+        let circleLayer01 = CAShapeLayer()
         
+        // width is used twice with intention
+        // the RECT passed gives the top left and size of the Shape inside the superview
+        circleLayer01.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, e_details.width, e_details.height)).CGPath
         
-//        for obj in arrayGameElements {
-//            self.view.layer.addSublayer(obj as CAShapeLayer)
-//        }
+        // attributes
+        circleLayer01.strokeColor = UIColor.whiteColor().CGColor
+        circleLayer01.lineWidth = 5
+        circleLayer01.fillColor = UIColor.orangeColor().CGColor
+        
+        tempElement.layer.addSublayer(circleLayer01)
+
+        return tempElement
     }
     
     func removeElements () {
