@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     class ElementDetails : NSObject {
         var x_offset : CGFloat = 0
@@ -16,6 +16,10 @@ class MainViewController: UIViewController {
         var width    : CGFloat = 0
         var height   : CGFloat = 0
     }
+    
+    // ################################################################################
+    // GestureRecognizer
+    
     
     
     // ################################################################################
@@ -55,7 +59,7 @@ class MainViewController: UIViewController {
     // Game Play Elements
     var labelAction: UILabel!
     let consLabelActionCenterX : CGFloat = 50.0 // percentage of screen
-    let consLabelActionCenterY : CGFloat = 10.0 // percentage of screen
+    let consLabelActionCenterY : CGFloat = 13.0 // percentage of screen
 
     var arrayGameElements = [CAShapeLayer]()
     var arrayGameElementsPlacement = [CGPoint]()
@@ -84,7 +88,7 @@ class MainViewController: UIViewController {
     
     var buttonCountdownTimer: UIButton!
     let consButtonCountdownTimerCenterX : CGFloat = 90.0 // percentage of screen
-    let consButtonCountdownTimerCenterY : CGFloat = 5.0 // percentage of screen
+    let consButtonCountdownTimerCenterY : CGFloat = 7.0 // percentage of screen
     
     //    let consLabelApplicationTitleCenterX : CGFloat = 50.0 // percentage of screen
     //    let consLabelApplicationTitleCenterY : CGFloat = 20.0 // percentage of screen
@@ -156,7 +160,6 @@ class MainViewController: UIViewController {
         screenHeight = fullScreenRect.size.height
     }
 
-    
     override func viewDidAppear(animated: Bool) {
         createUIElementsOffScreen()
 
@@ -290,7 +293,7 @@ class MainViewController: UIViewController {
         labelAction.textAlignment = NSTextAlignment.Center
         labelAction.layer.cornerRadius = 5
         labelAction.frame = CGRectMake(labelAction.frame.origin.x, labelAction.frame.origin.y,
-            screenWidth * 0.01 * 90, screenHeight * 0.01 * 5)
+            screenWidth * 0.01 * 80, screenHeight * 0.01 * 5)
         labelAction.layer.backgroundColor = UIColor.redColor().CGColor
         //labelAction.center = CGPointMake(self.view.center.x, self.view.center.y/3)
         labelAction.center = CGPointMake(-100, -100)
@@ -339,7 +342,7 @@ class MainViewController: UIViewController {
         tempLabel.textAlignment = NSTextAlignment.Center
         tempLabel.layer.cornerRadius = 5
         tempLabel.frame = CGRectMake(tempLabel.frame.origin.x, tempLabel.frame.origin.y,
-            tempLabel.frame.size.width * 2.0, tempLabel.frame.size.height * 1.3)
+            tempLabel.frame.size.width * 3.0, tempLabel.frame.size.height * 1.3)
         tempLabel.layer.backgroundColor = UIColor.redColor().CGColor
         tempLabel.alpha = 0.0
         return tempLabel
@@ -583,9 +586,9 @@ class MainViewController: UIViewController {
 //        self.view.addSubview(viewGameElement01)
         
         for i in 0..<4 {
-            println("i is \(i)")
+            //println("i is \(i)")
             for j in 0..<4 {
-                println("j is \(j)")
+                //println("j is \(j)")
                 var elementDetailsObj = ElementDetails()
                 
                 elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * 25))
@@ -593,19 +596,26 @@ class MainViewController: UIViewController {
                 elementDetailsObj.width = screenWidth * 0.01 * sizeElement01_Width
                 elementDetailsObj.height = screenWidth * 0.01 * sizeElement01_Width
                 
+                let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+                recognizer.delegate = self
+                
                 if 0 == i {
                     switch j {
                     case 0:
                         viewGameElement01 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement01.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement01)
                     case 1:
                         viewGameElement02 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement02.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement02)
                     case 2:
                         viewGameElement03 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement03.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement03)
                     case 3:
                         viewGameElement04 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement04.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement04)
                     default:
                         println("default case i == 0")
@@ -614,15 +624,19 @@ class MainViewController: UIViewController {
                     switch j {
                     case 0:
                         viewGameElement05 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement05.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement05)
                     case 1:
                         viewGameElement06 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement06.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement06)
                     case 2:
                         viewGameElement07 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement07.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement07)
                     case 3:
                         viewGameElement08 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement08.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement08)
                     default:
                         println("default case i == 1")
@@ -631,15 +645,19 @@ class MainViewController: UIViewController {
                     switch j {
                     case 0:
                         viewGameElement09 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement09.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement09)
                     case 1:
                         viewGameElement10 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement10.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement10)
                     case 2:
                         viewGameElement11 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement11.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement11)
                     case 3:
                         viewGameElement12 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement12.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement12)
                     default:
                         println("default case i == 2")
@@ -648,15 +666,19 @@ class MainViewController: UIViewController {
                     switch j {
                     case 0:
                         viewGameElement13 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement13.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement13)
                     case 1:
                         viewGameElement14 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement14.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement14)
                     case 2:
                         viewGameElement15 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement15.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement15)
                     case 3:
                         viewGameElement16 = makeGameElementWithDetails(elementDetailsObj)
+                        viewGameElement16.addGestureRecognizer(recognizer)
                         self.view.addSubview(viewGameElement16)
                     default:
                         println("default case i == 3")
@@ -664,10 +686,46 @@ class MainViewController: UIViewController {
                 }
             }
         }
-        
+    }
 
+    func handleTap(recognizer: UITapGestureRecognizer) {
+        
+        if recognizer.view === viewGameElement01 {
+            println("User has tapped Element 1")
+        } else if recognizer.view === viewGameElement02 {
+            println("User has tapped Element 2")
+        } else if recognizer.view === viewGameElement03 {
+            println("User has tapped Element 3")
+        } else if recognizer.view === viewGameElement04 {
+            println("User has tapped Element 4")
+        } else if recognizer.view === viewGameElement05 {
+            println("User has tapped Element 5")
+        } else if recognizer.view === viewGameElement06 {
+            println("User has tapped Element 6")
+        } else if recognizer.view === viewGameElement07 {
+            println("User has tapped Element 7")
+        } else if recognizer.view === viewGameElement08 {
+            println("User has tapped Element 8")
+        } else if recognizer.view === viewGameElement09 {
+            println("User has tapped Element 9")
+        } else if recognizer.view === viewGameElement10 {
+            println("User has tapped Element 10")
+        } else if recognizer.view === viewGameElement11 {
+            println("User has tapped Element 11")
+        } else if recognizer.view === viewGameElement12 {
+            println("User has tapped Element 12")
+        } else if recognizer.view === viewGameElement13 {
+            println("User has tapped Element 13")
+        } else if recognizer.view === viewGameElement14 {
+            println("User has tapped Element 14")
+        } else if recognizer.view === viewGameElement15 {
+            println("User has tapped Element 15")
+        } else if recognizer.view === viewGameElement16 {
+            println("User has tapped Element 16")
+        }
     }
     
+
     
     func makeGameElementWithDetails (e_details: ElementDetails) -> (UIView) {
         
@@ -676,21 +734,40 @@ class MainViewController: UIViewController {
         tempElement.backgroundColor = UIColor.blueColor()
         tempElement.alpha = 1.0
         
-        // MAKING the CIRCLE
-        // create and add one circle to UI
-        let circleLayer01 = CAShapeLayer()
+        // MAKING the LAYER
+        // create and add Shape to the UI, can be circle square or triangle
+        let oneLayer = CAShapeLayer()
+        
+        var randomX = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        //println("randomX is \(randomX)")
+        
+        if randomX < 0.05 {
+            randomX = 0.05
+        }
         
         // width is used twice with intention
         // the RECT passed gives the top left and size of the Shape inside the superview
-        circleLayer01.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, e_details.width, e_details.height)).CGPath
+        // making a circle or oval
+        //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+        // making a square or a rectangle
+        oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
+                                                      (e_details.height - randomX * e_details.height)/2,
+                                                randomX * e_details.width, randomX * e_details.height)).CGPath
+        //making a triangle
+        
         
         // attributes
-        circleLayer01.strokeColor = UIColor.whiteColor().CGColor
-        circleLayer01.lineWidth = 5
-        circleLayer01.fillColor = UIColor.orangeColor().CGColor
+        oneLayer.strokeColor = UIColor.whiteColor().CGColor
+        oneLayer.lineWidth = 2
+        oneLayer.fillColor = UIColor.orangeColor().CGColor
         
-        tempElement.layer.addSublayer(circleLayer01)
+        //viewGameElement01.addGestureRecognizer(recognizer)
+        //oneLayer.
+        tempElement.layer.addSublayer(oneLayer)
 
+        // element attributes
+        tempElement.layer.borderWidth = 2
+        tempElement.layer.borderColor = UIColor.yellowColor().CGColor
         return tempElement
     }
     
