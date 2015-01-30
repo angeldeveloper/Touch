@@ -10,6 +10,29 @@ import UIKit
 
 class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
+    // ################################################################################
+    let numberRowsOrColumns = 3
+    // ################################################################################
+    
+    
+    // ################################################################################
+    // Actions that can be performed
+    /* 
+    Blue Circle, Red Circle, Yellow Circle, [different color circles]
+    Largest Circle, Smallest Circle, Blinking Circle, Odd Circle,
+    Rotating Circle
+    
+    Square
+    Triangle
+    Rectangle
+    
+    Other Shapes can be added after the above works properly
+    
+    TOUCH THE ODD SHAPE, THE WHOLE GAME CAN BE THIS.
+    THINK ABOUT ALL THE IDEAS
+    */
+    
+    
     class ElementDetails : NSObject {
         var x_offset : CGFloat = 0
         var y_offset : CGFloat = 0
@@ -61,19 +84,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelActionCenterX : CGFloat = 50.0 // percentage of screen
     let consLabelActionCenterY : CGFloat = 13.0 // percentage of screen
 
-    var arrayGameElements = [CAShapeLayer]()
-    var arrayGameElementsPlacement = [CGPoint]()
-    
-    // instead of array, use hard coding 3 elements on the screen.
-    // you can hide what is not required or move them off screen
-    // later this 3 can be increased to make the game more complex.
-
-    var viewGameElement01, viewGameElement02, viewGameElement03, viewGameElement04 : UIView!
-    var viewGameElement05, viewGameElement06, viewGameElement07, viewGameElement08 : UIView!
-    var viewGameElement09, viewGameElement10, viewGameElement11, viewGameElement12 : UIView!
-    var viewGameElement13, viewGameElement14, viewGameElement15, viewGameElement16 : UIView!
     
     // Can I make an array of 16 elements here and have the same functionality???
+
+    var arrayGameElements = [UIView]()
+    //var arrayGameElementsPlacement = [CGPoint]()
     
     
     
@@ -155,17 +170,13 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         var screen: UIScreen = UIScreen.mainScreen()
-        var fullScreenRect: CGRect = screen.bounds
-
-        screenWidth = fullScreenRect.size.width
-        screenHeight = fullScreenRect.size.height
+        screenWidth = screen.bounds.size.width
+        screenHeight = screen.bounds.size.height
     }
 
     override func viewDidAppear(animated: Bool) {
         createUIElementsOffScreen()
-
         animateIntoMainScreen()
     }
     
@@ -205,58 +216,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func startGameLoop() {
         
-        
-        // create elements for this round
         createGameElementsForThisRound()
         
-        // make the elements visible
-        // animate the elements also
-        
-//        var iCount = 0
-//        while (iCount < arrayGameElements.count) {
-//            arrayGameElements[0].frame.origin = arrayGameElementsPlacement[iCount]
-//            arrayGameElements[0].opacity = 0
-//            iCount++
-//        }
-//        
-//        buttonPlay.alpha = 0.0
-//        buttonPlay.center = CGPointMake(screenWidth * 0.01 * consButtonPlayCenterX, screenHeight * 0.01 * consButtonPlayCenterY)
-//        
-//        labelApplicationTitle.alpha = 0.0
-//        labelApplicationTitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleCenterX_MainScreen, screenHeight * 0.01 * consLabelApplicationTitleCenterY_MainScreen)
-//       
-        
-//        for obj in arrayGameElements {
-//            self.view.layer.addSublayer(obj)
-//        }
-//
-//        UIView.animateWithDuration(1.0, animations: {
-//
-//            var iCount = 0
-//            while (iCount < self.arrayGameElements.count) {
-//                self.arrayGameElements[0].opacity = 1
-//                iCount++
-//            }
-//            
-//
-////            self.buttonPlay.alpha = 1.0
-////            self.labelApplicationTitle.alpha = 1.0
-//            
-//            }, completion: {_ in
-//                NSLog("")
-//        })
-//
-//        
-        
-        // then wait for the touch
-        
-        // when touch
-        // win or loss, change the points, etc
-        
-        // remove current elements
-        
-        // LOOP AGAIN
-
     }
     
     func createUIElementsOffScreen() {
@@ -316,6 +277,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonCountdownTimer.alpha = 0.0
         self.view.addSubview(buttonCountdownTimer)
         
+        
+        
         labelGameStats1 = makeGameStatsLabel()
         //labelGameStats1.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats1CenterX, screenHeight * 0.01 * consLabelGameStats1CenterY)
         labelGameStats1.center = CGPointMake(-100, -100)
@@ -351,14 +314,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         return tempLabel
     }
     
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    
-    
     override func viewWillAppear(animated: Bool) {
         view.backgroundColor = UIColor(red: 153.00/255.00, green: 255.0/255.0, blue: 0.00/255.0, alpha: 1.00)
         
@@ -386,29 +341,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         animateIntoGamePlayScreen()
         
         
-//        //fadeOutView(buttonPlay)
-//        
-//        UIView.animateWithDuration(0.5, animations: {
-//            self.buttonPlay.alpha = 0.0
-//            }, completion: {_ in
-//                NSLog("Play button faded.")
-//        })
-//
-//        UIView.animateWithDuration(1.0, animations: {
-//            //self.labelApplicationTitle.center = CGPointMake(self.labelApplicationTitle.center.x, self.labelApplicationTitle.center.y - 100)
-//            self.labelApplicationTitle.center = CGPointMake(self.labelApplicationTitle.frame.width * 0.5 + 20, self.labelApplicationTitle.frame.height * 0.5 + 20)
-//            }, completion: {_ in
-//                NSLog("Title moved with animation.")
-//                self.fadeInGamePlayElements()
-//        })
     }
-    
-//    func removeMainScreenElements () -> () {
-//        buttonPlay.enabled = false
-//        buttonPlay.hidden = true
-//        buttonPlay.alpha = 1.0
-//    }
-
     
     
     func fadeOutGamePlayScreen() -> () {
@@ -581,311 +514,73 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     
     func createGameElementsForThisRound() {
-        
         println(__FUNCTION__)
 
-        // I am trying 4 X 4 matrix having 16 elements of equal sizes in the version 0.01
-        // then maybe later I can complicate things
-        let sizeElement01_Width : CGFloat = 25.0
-        let sizeElement01_Height :CGFloat = 25.0 // this will not be used, 25% of width will be used as height
-
+        let sizeElement01_Width : CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
+        let sizeElement01_Height :CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
         
-        // calculation of top left for first element
         var Y_offset = ( screenHeight - screenWidth ) / 2
         
         let pointTopLeftElement01 = CGPointMake(0, Y_offset)
         
-        // We have 3 elements (as of now, this can always change) added to this view
-        // they may or may not be visible
-        // these are the elements you can play with for the game
-        
-        // frame gives the location and size of the view
-        // first two gives the beginning point, top left point AND NOT CENTER
-        // second two gives the width and height in points (not pixels)
-        
-        //// width is used twice with intention
-       
-//        // all in points, NOT in percentages
-//        var elementDetailsObj = ElementDetails()
-//        
-//        elementDetailsObj.x_offset = pointTopLeftElement01.x
-//        elementDetailsObj.y_offset = pointTopLeftElement01.y
-//        elementDetailsObj.width = screenWidth * 0.01 * sizeElement01_Width
-//        elementDetailsObj.height = screenWidth * 0.01 * sizeElement01_Width
-//        
-//        viewGameElement01 = makeGameElementWithDetails(elementDetailsObj)
-//        
-//        self.view.addSubview(viewGameElement01)
-        
-        for i in 0..<4 {
-            //println("i is \(i)")
-            for j in 0..<4 {
-                //println("j is \(j)")
-                var elementDetailsObj = ElementDetails()
+        var elementDetailsObj = ElementDetails()
+
+        for i in 0..<numberRowsOrColumns {
+            
+            println("i is \(i)")
+            
+            for j in 0..<numberRowsOrColumns {
+            
+                println("j is \(j)")
                 
-                elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * 25))
-                elementDetailsObj.y_offset = (CGFloat(i) * (screenWidth * 0.01 * 25)) + (screenHeight - screenWidth)/2
+                elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * sizeElement01_Width))
+                elementDetailsObj.y_offset = (CGFloat(i) * (screenWidth * 0.01 * sizeElement01_Height)) + (screenHeight - screenWidth)/2
+                
                 elementDetailsObj.width = screenWidth * 0.01 * sizeElement01_Width
                 elementDetailsObj.height = screenWidth * 0.01 * sizeElement01_Width
+
                 
                 let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
                 recognizer.delegate = self
+
+                var tempViewToAddToArray = makeGameElementWithDetails(elementDetailsObj)
+                tempViewToAddToArray.addGestureRecognizer(recognizer)
+                //arrayGameElements[i * numberRowsOrColumns + j] = tempViewToAddToArray
+                arrayGameElements.insert(tempViewToAddToArray, atIndex: i * numberRowsOrColumns + j)
+                self.view.addSubview(tempViewToAddToArray)
                 
-                if 0 == i {
-                    switch j {
-                    case 0:
-                        viewGameElement01 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement01.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement01)
-                    case 1:
-                        viewGameElement02 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement02.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement02)
-                    case 2:
-                        viewGameElement03 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement03.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement03)
-                    case 3:
-                        viewGameElement04 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement04.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement04)
-                    default:
-                        println("default case i == 0")
-                    }
-                } else if 1 == i {
-                    switch j {
-                    case 0:
-                        viewGameElement05 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement05.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement05)
-                    case 1:
-                        viewGameElement06 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement06.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement06)
-                    case 2:
-                        viewGameElement07 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement07.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement07)
-                    case 3:
-                        viewGameElement08 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement08.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement08)
-                    default:
-                        println("default case i == 1")
-                    }
-                } else if 2 == i {
-                    switch j {
-                    case 0:
-                        viewGameElement09 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement09.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement09)
-                    case 1:
-                        viewGameElement10 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement10.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement10)
-                    case 2:
-                        viewGameElement11 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement11.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement11)
-                    case 3:
-                        viewGameElement12 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement12.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement12)
-                    default:
-                        println("default case i == 2")
-                    }
-                } else if 3 == i {
-                    switch j {
-                    case 0:
-                        viewGameElement13 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement13.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement13)
-                    case 1:
-                        viewGameElement14 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement14.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement14)
-                    case 2:
-                        viewGameElement15 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement15.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement15)
-                    case 3:
-                        viewGameElement16 = makeGameElementWithDetails(elementDetailsObj)
-                        viewGameElement16.addGestureRecognizer(recognizer)
-                        self.view.addSubview(viewGameElement16)
-                    default:
-                        println("default case i == 3")
-                    }
-                }
             }
         }
-
-        // use key frame animation to make new elements on screen
-        // from 0 size to actual size in 3 seconds.
-        elementsAnimateIn()
-
-//        UIView.animateKeyframesWithDuration(3, delay: 0.0, options: <#UIViewKeyframeAnimationOptions#>, animations: <#() -> Void##() -> Void#>, completion: <#((Bool) -> Void)?##(Bool) -> Void#>)
-//        
-//        //UIViewAnimationOptions
-//        
-//        // animate the new 16 elements into the screen.
-//        // trying the transform animation,
-//        UIView.animateWithDuration(3.0, animations: {
-//            self.viewGameElement01.alpha = 1.0
-////            self.viewGameElement02.alpha = 1.0
-////            self.viewGameElement03.alpha = 1.0
-////            self.viewGameElement04.alpha = 1.0
-//            
-//        })
-//        
         
+        elementsAnimateIn()
         
     }
     
+
     func elementsAnimateIn () -> () {
 
-        let originalFrame = viewGameElement01.frame
+        var additiveDelay :Double = 0.05
+        var animationDuration : Double = 0.15
         
-        
-        // squish the view to very very small size
-        viewGameElement01.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement02.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement03.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement04.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement05.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement06.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement07.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement08.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement09.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement10.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement11.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement12.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement13.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement14.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement15.transform = CGAffineTransformMakeScale(0, 0)
-        viewGameElement16.transform = CGAffineTransformMakeScale(0, 0)
-
-        viewGameElement01.alpha = 1.0
-        viewGameElement02.alpha = 1.0
-        viewGameElement03.alpha = 1.0
-        viewGameElement04.alpha = 1.0
-        viewGameElement05.alpha = 1.0
-        viewGameElement06.alpha = 1.0
-        viewGameElement07.alpha = 1.0
-        viewGameElement08.alpha = 1.0
-        viewGameElement09.alpha = 1.0
-        viewGameElement10.alpha = 1.0
-        viewGameElement11.alpha = 1.0
-        viewGameElement12.alpha = 1.0
-        viewGameElement13.alpha = 1.0
-        viewGameElement14.alpha = 1.0
-        viewGameElement15.alpha = 1.0
-        viewGameElement16.alpha = 1.0
-
-        var additiveDelay       = 0.05
-        var animationDuration   = 0.15
-        
-        UIView.animateWithDuration(animationDuration, delay: 0 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement01.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 1 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement02.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 2 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement03.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 3 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement04.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 4 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement05.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 5 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement06.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 6 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement07.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 7 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement08.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 8 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement09.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 9 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement10.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 10 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement11.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 11 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement12.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 12 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement13.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 13 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement14.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 14 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement15.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
-        UIView.animateWithDuration(animationDuration, delay: 15 * additiveDelay, options: .CurveEaseOut, animations: {
-            self.viewGameElement16.transform = CGAffineTransformIdentity
-            }, completion: {_ in
-        })
+        for iCount in 0..<arrayGameElements.count {
+            arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+            arrayGameElements[iCount].alpha = 1.0
+            
+            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
+                self.arrayGameElements[iCount].transform = CGAffineTransformIdentity
+                }, completion: {_ in
+                    //println("Animation completed \(iCount)")
+            })
+        }
     }
 
     func handleTap(recognizer: UITapGestureRecognizer) {
-        
-        if recognizer.view === viewGameElement01 {
-            println("User has tapped Element 1")
-        } else if recognizer.view === viewGameElement02 {
-            println("User has tapped Element 2")
-        } else if recognizer.view === viewGameElement03 {
-            println("User has tapped Element 3")
-        } else if recognizer.view === viewGameElement04 {
-            println("User has tapped Element 4")
-        } else if recognizer.view === viewGameElement05 {
-            println("User has tapped Element 5")
-        } else if recognizer.view === viewGameElement06 {
-            println("User has tapped Element 6")
-        } else if recognizer.view === viewGameElement07 {
-            println("User has tapped Element 7")
-        } else if recognizer.view === viewGameElement08 {
-            println("User has tapped Element 8")
-        } else if recognizer.view === viewGameElement09 {
-            println("User has tapped Element 9")
-        } else if recognizer.view === viewGameElement10 {
-            println("User has tapped Element 10")
-        } else if recognizer.view === viewGameElement11 {
-            println("User has tapped Element 11")
-        } else if recognizer.view === viewGameElement12 {
-            println("User has tapped Element 12")
-        } else if recognizer.view === viewGameElement13 {
-            println("User has tapped Element 13")
-        } else if recognizer.view === viewGameElement14 {
-            println("User has tapped Element 14")
-        } else if recognizer.view === viewGameElement15 {
-            println("User has tapped Element 15")
-        } else if recognizer.view === viewGameElement16 {
-            println("User has tapped Element 16")
+
+        for iCount in 0..<arrayGameElements.count {
+            if recognizer.view === arrayGameElements[iCount] {
+                println("User has tapped Element \(iCount)")
+            }
         }
-        
     }
     
 
@@ -910,55 +605,56 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         // width is used twice with intention
         // the RECT passed gives the top left and size of the Shape inside the superview
+
+        // first try
         // making a circle or oval
         //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+
+        
+        
+        // second try
         // making a square or a rectangle
-        oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
-                                                      (e_details.height - randomX * e_details.height)/2,
-                                                randomX * e_details.width, randomX * e_details.height)).CGPath
+//        oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
+//                                                      (e_details.height - randomX * e_details.height)/2,
+//                                                randomX * e_details.width, randomX * e_details.height)).CGPath
+        
+        // third try
+//        var point = CGPointMake(50, 50)
+//        oneLayer.path = UIBezierPath(arcCenter:point, radius: 35, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
+//        
+
+        // fourth try
         //making a triangle
         
+        var triangle = UIBezierPath()
+        triangle.moveToPoint(CGPointMake(10,10))
+        triangle.addLineToPoint(CGPointMake(60, 40))
+        triangle.addLineToPoint(CGPointMake(20, 60))
+        triangle.closePath()
+        //UIColor.redColor().set()
+        //triangle.fill()
+        
+        oneLayer.path = triangle.CGPath
         
         // attributes
-        oneLayer.strokeColor = UIColor.whiteColor().CGColor
-        oneLayer.lineWidth = 2
-        oneLayer.fillColor = UIColor.orangeColor().CGColor
+        //oneLayer.strokeColor = UIColor.whiteColor().CGColor
+        //oneLayer.strokeColor = UIColor.magentaColor().CGColor
         
-        //viewGameElement01.addGestureRecognizer(recognizer)
-        //oneLayer.
+        oneLayer.lineWidth = 1
+        
+        //oneLayer.fillColor = UIColor.orangeColor().CGColor
+
+        
+        
         tempElement.layer.addSublayer(oneLayer)
 
         // element attributes
         tempElement.layer.borderWidth = 2
         tempElement.layer.borderColor = UIColor.yellowColor().CGColor
+        
         return tempElement
     }
     
-    func removeElements () {
-        
-        self.labelAction.alpha = 0.0
-        self.buttonCountdownTimer.alpha = 0.0
-        
-    }
-    
-    
-    func removeGameElements() {
-        for obj in arrayGameElements {
-            (obj as CAShapeLayer).removeFromSuperlayer()
-        }
-        
-        arrayGameElements.removeAll(keepCapacity: true)
-    }
-    
-    func createOneGameElement()->() {
-//        let circleLayer = CAShapeLayer()
-//        circleLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, 25, 25)).CGPath
-//        circleLayer.strokeColor = UIColor.whiteColor().CGColor
-//        circleLayer.lineWidth = 5
-//        circleLayer.fillColor = UIColor.clearColor().CGColor
-
-        //return circleLayer
-    }
     
     
     func createGameOverElements() {
@@ -1064,7 +760,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         return buttonTemp
     }
     
-    func createLabelGameOver () -> (UILabel) {
+    func createLabelGameOver()->(UILabel) {
+        
         var labelReturnObject = UILabel()
         labelReturnObject.textAlignment = NSTextAlignment.Center
         labelReturnObject.layer.cornerRadius = 15
@@ -1082,7 +779,25 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         return labelReturnObject
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
