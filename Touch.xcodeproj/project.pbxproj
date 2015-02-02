@@ -13,6 +13,7 @@
 		100D30A91A77D207008F3FBF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 100D30A81A77D207008F3FBF /* Images.xcassets */; };
 		100D30AC1A77D207008F3FBF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 100D30AA1A77D207008F3FBF /* LaunchScreen.xib */; };
 		100D30B81A77D207008F3FBF /* TouchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100D30B71A77D207008F3FBF /* TouchTests.swift */; };
+		1048B1061A7FE0DF0013A553 /* AnimationsLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1048B1051A7FE0DF0013A553 /* AnimationsLibrary.swift */; };
 		10EB77B61A7924E60075E089 /* GameElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EB77B51A7924E60075E089 /* GameElement.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		100D30B11A77D207008F3FBF /* TouchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		100D30B61A77D207008F3FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		100D30B71A77D207008F3FBF /* TouchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchTests.swift; sourceTree = "<group>"; };
+		1048B1051A7FE0DF0013A553 /* AnimationsLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationsLibrary.swift; sourceTree = "<group>"; };
 		10EB77B51A7924E60075E089 /* GameElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameElement.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				100D30A11A77D207008F3FBF /* AppDelegate.swift */,
+				1048B1051A7FE0DF0013A553 /* AnimationsLibrary.swift */,
 				10EB77B51A7924E60075E089 /* GameElement.swift */,
 				100D30A31A77D207008F3FBF /* MainViewController.swift */,
 				100D30A51A77D207008F3FBF /* Touch_Main.storyboard */,
@@ -217,6 +220,7 @@
 			files = (
 				100D30A41A77D207008F3FBF /* MainViewController.swift in Sources */,
 				100D30A21A77D207008F3FBF /* AppDelegate.swift in Sources */,
+				1048B1061A7FE0DF0013A553 /* AnimationsLibrary.swift in Sources */,
 				10EB77B61A7924E60075E089 /* GameElement.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

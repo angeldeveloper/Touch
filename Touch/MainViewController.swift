@@ -12,6 +12,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // ################################################################################
     let numberRowsOrColumns = 3
+    
+    var intScore : Int = 0
     // ################################################################################
     
     
@@ -89,7 +91,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     var arrayGameElements = [UIView]()
     //var arrayGameElementsPlacement = [CGPoint]()
-    
+    var arrayGameElements_WinningElement : Int = -1
     
     
     let consLabelGameStats1CenterX : CGFloat = 20.0 //
@@ -178,6 +180,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidAppear(animated: Bool) {
         createUIElementsOffScreen()
         animateIntoMainScreen()
+        
+        
+        // this should be a little later when the user actually sees the start
+        startTimer()
     }
     
     
@@ -190,13 +196,14 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func Counting() {
+        
         timerCount += 1
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         //buttonCountdownTimer.titleLabel?.text = "\(timerCount)"
         //buttonCountdownTimer.titleLabel?.sizeToFit()
         
         
-        // TESTING TESTING TESTING REMOVED
+        // TESTING TESTING TESTING - REMOVED FOR TESTING
         
 //        
 //        // game over in 5 seconds for testing only
@@ -211,12 +218,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //            
 //            createGameOverElements()
 //        }
-        
-    }
-    
-    func startGameLoop() {
-        
-        createGameElementsForThisRound()
         
     }
     
@@ -343,41 +344,44 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     
+//    
+//    func fadeOutGamePlayScreen() -> () {
+//        
+//    }
     
-    func fadeOutGamePlayScreen() -> () {
-        
-    }
-    
-    func fadeInEndGameScreen() -> () {
-
-        view4 = UIView(frame: CGRectMake(0, self.view.bounds.height/4, self.view.bounds.width, self.view.bounds.height/2))
-        view4.backgroundColor = UIColor.yellowColor()
-
-        view4.alpha = 0.0
-
-        self.view.addSubview(view4)
-
-        UIView.animateWithDuration(3.0, animations: {
-            self.view4.alpha = 1.0
-            
-            }, completion: {_ in
-                NSLog("completed the third animation.")
-                
-                NSThread.sleepForTimeInterval(4.0)
-                NSLog("Slept for 4 seconds")
-
-                self.fadeOutGameEndScreen()
-                self.animateIntoMainScreen()
-        })
-    }
-
-    func fadeOutGameEndScreen () -> () {
-        self.view4.hidden = true
-    }
+//    func fadeInEndGameScreen() -> () {
+//
+//        view4 = UIView(frame: CGRectMake(0, self.view.bounds.height/4, self.view.bounds.width, self.view.bounds.height/2))
+//        view4.backgroundColor = UIColor.yellowColor()
+//
+//        view4.alpha = 0.0
+//
+//        self.view.addSubview(view4)
+//
+//        UIView.animateWithDuration(3.0, animations: {
+//            self.view4.alpha = 1.0
+//            
+//            }, completion: {_ in
+//                NSLog("completed the third animation.")
+//                
+//                NSThread.sleepForTimeInterval(4.0)
+//                NSLog("Slept for 4 seconds")
+//
+//                self.fadeOutGameEndScreen()
+//                self.animateIntoMainScreen()
+//        })
+//    }
+//
+//    func fadeOutGameEndScreen () -> () {
+//        self.view4.hidden = true
+//    }
 
     
     
     
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
     // ################################################################################
     // ################################################################################
     // Animation Functions
@@ -399,32 +403,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 NSLog("CAME TO MAIN SCREEN")
                 self.playTouched(UIView)
         })
-        
-        /*
-        UIView.animateWithDuration(duration: NSTimeInterval, animations: { () -> Void in
-        <#code#>
-        })
-        
-        UIView.animateWithDuration(duration: NSTimeInterval, animations: { () -> Void in
-        <#code#>
-        }, completion: { (Bool) -> Void in
-        <#code#>
-        })
-        
-        UIView.animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval, options: UIViewAnimationOptions, animations: { () -> Void in
-        <#code#>
-        }, completion: { (Bool) -> Void in
-        <#code#>
-        })
-        
-        UIView.animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, animations: { () -> Void in
-        <#code#>
-        }, completion: { (Bool) -> Void in
-        <#code#>
-        })
-        
-        */
-        
     }
     
     func animateOutofMainScreen () -> () {
@@ -480,7 +458,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             }, completion: {_ in
                 NSLog("CAME TO GAME PLAY SCREEN")
                 
-                self.startGameLoop()
+                self.createGameElementsForNextRound()
                 
         })
     }
@@ -488,34 +466,88 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateOutofGamePlayScreen () -> () {
         
     }
-
-    // ################################################################################
-    // ################################################################################
     
     
-    
-    func fadeOutView (view: UIView) -> () {
+    func animateIntoGamePlayElements()->() {
         
-        // create a fade out element and add the animation to the passed view
-        // the properties of the fade can be changed only from here.
+        var additiveDelay :Double = 0.05
+        var animationDuration : Double = 0.15
         
-//        UIView.animateWithDuration(3.0, animations: {
-//            view.alpha = 0.0
-//        })
+        for iCount in 0..<arrayGameElements.count {
+            arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+            arrayGameElements[iCount].alpha = 1.0
+            
+            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
+                self.arrayGameElements[iCount].transform = CGAffineTransformIdentity
+                }, completion: {_ in
+                    //println("Animation completed \(iCount)")
+            })
+        }
         
-        UIView.animateWithDuration(0.5, animations: {
-                view.alpha = 0.0
-            }, completion: {_ in
-                NSLog("completed first animation. starting second animation")
-                //self.removeMainScreenElements()
-                //self.fadeInGamePlayElements()
-        })
     }
-
     
-    func createGameElementsForThisRound() {
+    func animateOutofGamePlayElements()->() {
+        
+        var additiveDelay :Double = 0.10
+        var animationDuration : Double = 0.20
+        
+        for iCount in 0..<arrayGameElements.count {
+            //arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+            //arrayGameElements[iCount].alpha = 1.0
+            
+            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
+                //self.arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+                self.arrayGameElements[iCount].alpha = 0.0
+                }, completion: {_ in
+                    println("out of game elements Animation completed \(iCount)")
+            })
+        }
+
+    }
+    
+
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
+    
+    
+    
+//    func fadeOutView (view: UIView) -> () {
+//        
+//        // create a fade out element and add the animation to the passed view
+//        // the properties of the fade can be changed only from here.
+//        
+////        UIView.animateWithDuration(3.0, animations: {
+////            view.alpha = 0.0
+////        })
+//        
+//        UIView.animateWithDuration(0.5, animations: {
+//                view.alpha = 0.0
+//            }, completion: {_ in
+//                NSLog("completed first animation. starting second animation")
+//                //self.removeMainScreenElements()
+//                //self.fadeInGamePlayElements()
+//        })
+//    }
+    
+    
+    func createGameElementsForNextRound() {
         println(__FUNCTION__)
 
+        
+        // Decide which try to use randomly
+        
+        var randomNumber : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        println("randomNumber is \(randomNumber)")
+        var randomTryEffort : CGFloat = randomNumber * 4
+        println("randomTryEffort is \(randomTryEffort)")
+        var randomTryEffortInt = Int(randomTryEffort)
+        println("randomTryEffortInt is \(randomTryEffortInt)")
+        
+        
+        
         let sizeElement01_Width : CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
         let sizeElement01_Height :CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
         
@@ -543,49 +575,127 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
                 recognizer.delegate = self
 
-                var tempViewToAddToArray = makeGameElementWithDetails(elementDetailsObj)
+                var tempViewToAddToArray = makeGameElementWithDetails(elementDetailsObj, ElementType:randomTryEffortInt)
+                
                 tempViewToAddToArray.addGestureRecognizer(recognizer)
+                
                 //arrayGameElements[i * numberRowsOrColumns + j] = tempViewToAddToArray
                 arrayGameElements.insert(tempViewToAddToArray, atIndex: i * numberRowsOrColumns + j)
+                
                 self.view.addSubview(tempViewToAddToArray)
                 
             }
         }
         
-        elementsAnimateIn()
+        var randomNumber1 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        var randomWinningElement : CGFloat = randomNumber1 * CGFloat(numberRowsOrColumns) * CGFloat(numberRowsOrColumns)
+        println("randomNumber1 is \(randomNumber1)")
+        println("randomWinningElement is \(randomWinningElement)")
+        
+        
+        arrayGameElements_WinningElement = Int(randomWinningElement)
+        println("arrayGameElements_WinningElement is \(arrayGameElements_WinningElement)")
+
+        
+        animateIntoGamePlayElements()
         
     }
     
-
-    func elementsAnimateIn () -> () {
-
-        var additiveDelay :Double = 0.05
-        var animationDuration : Double = 0.15
-        
-        for iCount in 0..<arrayGameElements.count {
-            arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
-            arrayGameElements[iCount].alpha = 1.0
-            
-            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
-                self.arrayGameElements[iCount].transform = CGAffineTransformIdentity
-                }, completion: {_ in
-                    //println("Animation completed \(iCount)")
-            })
-        }
-    }
+    
+    
 
     func handleTap(recognizer: UITapGestureRecognizer) {
 
         for iCount in 0..<arrayGameElements.count {
             if recognizer.view === arrayGameElements[iCount] {
                 println("User has tapped Element \(iCount)")
+                
+                // things need to be done here... like whether the user was right or wrong
+         
+                if iCount == arrayGameElements_WinningElement {
+                    println("You Win")
+                    handleOneRoundWin()
+                    
+                } else {
+                    println("You Lose")
+                    handleOneRoundLose()
+                    
+                }
             }
         }
+        
+        
+        // this is actually not working
+        // it does not get the time to do anything
+        // the next function is called and it takes over
+        // the animation needs time to complete
+        
+        // animate away the Game elements
+        animateOutofGamePlayElements()
+        
+        // Remove all the elements from the view
+        // and then clear off the array which has all the elements
+        // they will be created and then added again for next round.
+        // I am not changing anything now, but the elements will be created differently every time
+        // so removal and adding is required
+        
+        
+        // THIS DELAY SHOULD BE CORRECTLY CALCULATED FOR GETTING PROPER ANIMATIONS
+        var newRoundDelay : Double = 2.0
+        delay(seconds:newRoundDelay, completion: {
+            println("finished delay and waiting")
+            
+            // REMOVING FROM VIEW
+            for iCount in 0..<self.arrayGameElements.count {
+                self.arrayGameElements[iCount].removeFromSuperview()
+            }
+            
+            // CLEARING THE ARRAY
+            self.arrayGameElements.removeAll(keepCapacity: true)
+            
+            
+            // Create new game elements with some logic which changes the elements everytime
+            // the function is called
+            self.createGameElementsForNextRound()
+
+        })
     }
     
+    func delay(#seconds: Double, completion:()->()) {
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64( Double(NSEC_PER_SEC) * seconds ))
+        
+        dispatch_after(popTime, dispatch_get_main_queue()) {
+            completion()
+        }
+    }
 
     
-    func makeGameElementWithDetails (e_details: ElementDetails) -> (UIView) {
+    func handleOneRoundWin() {
+        
+        
+        // increase the Score - total correctly touched objects
+        intScore++
+        
+        labelGameStats1.text = "\(intScore)"
+        //buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
+
+        
+        // update all the game statistics
+        
+        
+        
+        
+        
+    }
+    
+    
+    func handleOneRoundLose() {
+    
+        
+    }
+    
+    
+    func makeGameElementWithDetails (e_details: ElementDetails, ElementType:Int) -> (UIView) {
         
         var tempElement = UIView(frame: CGRectMake(e_details.x_offset, e_details.y_offset, e_details.width, e_details.height))
         
@@ -606,35 +716,56 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // width is used twice with intention
         // the RECT passed gives the top left and size of the Shape inside the superview
 
-        // first try
-        // making a circle or oval
-        //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+        
+        switch(ElementType) {
+        case 0:
+            // first try
+            // making a circle or oval
+            oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+        case 1:
+            // second try
+            // making a square or a rectangle
+            oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
+                                                                  (e_details.height - randomX * e_details.height)/2,
+                                                            randomX * e_details.width, randomX * e_details.height)).CGPath
+            
+        case 2:
+            // third try
+            var point = CGPointMake(50, 50)
+            oneLayer.path = UIBezierPath(arcCenter:point, radius: 35, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
+            
+        case 3:
+            
+            // fourth try
+            //making a triangle
+            
+            var triangle = UIBezierPath()
+            triangle.moveToPoint(CGPointMake(10,10))
+            triangle.addLineToPoint(CGPointMake(60, 40))
+            triangle.addLineToPoint(CGPointMake(20, 60))
+            triangle.closePath()
+            //UIColor.redColor().set()
+            //triangle.fill()
+            
+            oneLayer.path = triangle.CGPath
+            
+        default:
+            println("default switch case")
+        }
+        
+        
 
         
         
-        // second try
-        // making a square or a rectangle
-//        oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
-//                                                      (e_details.height - randomX * e_details.height)/2,
-//                                                randomX * e_details.width, randomX * e_details.height)).CGPath
         
-        // third try
-//        var point = CGPointMake(50, 50)
-//        oneLayer.path = UIBezierPath(arcCenter:point, radius: 35, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
-//        
 
-        // fourth try
-        //making a triangle
         
-        var triangle = UIBezierPath()
-        triangle.moveToPoint(CGPointMake(10,10))
-        triangle.addLineToPoint(CGPointMake(60, 40))
-        triangle.addLineToPoint(CGPointMake(20, 60))
-        triangle.closePath()
-        //UIColor.redColor().set()
-        //triangle.fill()
         
-        oneLayer.path = triangle.CGPath
+        
+        
+        
+        
+        
         
         // attributes
         //oneLayer.strokeColor = UIColor.whiteColor().CGColor
@@ -643,16 +774,16 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         oneLayer.lineWidth = 1
         
         //oneLayer.fillColor = UIColor.orangeColor().CGColor
-
         
-        
+        // Adding the Current Element
         tempElement.layer.addSublayer(oneLayer)
 
-        // element attributes
+        // Element attributes
         tempElement.layer.borderWidth = 2
         tempElement.layer.borderColor = UIColor.yellowColor().CGColor
         
         return tempElement
+        
     }
     
     
