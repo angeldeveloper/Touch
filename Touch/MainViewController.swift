@@ -197,14 +197,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     override func viewDidAppear(animated: Bool) {
-        
         createUIElementsOffScreen()
-        
         animateIntoMainScreen()
-        
-        
-        // this should be a little later when the user actually sees the start
-        //startTimer()
     }
     
     
@@ -219,17 +213,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func Counting() {
-        
         println(__FUNCTION__)
 
         timerCount += 1
+        // this needs to be animated
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
-        //buttonCountdownTimer.titleLabel?.text = "\(timerCount)"
-        //buttonCountdownTimer.titleLabel?.sizeToFit()
-        
-        
-        // TESTING TESTING TESTING - REMOVED FOR TESTING
-        
         
         // game over in 5 seconds for testing only
         if 5 == timerCount {
@@ -243,22 +231,25 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             NSLog("Game Over this round")
 
             animateOutofGamePlayElements()
-            
+            // the above takes time so delay the following function
+            delay(seconds:2, completion: {
+                println("delay is over in counting and so calling remove game play elements")
+                self.removeGamePlayElements()
+            })
+
             removeGamePlayElements_EverythingElse()
             
             animateIntoGameOverElements()
-            
-//            removeElements()
-//            
-//            removeGameElements()
-//            
-//            createGameOverElements()
         }
-        
     }
     
     func createUIElementsOffScreen() {
-        
+        createMainScreenElements()
+        createGamePlayElements()
+        createGameOverElements()
+    }
+
+    func createMainScreenElements()->() {
         buttonPlay = UIButton()
         buttonPlay.setTitle("PLAY", forState: UIControlState.Normal)
         buttonPlay.sizeToFit()
@@ -278,16 +269,17 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelApplicationTitle.textAlignment = NSTextAlignment.Center
         labelApplicationTitle.layer.cornerRadius = 15
         labelApplicationTitle.frame = CGRectMake(labelApplicationTitle.frame.origin.x, labelApplicationTitle.frame.origin.y,
-                                                labelApplicationTitle.frame.width*2, labelApplicationTitle.frame.height*2)
-
+            labelApplicationTitle.frame.width*2, labelApplicationTitle.frame.height*2)
+        
         //labelApplicationTitle.backgroundColor = UIColor.brownColor()
         labelApplicationTitle.layer.backgroundColor = UIColor.brownColor().CGColor
         //labelApplicationTitle.center = CGPointMake(self.view.center.x, self.view.center.y/2)
         //labelApplicationTitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleCenterX, screenHeight * 0.01 * consLabelApplicationTitleCenterY)
         labelApplicationTitle.center = CGPointMake(offscreenXValue, offscreenYValue)
         self.view.addSubview(labelApplicationTitle)
-
-        
+    }
+    
+    func createGamePlayElements()->() {
         labelAction = UILabel()
         labelAction.text = "Action needs to come here"
         labelAction.sizeToFit()
@@ -300,20 +292,19 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelAction.center = CGPointMake(offscreenXValue, offscreenYValue)
         labelAction.alpha = 0.0
         self.view.addSubview(labelAction)
-
+        
         buttonCountdownTimer = UIButton()
         buttonCountdownTimer.setTitle("0", forState: UIControlState.Normal)
         buttonCountdownTimer.sizeToFit()
         buttonCountdownTimer.backgroundColor = UIColor.blueColor()
         buttonCountdownTimer.frame = CGRectMake(buttonCountdownTimer.frame.origin.x, buttonCountdownTimer.frame.origin.y,
-                                                buttonCountdownTimer.frame.width * 0.01 * 150, buttonCountdownTimer.frame.height * 0.01 * 100)
+            buttonCountdownTimer.frame.width * 0.01 * 150, buttonCountdownTimer.frame.height * 0.01 * 100)
         buttonCountdownTimer.layer.cornerRadius = 5.0
         //buttonCountdownTimer.center = CGPointMake(screenWidth * 0.01 * consButtonCountdownTimerCenterX, screenHeight * 0.01 * consButtonCountdownTimerCenterY)
         buttonCountdownTimer.center = CGPointMake(-offscreenXValue, offscreenYValue)
         buttonCountdownTimer.addTarget(self, action: "countdownTimerTouched:", forControlEvents: UIControlEvents.TouchUpInside)
         buttonCountdownTimer.alpha = 0.0
         self.view.addSubview(buttonCountdownTimer)
-        
         
         
         labelGameStats1 = makeGameStatsLabel()
@@ -325,57 +316,75 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         //labelGameStats2.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats2CenterX, screenHeight * 0.01 * consLabelGameStats2CenterY)
         labelGameStats2.center = CGPointMake(offscreenXValue, offscreenYValue)
         self.view.addSubview(labelGameStats2)
-
+        
         labelGameStats3 = makeGameStatsLabel()
         //labelGameStats3.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats3CenterX, screenHeight * 0.01 * consLabelGameStats3CenterY)
         labelGameStats3.center = CGPointMake(offscreenXValue, offscreenYValue)
         self.view.addSubview(labelGameStats3)
-
+        
         labelGameStats4 = makeGameStatsLabel()
         //labelGameStats4.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats4CenterX, screenHeight * 0.01 * consLabelGameStats4CenterY)
         labelGameStats4.center = CGPointMake(offscreenXValue, offscreenYValue)
         self.view.addSubview(labelGameStats4)
-        
-        
-        // Game Over Elements
+    }
     
+    func createGameOverElements()->() {
         
+        
+        // ################################################################################
+        // Game Over Elements
+        
+        
+        // LABEL game over
         labelGameOver = createLabelGameOver()
         labelGameOver.text = "Game Over"
         labelGameOver.sizeToFit()
+        labelGameOver.frame = CGRectMake(labelGameOver.frame.origin.x, labelGameOver.frame.origin.y, screenWidth * 0.01 * 40, labelGameOver.frame.height)
         
         //labelGameOver.center = CGPointMake(screenWidth * 0.01 * consLabelGameOverCenterX, screenHeight * 0.01 * consLabelGameOverCenterY)
         labelGameOver.center = CGPointMake(offscreenXValue, offscreenYValue)
         
         self.view.addSubview(labelGameOver)
         
+        // LABEL Objects touched
+        
         labelObjectsTouched = createLabelGameOver()
         labelObjectsTouched.text = "Objects Touched"
         labelObjectsTouched.sizeToFit()
+        
+        labelObjectsTouched.frame = CGRectMake(labelObjectsTouched.frame.origin.x, labelObjectsTouched.frame.origin.y, screenWidth * 0.01 * 40, labelObjectsTouched.frame.height)
+        
         //        labelObjectsTouched.textAlignment = NSTextAlignment.Center
         //        labelObjectsTouched.layer.cornerRadius = 15
         //        labelObjectsTouched.frame = CGRectMake(labelObjectsTouched.frame.origin.x, labelObjectsTouched.frame.origin.y,
         //            labelObjectsTouched.frame.width * 2, labelObjectsTouched.frame.height * 2)
         //
         //        labelObjectsTouched.layer.backgroundColor = UIColor.brownColor().CGColor
-
+        
         //labelObjectsTouched.center = CGPointMake(screenWidth * 0.01 * consLabelObjectsTouchedCenterX, screenHeight * 0.01 * consLabelObjectsTouchedCenterY)
         labelObjectsTouched.center = CGPointMake(offscreenXValue, offscreenYValue)
         
         self.view.addSubview(labelObjectsTouched)
         
+        
+        // LABEL objects touched value
+        
         labelObjectsTouchedValue = createLabelGameOver()
         labelObjectsTouchedValue.text = "0"
         labelObjectsTouchedValue.sizeToFit()
+        labelObjectsTouchedValue.frame = CGRectMake(labelObjectsTouchedValue.frame.origin.x, labelObjectsTouchedValue.frame.origin.y, screenWidth * 0.01 * 20, labelObjectsTouchedValue.frame.height)
         
         //labelObjectsTouchedValue.center = CGPointMake(screenWidth * 0.01 * consLabelObjectsTouchedValueCenterX, screenHeight * 0.01 * consLabelObjectsTouchedValueCenterY)
         labelObjectsTouchedValue.center = CGPointMake(offscreenXValue, offscreenYValue)
- 
+        
         self.view.addSubview(labelObjectsTouchedValue)
         
+        // LABEL speed
         labelSpeed = createLabelGameOver()
         labelSpeed.text = "Speed"
         labelSpeed.sizeToFit()
+        
+        labelSpeed.frame = CGRectMake(labelSpeed.frame.origin.x, labelSpeed.frame.origin.y, screenWidth * 0.01 * 30, labelSpeed.frame.height)
         
         //labelSpeed.center = CGPointMake(screenWidth * 0.01 * consLabelSpeedCenterX, screenHeight * 0.01 * consLabelSpeedCenterY)
         labelSpeed.center = CGPointMake(offscreenXValue, offscreenYValue)
@@ -385,7 +394,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelSpeedValue = createLabelGameOver()
         labelSpeedValue.text = "0"
         labelSpeedValue.sizeToFit()
-
+        labelSpeedValue.frame = CGRectMake(labelSpeedValue.frame.origin.x, labelSpeedValue.frame.origin.y, screenWidth * 0.01 * 20, labelSpeedValue.frame.height)
+        
         //labelSpeedValue.center = CGPointMake(screenWidth * 0.01 * consLabelSpeedValueCenterX, screenHeight * 0.01 * consLabelSpeedValueCenterY)
         labelSpeedValue.center = CGPointMake(offscreenXValue, offscreenYValue)
         
@@ -394,7 +404,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelScore = createLabelGameOver()
         labelScore.text = "Score"
         labelScore.sizeToFit()
-
+        
         //labelScore.center = CGPointMake(screenWidth * 0.01 * consLabelScoreCenterX, screenHeight * 0.01 * consLabelScoreCenterY)
         labelScore.center = CGPointMake(offscreenXValue, offscreenYValue)
         
@@ -403,7 +413,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelScoreValue = createLabelGameOver()
         labelScoreValue.text = "0"
         labelScoreValue.sizeToFit()
-
+        labelScoreValue.frame = CGRectMake(labelScoreValue.frame.origin.x, labelScoreValue.frame.origin.y, screenWidth * 0.01 * 20, labelScoreValue.frame.height)
+        
         //labelScoreValue.center = CGPointMake(screenWidth * 0.01 * consLabelScoreValueCenterX, screenHeight * 0.01 * consLabelScoreValueCenterY)
         labelScoreValue.center = CGPointMake(offscreenXValue, offscreenYValue)
         
@@ -412,26 +423,28 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonTryAgain = createButtonGameOver()
         buttonTryAgain.setTitle("Try Again", forState: UIControlState.Normal)
         buttonTryAgain.sizeToFit()
- 
+        buttonTryAgain.frame = CGRectMake(buttonTryAgain.frame.origin.x, buttonTryAgain.frame.origin.y, screenWidth * 0.01 * 30, buttonTryAgain.frame.height)
+        
         //buttonTryAgain.center = CGPointMake(screenWidth * 0.01 * consButtonTryAgainCenterX, screenHeight * 0.01 * consButtonTryAgainCenterY)
         buttonTryAgain.center = CGPointMake(offscreenXValue, offscreenYValue)
         
         buttonTryAgain.addTarget(self, action: "tryAgainTouched:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonTryAgain)
         
+        
         buttonQuit = createButtonGameOver()
         buttonQuit.setTitle("Quit", forState: UIControlState.Normal)
         buttonQuit.sizeToFit()
+        buttonQuit.frame = CGRectMake(buttonQuit.frame.origin.x, buttonQuit.frame.origin.y, screenWidth * 0.01 * 20, buttonQuit.frame.height)
         
         //buttonQuit.center = CGPointMake(screenWidth * 0.01 * consButtonQuitCenterX, screenHeight * 0.01 * consButtonQuitCenterY)
         buttonQuit.center = CGPointMake(offscreenXValue, offscreenYValue)
-
+        
         buttonQuit.addTarget(self, action: "quitTouched:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonQuit)
         
 
     }
-
     
     
     func makeGameStatsLabel() -> (UILabel) {
@@ -533,7 +546,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             
             }, completion: {_ in
                 NSLog("CAME TO MAIN SCREEN")
-                //self.playTouched(UIView)
+                self.playTouched(UIView)
         })
     }
     
@@ -724,7 +737,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func removeGamePlayElements()->() {
-        
+        // REMOVING FROM VIEW
+        for iCount in 0..<self.arrayGameElements.count {
+            self.arrayGameElements[iCount].removeFromSuperview()
+        }
+        // CLEARING THE ARRAY
+        self.arrayGameElements.removeAll(keepCapacity: true)
     }
 
     func removeGameOverElements()->() {
@@ -786,6 +804,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         var randomTryEffort : CGFloat = randomNumber * 4
         println("randomTryEffort is \(randomTryEffort)")
         var randomTryEffortInt = Int(randomTryEffort)
+        randomTryEffortInt = 0
         println("randomTryEffortInt is \(randomTryEffortInt)")
         
         
@@ -887,14 +906,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         delay(seconds:newRoundDelay, completion: {
             println("finished delay and waiting")
             
-            // REMOVING FROM VIEW
-            for iCount in 0..<self.arrayGameElements.count {
-                self.arrayGameElements[iCount].removeFromSuperview()
-            }
-            
-            // CLEARING THE ARRAY
-            self.arrayGameElements.removeAll(keepCapacity: true)
-            
+//            // REMOVING FROM VIEW
+//            for iCount in 0..<self.arrayGameElements.count {
+//                self.arrayGameElements[iCount].removeFromSuperview()
+//            }
+//            
+//            // CLEARING THE ARRAY
+//            self.arrayGameElements.removeAll(keepCapacity: true)
+//            
+            self.removeGamePlayElements()
             
             // Create new game elements with some logic which changes the elements everytime
             // the function is called
@@ -958,12 +978,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // width is used twice with intention
         // the RECT passed gives the top left and size of the Shape inside the superview
 
-        
         switch(ElementType) {
         case 0:
             // first try
             // making a circle or oval
-            oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+            //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+            oneLayer.path = UIBezierPath(ovalInRect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
+                (e_details.height - randomX * e_details.height)/2,
+                randomX * e_details.width, randomX * e_details.height)).CGPath
+            
         case 1:
             // second try
             // making a square or a rectangle
@@ -998,16 +1021,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
 
         
-        
-        
 
-        
-        
-        
-        
-        
-        
-        
         
         // attributes
         //oneLayer.strokeColor = UIColor.whiteColor().CGColor
@@ -1072,15 +1086,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         var labelReturnObject = UILabel()
         labelReturnObject.textAlignment = NSTextAlignment.Center
-        labelReturnObject.layer.cornerRadius = 15
+        labelReturnObject.layer.cornerRadius = 6
         
-        labelReturnObject.text = "Temp"
-        labelReturnObject.sizeToFit()
-        labelReturnObject.frame = CGRectMake(
-            labelReturnObject.frame.origin.x,
-            labelReturnObject.frame.origin.y,
-            labelReturnObject.frame.width * 2,
-            labelReturnObject.frame.height * 2)
+//        labelReturnObject.text = "Temp"
+//        labelReturnObject.sizeToFit()
+//        labelReturnObject.frame = CGRectMake(
+//            labelReturnObject.frame.origin.x,
+//            labelReturnObject.frame.origin.y,
+//            labelReturnObject.frame.width * 2,
+//            labelReturnObject.frame.height * 2)
         
         labelReturnObject.layer.backgroundColor = UIColor.brownColor().CGColor
 
