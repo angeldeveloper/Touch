@@ -116,7 +116,17 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     var labelGameStats1, labelGameStats2, labelGameStats3, labelGameStats4: UILabel!
     
     // ################################################################################
+    // Game Paused Elements
     
+    var labelGamePaused: UILabel!
+    let consLabelGamePausedCenterX : CGFloat = 50.0 // percentage of screen
+    let consLabelGamePausedCenterY : CGFloat = 30.0 // percentage of screen
+
+    var buttonResume: UIButton!
+    let consButtonResumeCenterX : CGFloat = 50.0 // percentage of screen
+    let consButtonResumeCenterY : CGFloat = 70.0 // percentage of screen
+    
+
     // ################################################################################
     // Game Over Elements
     
@@ -125,46 +135,36 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelGameOverCenterY : CGFloat = 30.0 // percentage of screen
     
     var labelObjectsTouched: UILabel!
-    let consLabelObjectsTouchedCenterX : CGFloat = 20.0 // percentage of screen
+    let consLabelObjectsTouchedCenterX : CGFloat = 30.0 // percentage of screen
     let consLabelObjectsTouchedCenterY : CGFloat = 40.0 // percentage of screen
     
     var labelObjectsTouchedValue: UILabel!
-    let consLabelObjectsTouchedValueCenterX : CGFloat = 60.0 // percentage of screen
+    let consLabelObjectsTouchedValueCenterX : CGFloat = 70.0 // percentage of screen
     let consLabelObjectsTouchedValueCenterY : CGFloat = 40.0 // percentage of screen
     
     var labelSpeed: UILabel!
-    let consLabelSpeedCenterX : CGFloat = 20.0 // percentage of screen
+    let consLabelSpeedCenterX : CGFloat = 30.0 // percentage of screen
     let consLabelSpeedCenterY : CGFloat = 50.0 // percentage of screen
     
     var labelSpeedValue: UILabel!
-    let consLabelSpeedValueCenterX : CGFloat = 40.0 // percentage of screen
+    let consLabelSpeedValueCenterX : CGFloat = 70.0 // percentage of screen
     let consLabelSpeedValueCenterY : CGFloat = 50.0 // percentage of screen
     
     var labelScore: UILabel!
-    let consLabelScoreCenterX : CGFloat = 20.0 // percentage of screen
+    let consLabelScoreCenterX : CGFloat = 30.0 // percentage of screen
     let consLabelScoreCenterY : CGFloat = 60.0 // percentage of screen
     
     var labelScoreValue: UILabel!
-    let consLabelScoreValueCenterX : CGFloat = 40.0 // percentage of screen
+    let consLabelScoreValueCenterX : CGFloat = 70.0 // percentage of screen
     let consLabelScoreValueCenterY : CGFloat = 60.0 // percentage of screen
     
     var buttonTryAgain: UIButton!
     let consButtonTryAgainCenterX : CGFloat = 50.0 // percentage of screen
-    let consButtonTryAgainCenterY : CGFloat = 70.0 // percentage of screen
+    let consButtonTryAgainCenterY : CGFloat = 75.0 // percentage of screen
     
     var buttonQuit: UIButton!
     let consButtonQuitCenterX : CGFloat = 50.0 // percentage of screen
-    let consButtonQuitCenterY : CGFloat = 80.0 // percentage of screen
-    
-    // ################################################################################
-
-    
-    // ################################################################################
-    // Game Paused Elements
-
-    var buttonResume: UIButton!
-    let consButtonResumeCenterX : CGFloat = 50.0 // percentage of screen
-    let consButtonResumeCenterY : CGFloat = 70.0 // percentage of screen
+    let consButtonQuitCenterY : CGFloat = 85.0 // percentage of screen
     
     // ################################################################################
     // ################################################################################
@@ -206,8 +206,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         println(__FUNCTION__)
 
         if false == timerRunning {
-                myTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("Counting"), userInfo: nil, repeats: true)
-                timerRunning = true
+            myTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("Counting"), userInfo: nil, repeats: true)
+            myTimer.tolerance = 0.10
+            
+            timerRunning = true
         }
     }
     
@@ -220,25 +222,26 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         
         // game over in 5 seconds for testing only
-        if 5 == timerCount {
-            println("Timer Count reached")
+        if 10 == timerCount {
+            println("Timer Count Reached")
 
             timerCount = 0
-            // game over
+
             timerRunning = false
             myTimer.invalidate()
             
             NSLog("Game Over this round")
 
             animateOutofGamePlayElements()
+            animateOutofGamePlayElements_EverythingElse()
+            
             // the above takes time so delay the following function
             delay(seconds:2, completion: {
                 println("delay is over in counting and so calling remove game play elements")
                 self.removeGamePlayElements()
+                self.removeGamePlayElements_EverythingElse()
             })
 
-            removeGamePlayElements_EverythingElse()
-            
             animateIntoGameOverElements()
         }
     }
@@ -246,6 +249,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func createUIElementsOffScreen() {
         createMainScreenElements()
         createGamePlayElements()
+        createGamePausedElements()
         createGameOverElements()
     }
 
@@ -328,11 +332,30 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         self.view.addSubview(labelGameStats4)
     }
     
+    func createGamePausedElements()->() {
+        // ================================================================================
+        // LABEL game paused
+        labelGamePaused = createLabelGameOver()
+        labelGamePaused.text = "Game Paused"
+        labelGamePaused.sizeToFit()
+        labelGamePaused.frame = CGRectMake(labelGamePaused.frame.origin.x, labelGamePaused.frame.origin.y, screenWidth * 0.01 * 40, labelGamePaused.frame.height)
+        labelGamePaused.center = CGPointMake(offscreenXValue, offscreenYValue)
+        self.view.addSubview(labelGamePaused)
+
+        // ================================================================================
+        // Button game resume
+        buttonResume = UIButton()
+        buttonResume.setTitle("Resume", forState: UIControlState.Normal)
+        buttonResume.sizeToFit()
+        buttonResume.backgroundColor = UIColor.blueColor()
+        buttonResume.frame = CGRectMake(buttonResume.frame.origin.x, buttonResume.frame.origin.y, buttonResume.frame.width*2, buttonResume.frame.height*2)
+        buttonResume.layer.cornerRadius = 15.0
+        buttonResume.center = CGPointMake(offscreenXValue, offscreenYValue)
+        buttonResume.addTarget(self, action: "resumeTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(buttonResume)
+    }
+    
     func createGameOverElements()->() {
-        
-        
-        // ################################################################################
-        // Game Over Elements
         
         
         // LABEL game over
@@ -384,7 +407,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelSpeed.text = "Speed"
         labelSpeed.sizeToFit()
         
-        labelSpeed.frame = CGRectMake(labelSpeed.frame.origin.x, labelSpeed.frame.origin.y, screenWidth * 0.01 * 30, labelSpeed.frame.height)
+        //labelSpeed.frame = CGRectMake(labelSpeed.frame.origin.x, labelSpeed.frame.origin.y, screenWidth * 0.01 * 30, labelSpeed.frame.height)
+        labelSpeed.frame = CGRectMake(labelSpeed.frame.origin.x, labelSpeed.frame.origin.y, screenWidth * 0.01 * 40, labelSpeed.frame.height)
         
         //labelSpeed.center = CGPointMake(screenWidth * 0.01 * consLabelSpeedCenterX, screenHeight * 0.01 * consLabelSpeedCenterY)
         labelSpeed.center = CGPointMake(offscreenXValue, offscreenYValue)
@@ -404,6 +428,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelScore = createLabelGameOver()
         labelScore.text = "Score"
         labelScore.sizeToFit()
+        
+        labelScore.frame = CGRectMake(labelScore.frame.origin.x, labelScore.frame.origin.y, screenWidth * 0.01 * 40, labelScore.frame.height)
         
         //labelScore.center = CGPointMake(screenWidth * 0.01 * consLabelScoreCenterX, screenHeight * 0.01 * consLabelScoreCenterY)
         labelScore.center = CGPointMake(offscreenXValue, offscreenYValue)
@@ -443,7 +469,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonQuit.addTarget(self, action: "quitTouched:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonQuit)
         
-
     }
     
     
@@ -469,25 +494,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     
-    
-    func countdownTimerTouched(sender: AnyObject) {
-        NSLog("Timer touched")
-    }
-    
-    /*
-    when play button is touched, main screen elements need to disappear and then
-    game play elements need to animate in after the finish of the main screen OUT animation.
-    there would be a delay for second animation which has to be appropriate...
-    */
-    
-    func playTouched(sender: AnyObject) {
-    
-        animateOutofMainScreen()
-        
-        animateIntoGamePlayScreen()
-        
-        startTimer()
-    }
     
 //    
 //    func fadeOutGamePlayScreen() -> () {
@@ -652,10 +658,55 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                     println("out of game elements Animation completed \(iCount)")
             })
         }
-
     }
     
+    func animateOutofGamePlayElements_EverythingElse()->() {
+        var additiveDelay :Double = 0.10
+        var animationDuration : Double = 0.20
+        
+        UIView.animateWithDuration(animationDuration, delay: 1.0, options: .CurveEaseOut, animations: {
 
+            self.labelGameStats1.alpha = 0.0
+            self.labelGameStats2.alpha = 0.0
+            self.labelGameStats3.alpha = 0.0
+            self.labelGameStats4.alpha = 0.0
+            self.buttonCountdownTimer.alpha = 0.0
+            self.labelAction.alpha = 0.0
+
+                }, completion: {_ in
+                    println("animation complete everything else game play elements")
+        })
+    }
+
+    
+    func animateIntoGamePausedElements()->() {
+        
+        var animationDelay :Double = 3.0
+        var animationDuration : Double = 1.0
+        
+        labelGamePaused.alpha = 0.0
+        buttonResume.alpha = 0.0
+        
+        labelGamePaused.center = CGPointMake(screenWidth * 0.01 * consLabelGamePausedCenterX, screenHeight * 0.01 * consLabelGamePausedCenterY)
+        buttonResume.center = CGPointMake(screenWidth * 0.01 * consButtonResumeCenterX, screenHeight * 0.01 * consButtonResumeCenterY)
+        
+        UIView.animateWithDuration(animationDuration, delay: animationDelay, options: .CurveEaseOut, animations: {
+            
+            self.labelGamePaused.alpha = 1.0
+            self.buttonResume.alpha = 1.0
+            
+            }, completion: {_ in
+                println("Animation Game Paused Completed.")
+        })
+    }
+    
+    
+    func animateOutofGamePausedElements()->() {
+        labelGamePaused.center = CGPointMake(offscreenXValue, offscreenYValue)
+        buttonResume.center = CGPointMake(offscreenXValue, offscreenYValue)
+    }
+    
+    
     func animateIntoGameOverElements()->() {
         
         
@@ -745,6 +796,29 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         self.arrayGameElements.removeAll(keepCapacity: true)
     }
 
+    func hideForPausedGamePlayElements()->() {
+        for iCount in 0..<self.arrayGameElements.count {
+            self.arrayGameElements[iCount].alpha = 0.0
+        }
+    }
+    
+    func unhideForPausedGamePlayElements()->() {
+        for iCount in 0..<self.arrayGameElements.count {
+            self.arrayGameElements[iCount].alpha = 1.0
+        }
+    }
+    
+    func removeGamePlayElements_EverythingElse()->() {
+        // These elements are only moved offscreen
+        // and not actually deleted/removed from the view
+        labelGameStats1.center = CGPointMake(offscreenXValue, offscreenYValue)
+        labelGameStats2.center = CGPointMake(offscreenXValue, offscreenYValue)
+        labelGameStats3.center = CGPointMake(offscreenXValue, offscreenYValue)
+        labelGameStats4.center = CGPointMake(offscreenXValue, offscreenYValue)
+        buttonCountdownTimer.center = CGPointMake(offscreenXValue, offscreenYValue)
+        labelAction.center = CGPointMake(offscreenXValue, offscreenYValue)
+    }
+
     func removeGameOverElements()->() {
         
         labelGameOver.center = CGPointMake(offscreenXValue, offscreenYValue)
@@ -758,18 +832,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonQuit.center = CGPointMake(offscreenXValue, offscreenYValue)
     }
 
-    func removeGamePlayElements_EverythingElse()->() {
-    
-        labelGameStats1.center = CGPointMake(offscreenXValue, offscreenYValue)
-        labelGameStats2.center = CGPointMake(offscreenXValue, offscreenYValue)
-        labelGameStats3.center = CGPointMake(offscreenXValue, offscreenYValue)
-        labelGameStats4.center = CGPointMake(offscreenXValue, offscreenYValue)
-
-        buttonCountdownTimer.center = CGPointMake(offscreenXValue, offscreenYValue)
-
-        labelAction.center = CGPointMake(offscreenXValue, offscreenYValue)
-        
-    }
     
     // ################################################################################
     // ################################################################################
@@ -945,9 +1007,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // update all the game statistics
         
         
-        
-        
-        
     }
     
     
@@ -1019,9 +1078,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         
         
-
-        
-
         
         // attributes
         //oneLayer.strokeColor = UIColor.whiteColor().CGColor
@@ -1043,17 +1099,46 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-    func tryAgainTouched(sender: AnyObject) {
+    func countdownTimerTouched(sender: AnyObject) {
+        NSLog("Timer touched")
+     
+        myTimer.invalidate()
         
-        NSLog("try again touched")
+        timerRunning = false
         
-        // remove from visible region all the game over elements
-
-        removeGameOverElements()
-
-        self.playTouched(UIView)
+        self.hideForPausedGamePlayElements()
         
+        animateIntoGamePausedElements()
     }
+    
+    func resumeTouched(sender: AnyObject) {
+        
+        NSLog("Resume Touched")
+        
+        self.unhideForPausedGamePlayElements()
+        
+        animateOutofGamePausedElements()
+        
+        // Create and Add the timer Again
+        startTimer()
+
+    }
+    
+    /*
+    when play button is touched, main screen elements need to disappear and then
+    game play elements need to animate in after the finish of the main screen OUT animation.
+    there would be a delay for second animation which has to be appropriate...
+    */
+    
+    func playTouched(sender: AnyObject) {
+        
+        animateOutofMainScreen()
+        
+        animateIntoGamePlayScreen()
+        
+        startTimer()
+    }
+
     
     func quitTouched(sender: AnyObject) {
         NSLog("quit touched")
@@ -1067,6 +1152,19 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         animateIntoMainScreen()
         
     }
+    
+    func tryAgainTouched(sender: AnyObject) {
+        
+        NSLog("try again touched")
+        
+        // remove from visible region all the game over elements
+
+        removeGameOverElements()
+
+        self.playTouched(UIView)
+        
+    }
+    
     
     func createButtonGameOver()->(UIButton) {
      
