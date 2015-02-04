@@ -12,7 +12,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // ################################################################################
     let numberRowsOrColumns = 3
-    
     var intScore : Int = 0
     // ################################################################################
     
@@ -40,12 +39,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         var y_offset : CGFloat = 0
         var width    : CGFloat = 0
         var height   : CGFloat = 0
+        var fillColor : UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
     }
     
     // ################################################################################
     // GestureRecognizer
-    
-    
     
     // ################################################################################
     // Common Elements
@@ -90,6 +88,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     // Can I make an array of 16 elements here and have the same functionality???
 
     var arrayGameElements = [UIView]()
+    
     //var arrayGameElementsPlacement = [CGPoint]()
     var arrayGameElements_WinningElement : Int = -1
     
@@ -168,26 +167,20 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // ################################################################################
     // ################################################################################
-
-    // Game Over Elements
+    // Game Play Logic
+    // start with 5 different color circles which are shown randomly
+    // tap the Circle with the color which you are asked at the top
+    //
     
-//    var labelGameOver: UILabel!
-//    
-//    var labelObjectsTouched: UILabel!
-//    var labelObjectsTouchedValue: UILabel!
-//    
-//    var labelSpeed: UILabel!
-//    var labelSpeedValue: UILabel!
-//    
-//    var labelScore: UILabel!
-//    var labelScoreValue: UILabel!
-//    
-//    var buttonTryAgain: UIButton!
-//    var buttonQuit: UIButton!
-
     
-    // ################################################################################
-    // ################################################################################
+    var arrayActions = ["Red Circle", "Green Circle", "Blue Circle", "Yellow Circle", "Black Circle"]
+    var arrayColors = [
+        UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0),
+        UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0),
+        UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0),
+        UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 1.0),
+        UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)]
+        
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -201,6 +194,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         animateIntoMainScreen()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        view.backgroundColor = UIColor(red: 153.00/255.00, green: 255.0/255.0, blue: 0.00/255.0, alpha: 1.00)
+        NSLog("self.view.bounds.width : \(self.view.bounds.width)")
+        NSLog("self.view.bounds.height: \(self.view.bounds.height)")
+    }
+    
     
     func startTimer() {
         println(__FUNCTION__)
@@ -208,7 +207,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         if false == timerRunning {
             myTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("Counting"), userInfo: nil, repeats: true)
             myTimer.tolerance = 0.10
-            
             timerRunning = true
         }
     }
@@ -221,32 +219,37 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // this needs to be animated
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         
-        // game over in 5 seconds for testing only
-        if 10 == timerCount {
-            println("Timer Count Reached")
-
-            timerCount = 0
-
-            timerRunning = false
-            myTimer.invalidate()
-            
-            NSLog("Game Over this round")
-
-            animateOutofGamePlayElements()
-            animateOutofGamePlayElements_EverythingElse()
-            
-            // the above takes time so delay the following function
-            delay(seconds:2, completion: {
-                println("delay is over in counting and so calling remove game play elements")
-                self.removeGamePlayElements()
-                self.removeGamePlayElements_EverythingElse()
-            })
-
-            animateIntoGameOverElements()
-        }
+//        // game over in 10 seconds for testing only
+//        if 10 == timerCount {
+//            println("Timer Count Reached")
+//
+//            timerCount = 0
+//
+//            timerRunning = false
+//            myTimer.invalidate()
+//            
+//            NSLog("Game Over this round")
+//
+//            animateOutofGamePlayElements()
+//            animateOutofGamePlayElements_EverythingElse()
+//            
+//            // the above takes time so delay the following function
+//            delay(seconds:2, completion: {
+//                println("delay is over in counting and so calling remove game play elements")
+//                self.removeGamePlayElements()
+//                self.removeGamePlayElements_EverythingElse()
+//            })
+//
+//            animateIntoGameOverElements()
+//        }
     }
+
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
     
     func createUIElementsOffScreen() {
+        println(__FUNCTION__)
         createMainScreenElements()
         createGamePlayElements()
         createGamePausedElements()
@@ -254,6 +257,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createMainScreenElements()->() {
+        println(__FUNCTION__)
         buttonPlay = UIButton()
         buttonPlay.setTitle("PLAY", forState: UIControlState.Normal)
         buttonPlay.sizeToFit()
@@ -264,7 +268,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         //buttonPlay.center = CGPointMake(self.view.center.x, self.view.center.y)
         buttonPlay.center = CGPointMake(offscreenXValue, offscreenYValue)
         
-        buttonPlay.addTarget(self, action: "playTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonPlay.addTarget(self, action: "tapPlayEvent:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonPlay)
         
         labelApplicationTitle = UILabel()
@@ -306,7 +310,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonCountdownTimer.layer.cornerRadius = 5.0
         //buttonCountdownTimer.center = CGPointMake(screenWidth * 0.01 * consButtonCountdownTimerCenterX, screenHeight * 0.01 * consButtonCountdownTimerCenterY)
         buttonCountdownTimer.center = CGPointMake(-offscreenXValue, offscreenYValue)
-        buttonCountdownTimer.addTarget(self, action: "countdownTimerTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonCountdownTimer.addTarget(self, action: "tapCountdownTimerEvent:", forControlEvents: UIControlEvents.TouchUpInside)
         buttonCountdownTimer.alpha = 0.0
         self.view.addSubview(buttonCountdownTimer)
         
@@ -351,7 +355,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonResume.frame = CGRectMake(buttonResume.frame.origin.x, buttonResume.frame.origin.y, buttonResume.frame.width*2, buttonResume.frame.height*2)
         buttonResume.layer.cornerRadius = 15.0
         buttonResume.center = CGPointMake(offscreenXValue, offscreenYValue)
-        buttonResume.addTarget(self, action: "resumeTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonResume.addTarget(self, action: "tapResumeEvent:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonResume)
     }
     
@@ -388,7 +392,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelObjectsTouched.center = CGPointMake(offscreenXValue, offscreenYValue)
         
         self.view.addSubview(labelObjectsTouched)
-        
         
         // LABEL objects touched value
         
@@ -454,7 +457,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         //buttonTryAgain.center = CGPointMake(screenWidth * 0.01 * consButtonTryAgainCenterX, screenHeight * 0.01 * consButtonTryAgainCenterY)
         buttonTryAgain.center = CGPointMake(offscreenXValue, offscreenYValue)
         
-        buttonTryAgain.addTarget(self, action: "tryAgainTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonTryAgain.addTarget(self, action: "tapTryAgainEvent:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonTryAgain)
         
         
@@ -466,11 +469,36 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         //buttonQuit.center = CGPointMake(screenWidth * 0.01 * consButtonQuitCenterX, screenHeight * 0.01 * consButtonQuitCenterY)
         buttonQuit.center = CGPointMake(offscreenXValue, offscreenYValue)
         
-        buttonQuit.addTarget(self, action: "quitTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonQuit.addTarget(self, action: "tapQuitEvent:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonQuit)
         
     }
     
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
+
+    func createButtonGameOver()->(UIButton) {
+        
+        var buttonTemp = UIButton()
+        buttonTemp.setTitle("Temp", forState: UIControlState.Normal)
+        buttonTemp.sizeToFit()
+        buttonTemp.backgroundColor = UIColor.blueColor()
+        //        buttonTemp.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlay.frame.width*2, buttonPlay.frame.height*2)
+        buttonTemp.layer.cornerRadius = 15.0
+        //        buttonTemp.center = CGPointMake(self.view.center.x, self.view.center.y)
+        //        buttonTemp.addTarget(self, action: "tapPlayEvent:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        return buttonTemp
+    }
+    
+    func createLabelGameOver()->(UILabel) {
+        var labelReturnObject = UILabel()
+        labelReturnObject.textAlignment = NSTextAlignment.Center
+        labelReturnObject.layer.cornerRadius = 6
+        labelReturnObject.layer.backgroundColor = UIColor.brownColor().CGColor
+        return labelReturnObject
+    }
     
     func makeGameStatsLabel() -> (UILabel) {
         var tempLabel = UILabel()
@@ -485,57 +513,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         return tempLabel
     }
     
-    override func viewWillAppear(animated: Bool) {
-        view.backgroundColor = UIColor(red: 153.00/255.00, green: 255.0/255.0, blue: 0.00/255.0, alpha: 1.00)
-        
-        NSLog("self.view.bounds.width : \(self.view.bounds.width)")
-        NSLog("self.view.bounds.height: \(self.view.bounds.height)")
-    
-        
-    }
-    
-    
-//    
-//    func fadeOutGamePlayScreen() -> () {
-//        
-//    }
-    
-//    func fadeInEndGameScreen() -> () {
-//
-//        view4 = UIView(frame: CGRectMake(0, self.view.bounds.height/4, self.view.bounds.width, self.view.bounds.height/2))
-//        view4.backgroundColor = UIColor.yellowColor()
-//
-//        view4.alpha = 0.0
-//
-//        self.view.addSubview(view4)
-//
-//        UIView.animateWithDuration(3.0, animations: {
-//            self.view4.alpha = 1.0
-//            
-//            }, completion: {_ in
-//                NSLog("completed the third animation.")
-//                
-//                NSThread.sleepForTimeInterval(4.0)
-//                NSLog("Slept for 4 seconds")
-//
-//                self.fadeOutGameEndScreen()
-//                self.animateIntoMainScreen()
-//        })
-//    }
-//
-//    func fadeOutGameEndScreen () -> () {
-//        self.view4.hidden = true
-//    }
-
-    
-    
-    
     // ################################################################################
     // ################################################################################
     // ################################################################################
-    // ################################################################################
-    // ################################################################################
-    // Animation Functions
+    // Animation Functions - START
     
     func animateIntoMainScreen () -> () {
 
@@ -552,7 +533,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             
             }, completion: {_ in
                 NSLog("CAME TO MAIN SCREEN")
-                self.playTouched(UIView)
+                
+                // ONLY FOR TESTING
+                self.tapPlayEvent(UIView)
         })
     }
     
@@ -681,22 +664,25 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func animateIntoGamePausedElements()->() {
         
-        var animationDelay :Double = 3.0
-        var animationDuration : Double = 1.0
+        var animationDelay :Double = 0.0
+        var animationDuration : Double = 0.5
         
         labelGamePaused.alpha = 0.0
         buttonResume.alpha = 0.0
+        buttonQuit.alpha = 0.0
         
         labelGamePaused.center = CGPointMake(screenWidth * 0.01 * consLabelGamePausedCenterX, screenHeight * 0.01 * consLabelGamePausedCenterY)
         buttonResume.center = CGPointMake(screenWidth * 0.01 * consButtonResumeCenterX, screenHeight * 0.01 * consButtonResumeCenterY)
+        buttonQuit.center = CGPointMake(screenWidth * 0.01 * consButtonQuitCenterX, screenHeight * 0.01 * consButtonQuitCenterY)
         
         UIView.animateWithDuration(animationDuration, delay: animationDelay, options: .CurveEaseOut, animations: {
             
-            self.labelGamePaused.alpha = 1.0
-            self.buttonResume.alpha = 1.0
+            self.labelGamePaused.alpha  = 1.0
+            self.buttonResume.alpha     = 1.0
+            self.buttonQuit.alpha       = 1.0
             
             }, completion: {_ in
-                println("Animation Game Paused Completed.")
+                println("Animation Game Paused Completed!")
         })
     }
     
@@ -704,13 +690,14 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateOutofGamePausedElements()->() {
         labelGamePaused.center = CGPointMake(offscreenXValue, offscreenYValue)
         buttonResume.center = CGPointMake(offscreenXValue, offscreenYValue)
+        buttonQuit.center = CGPointMake(offscreenXValue, offscreenYValue)
     }
     
     
     func animateIntoGameOverElements()->() {
         
-        
-        var additiveDelay :Double = 3.0
+
+        var additiveDelay :Double = 1.0
         var animationDuration : Double = 1.0
         
 //        for iCount in 0..<arrayGameElements.count {
@@ -724,9 +711,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //            })
 //        }
 
-        
         // Game Over Elements
-
         
         labelGameOver.alpha = 0.0
         labelObjectsTouched.alpha = 0.0
@@ -769,18 +754,19 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         })
     }
     
-    
-    // ################################################################################
-    // ################################################################################
+    // Animation Functions - END
     // ################################################################################
     // ################################################################################
     // ################################################################################
     
     
     
+    
     // ################################################################################
     // ################################################################################
-
+    // ################################################################################
+    // Removing Elements - START
+    
     // Removing Main Screen Elements
     
     func removeMainScreenElements()->() {
@@ -800,12 +786,20 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         for iCount in 0..<self.arrayGameElements.count {
             self.arrayGameElements[iCount].alpha = 0.0
         }
+        labelGameStats1.alpha = 0.0
+        labelGameStats2.alpha = 0.0
+        labelGameStats3.alpha = 0.0
+        labelGameStats4.alpha = 0.0
     }
     
     func unhideForPausedGamePlayElements()->() {
         for iCount in 0..<self.arrayGameElements.count {
             self.arrayGameElements[iCount].alpha = 1.0
         }
+        labelGameStats1.alpha = 1.0
+        labelGameStats2.alpha = 1.0
+        labelGameStats3.alpha = 1.0
+        labelGameStats4.alpha = 1.0
     }
     
     func removeGamePlayElements_EverythingElse()->() {
@@ -832,43 +826,36 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonQuit.center = CGPointMake(offscreenXValue, offscreenYValue)
     }
 
+    func removeGamePausedElements()->() {
+        labelGamePaused.center = CGPointMake(offscreenXValue, offscreenYValue)
+        buttonResume.center = CGPointMake(offscreenXValue, offscreenYValue)
+    }
+    
+    
+    // Removing Elements - END
+    // ################################################################################
+    // ################################################################################
+    // ################################################################################
+
+    
     
     // ################################################################################
     // ################################################################################
-    
-//    func fadeOutView (view: UIView) -> () {
-//        
-//        // create a fade out element and add the animation to the passed view
-//        // the properties of the fade can be changed only from here.
-//        
-////        UIView.animateWithDuration(3.0, animations: {
-////            view.alpha = 0.0
-////        })
-//        
-//        UIView.animateWithDuration(0.5, animations: {
-//                view.alpha = 0.0
-//            }, completion: {_ in
-//                NSLog("completed first animation. starting second animation")
-//                //self.removeMainScreenElements()
-//                //self.fadeInGamePlayElements()
-//        })
-//    }
-    
     
     func createGameElementsForNextRound() {
         println(__FUNCTION__)
-
         
         // Decide which try to use randomly
         
         var randomNumber : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
         println("randomNumber is \(randomNumber)")
-        var randomTryEffort : CGFloat = randomNumber * 4
+        var randomTryEffort : CGFloat = randomNumber * 5
         println("randomTryEffort is \(randomTryEffort)")
         var randomTryEffortInt = Int(randomTryEffort)
-        randomTryEffortInt = 0
-        println("randomTryEffortInt is \(randomTryEffortInt)")
         
+        //randomTryEffortInt = 0
+        
+        println("randomTryEffortInt is \(randomTryEffortInt)")
         
         
         let sizeElement01_Width : CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
@@ -879,6 +866,17 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         let pointTopLeftElement01 = CGPointMake(0, Y_offset)
         
         var elementDetailsObj = ElementDetails()
+
+        
+        var randomNumber1 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        var randomWinningElement : CGFloat = randomNumber1 * CGFloat(numberRowsOrColumns) * CGFloat(numberRowsOrColumns)
+        println("randomNumber1 is \(randomNumber1)")
+        println("randomWinningElement is \(randomWinningElement)")
+        
+        
+        arrayGameElements_WinningElement = Int(randomWinningElement)
+        println("arrayGameElements_WinningElement is \(arrayGameElements_WinningElement)")
+        
 
         for i in 0..<numberRowsOrColumns {
             
@@ -898,6 +896,13 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
                 recognizer.delegate = self
 
+                // Check whether you are at the winning element, if yes it is a different scenario
+                if ((i*numberRowsOrColumns + j*numberRowsOrColumns) == arrayGameElements_WinningElement) {
+                    elementDetailsObj.fillColor = arrayColors[arrayGameElements_WinningElement]
+                } else {
+                    elementDetailsObj.fillColor = returnOtherColor(1.0, inGreen: 0.0, inBlue: 0.0)
+                }
+                
                 var tempViewToAddToArray = makeGameElementWithDetails(elementDetailsObj, ElementType:randomTryEffortInt)
                 
                 tempViewToAddToArray.addGestureRecognizer(recognizer)
@@ -910,23 +915,166 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
         
-        var randomNumber1 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        var randomWinningElement : CGFloat = randomNumber1 * CGFloat(numberRowsOrColumns) * CGFloat(numberRowsOrColumns)
-        println("randomNumber1 is \(randomNumber1)")
-        println("randomWinningElement is \(randomWinningElement)")
-        
-        
-        arrayGameElements_WinningElement = Int(randomWinningElement)
-        println("arrayGameElements_WinningElement is \(arrayGameElements_WinningElement)")
-
-        
         animateIntoGamePlayElements()
         
     }
     
-    
-    
+    func makeGameElementWithDetails (e_details: ElementDetails, ElementType:Int) -> (UIView) {
+        
+        var tempElement = UIView(frame: CGRectMake(e_details.x_offset, e_details.y_offset, e_details.width, e_details.height))
+        
+        tempElement.backgroundColor = UIColor.redColor()
+        
+        tempElement.alpha = 0.0 // it is not visible when created, you will need to animated it.
+        
+        
+        
+        // MAKING the LAYER
+        // create and add Shape to the UI, can be circle square or triangle
+        let oneLayer = CAShapeLayer()
+        
+        var randomX = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        //println("randomX is \(randomX)")
+        
+        if randomX < 0.05 {
+            randomX = 0.05
+        }
+        
+        // width is used twice with intention
+        // the RECT passed gives the top left and size of the Shape inside the superview
+        
+        oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(
+            (e_details.width  - randomX * e_details.width )/2,
+            (e_details.height - randomX * e_details.height)/2,
+            randomX * e_details.width,
+            randomX * e_details.height)).CGPath
 
+        
+//        switch(ElementType) {
+//        case 0:
+//            // first try
+//            // making a circle or oval
+//            //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
+//            oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(
+//                (e_details.width  - randomX * e_details.width )/2,
+//                (e_details.height - randomX * e_details.height)/2,
+//                randomX * e_details.width,
+//                randomX * e_details.height)).CGPath
+//            
+//        case 1:
+//            // second try
+//            // making a square or a rectangle
+//            oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
+//                (e_details.height - randomX * e_details.height)/2,
+//                randomX * e_details.width, randomX * e_details.height)).CGPath
+//            
+//        case 2:
+//            // third try
+//            var point = CGPointMake(50, 50)
+//            oneLayer.path = UIBezierPath(arcCenter:point, radius: 35, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
+//            
+//        case 3:
+//            
+//            // fourth try
+//            //making a triangle
+//            
+//            var triangle = UIBezierPath()
+//            triangle.moveToPoint(CGPointMake(10,10))
+//            triangle.addLineToPoint(CGPointMake(60, 40))
+//            triangle.addLineToPoint(CGPointMake(20, 60))
+//            triangle.closePath()
+//            //UIColor.redColor().set()
+//            //triangle.fill()
+//            
+//            oneLayer.path = triangle.CGPath
+//            
+//        default:
+//            println("default switch case")
+//        }
+        
+        
+        // attributes
+        oneLayer.lineWidth = 4
+        oneLayer.strokeColor = UIColor.whiteColor().CGColor
+        //oneLayer.strokeColor = UIColor.magentaColor().CGColor
+        
+        //oneLayer.fillColor = UIColor.blueColor().CGColor
+        oneLayer.fillColor = e_details.fillColor.CGColor
+        
+        
+        
+        // Adding the Current Element
+        tempElement.layer.addSublayer(oneLayer)
+        
+        // Element attributes
+        tempElement.layer.borderWidth = 5
+        tempElement.layer.borderColor = UIColor.yellowColor().CGColor
+        
+        return tempElement
+        
+    }
+
+    
+    func returnPassedColor(UIColor)->(UIColor) {
+        var someColor : UIColor
+        someColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        return someColor
+    }
+    
+    
+    func returnOtherColor(inRed: CGFloat, inGreen: CGFloat, inBlue: CGFloat)->(UIColor) {
+        var returnColor : UIColor
+        var returnRedValue : CGFloat = 0.0
+        var returnGreenValue : CGFloat = 0.0
+        var returnBlueValue : CGFloat = 0.0
+        
+        // all 3 values are between 0.00 and 1.00
+        // so generate random colors which are away from these values for RGB
+        
+        // RED
+        var randomGenerated1 = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        println("randomGenerated1 is \(randomGenerated1)")
+        
+        if ((inRed + 0.10 < randomGenerated1) || (randomGenerated1 + 0.10 < inRed)) {
+            returnRedValue = randomGenerated1
+        }
+        else if (randomGenerated1 - 0.10 > 0.00) {
+            returnRedValue = randomGenerated1 - 0.10
+        }
+        else if (randomGenerated1 + 0.10 < 1.00) {
+            returnRedValue = randomGenerated1 + 0.10
+        }
+        // GREEN
+        var randomGenerated2 = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        println("randomGenerated2 is \(randomGenerated2)")
+        
+        if ((inGreen + 0.10 < randomGenerated2) || (randomGenerated2 + 0.10 < inGreen)) {
+            returnGreenValue = randomGenerated2
+        }
+        else if (randomGenerated2 - 0.10 > 0.00) {
+            returnGreenValue = randomGenerated2 - 0.10
+        }
+        else if (randomGenerated2 + 0.10 < 1.00) {
+            returnGreenValue = randomGenerated2 + 0.10
+        }
+        // BLUE
+        var randomGenerated3 = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        println("randomGenerated3 is \(randomGenerated3)")
+        
+        if ((inBlue + 0.10 < randomGenerated3) || (randomGenerated3 + 0.10 < inBlue)) {
+            returnBlueValue = randomGenerated3
+        }
+        else if (randomGenerated3 - 0.10 > 0.00) {
+            returnBlueValue = randomGenerated3 - 0.10
+        }
+        else if (randomGenerated3 + 0.10 < 1.00) {
+            returnBlueValue = randomGenerated3 + 0.10
+        }
+        
+        
+        return UIColor(red: returnRedValue, green: returnGreenValue, blue: returnBlueValue, alpha: 1.0)
+    }
+    
     func handleTap(recognizer: UITapGestureRecognizer) {
 
         for iCount in 0..<arrayGameElements.count {
@@ -1005,123 +1153,54 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         
         // update all the game statistics
-        
-        
     }
     
     
     func handleOneRoundLose() {
-    
         
     }
     
-    
-    func makeGameElementWithDetails (e_details: ElementDetails, ElementType:Int) -> (UIView) {
-        
-        var tempElement = UIView(frame: CGRectMake(e_details.x_offset, e_details.y_offset, e_details.width, e_details.height))
-        
-        tempElement.backgroundColor = UIColor.blueColor()
-        tempElement.alpha = 0.0 // it is not visible when created, you will need to animated it.
-        
-        // MAKING the LAYER
-        // create and add Shape to the UI, can be circle square or triangle
-        let oneLayer = CAShapeLayer()
-        
-        var randomX = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        //println("randomX is \(randomX)")
-        
-        if randomX < 0.05 {
-            randomX = 0.05
-        }
-        
-        // width is used twice with intention
-        // the RECT passed gives the top left and size of the Shape inside the superview
+    // ######################################################################
+    // ######################################################################
+    // ######################################################################
+    // Tap Events - START
 
-        switch(ElementType) {
-        case 0:
-            // first try
-            // making a circle or oval
-            //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
-            oneLayer.path = UIBezierPath(ovalInRect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
-                (e_details.height - randomX * e_details.height)/2,
-                randomX * e_details.width, randomX * e_details.height)).CGPath
-            
-        case 1:
-            // second try
-            // making a square or a rectangle
-            oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
-                                                                  (e_details.height - randomX * e_details.height)/2,
-                                                            randomX * e_details.width, randomX * e_details.height)).CGPath
-            
-        case 2:
-            // third try
-            var point = CGPointMake(50, 50)
-            oneLayer.path = UIBezierPath(arcCenter:point, radius: 35, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
-            
-        case 3:
-            
-            // fourth try
-            //making a triangle
-            
-            var triangle = UIBezierPath()
-            triangle.moveToPoint(CGPointMake(10,10))
-            triangle.addLineToPoint(CGPointMake(60, 40))
-            triangle.addLineToPoint(CGPointMake(20, 60))
-            triangle.closePath()
-            //UIColor.redColor().set()
-            //triangle.fill()
-            
-            oneLayer.path = triangle.CGPath
-            
-        default:
-            println("default switch case")
-        }
-        
-        
-        
-        // attributes
-        //oneLayer.strokeColor = UIColor.whiteColor().CGColor
-        //oneLayer.strokeColor = UIColor.magentaColor().CGColor
-        
-        oneLayer.lineWidth = 1
-        
-        //oneLayer.fillColor = UIColor.orangeColor().CGColor
-        
-        // Adding the Current Element
-        tempElement.layer.addSublayer(oneLayer)
+    func tapQuitEvent(sender: AnyObject) {
+        println(__FUNCTION__)
 
-        // Element attributes
-        tempElement.layer.borderWidth = 2
-        tempElement.layer.borderColor = UIColor.yellowColor().CGColor
-        
-        return tempElement
-        
-    }
-    
-    
-    func countdownTimerTouched(sender: AnyObject) {
-        NSLog("Timer touched")
-     
+        timerCount = 0
         myTimer.invalidate()
-        
         timerRunning = false
+        // remove from visible region all the game over elements
+        removeGameOverElements()
+        removeGamePausedElements()
+        //removeGameOverElements_EverythingElse()
+        // get into the main screen now
+        animateIntoMainScreen()
+    }
+    
+    func tapTryAgainEvent(sender: AnyObject) {
+        println(__FUNCTION__)
+        // remove from visible region all the game over elements
+        removeGameOverElements()
+        self.tapPlayEvent(UIView)
+    }
+    
+    func tapCountdownTimerEvent(sender: AnyObject) {
+        println(__FUNCTION__)
         
+        myTimer.invalidate()
+        timerRunning = false
         self.hideForPausedGamePlayElements()
-        
         animateIntoGamePausedElements()
     }
     
-    func resumeTouched(sender: AnyObject) {
-        
-        NSLog("Resume Touched")
-        
+    func tapResumeEvent(sender: AnyObject) {
+        println(__FUNCTION__)
         self.unhideForPausedGamePlayElements()
-        
         animateOutofGamePausedElements()
-        
         // Create and Add the timer Again
         startTimer()
-
     }
     
     /*
@@ -1130,94 +1209,22 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     there would be a delay for second animation which has to be appropriate...
     */
     
-    func playTouched(sender: AnyObject) {
-        
+    func tapPlayEvent(sender: AnyObject) {
         animateOutofMainScreen()
-        
         animateIntoGamePlayScreen()
-        
         startTimer()
     }
+    
+    // Tap Events - END
+    // ######################################################################
+    // ######################################################################
+    // ######################################################################
 
-    
-    func quitTouched(sender: AnyObject) {
-        NSLog("quit touched")
-        
-        // remove from visible region all the game over elements
-        removeGameOverElements()
-        
-        //removeGameOverElements_EverythingElse()
-        
-        // get into the main screen now
-        animateIntoMainScreen()
-        
-    }
-    
-    func tryAgainTouched(sender: AnyObject) {
-        
-        NSLog("try again touched")
-        
-        // remove from visible region all the game over elements
-
-        removeGameOverElements()
-
-        self.playTouched(UIView)
-        
-    }
-    
-    
-    func createButtonGameOver()->(UIButton) {
-     
-        var buttonTemp = UIButton()
-        buttonTemp.setTitle("Temp", forState: UIControlState.Normal)
-        buttonTemp.sizeToFit()
-        buttonTemp.backgroundColor = UIColor.blueColor()
-//        buttonTemp.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlay.frame.width*2, buttonPlay.frame.height*2)
-        buttonTemp.layer.cornerRadius = 15.0
-//        buttonTemp.center = CGPointMake(self.view.center.x, self.view.center.y)
-//        buttonTemp.addTarget(self, action: "playTouched:", forControlEvents: UIControlEvents.TouchUpInside)
-
-        return buttonTemp
-    }
-    
-    func createLabelGameOver()->(UILabel) {
-        
-        var labelReturnObject = UILabel()
-        labelReturnObject.textAlignment = NSTextAlignment.Center
-        labelReturnObject.layer.cornerRadius = 6
-        
-//        labelReturnObject.text = "Temp"
-//        labelReturnObject.sizeToFit()
-//        labelReturnObject.frame = CGRectMake(
-//            labelReturnObject.frame.origin.x,
-//            labelReturnObject.frame.origin.y,
-//            labelReturnObject.frame.width * 2,
-//            labelReturnObject.frame.height * 2)
-        
-        labelReturnObject.layer.backgroundColor = UIColor.brownColor().CGColor
-
-        return labelReturnObject
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
