@@ -59,6 +59,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     var timerRunning = false
     var myTimer = NSTimer()
     
+    var randomWinningElementPlacementInt = -1
+    
     // ################################################################################
     
     
@@ -173,14 +175,32 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     //
     
     
-    var arrayActions = ["Red Circle", "Green Circle", "Blue Circle", "Yellow Circle", "Black Circle"]
+    var arrayActions = [
+        "Red Circle",
+        "Green Circle",
+        "Blue Circle",
+        
+        "Yellow Circle",
+        "Magenta Circle",
+        "Cyan Circle",
+     
+        "White Circle",
+        "Black Circle"
+    ]
+    
     var arrayColors = [
         UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0),
         UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0),
         UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0),
-        UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 1.0),
-        UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)]
         
+        UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 1.0),
+        UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0),
+        UIColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0),
+
+        UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0),
+        UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+    ]
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -213,37 +233,51 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func Counting() {
-        println(__FUNCTION__)
+        //println(__FUNCTION__)
 
         timerCount += 1
         // this needs to be animated
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         
-//        // game over in 10 seconds for testing only
-//        if 10 == timerCount {
-//            println("Timer Count Reached")
-//
-//            timerCount = 0
-//
-//            timerRunning = false
-//            myTimer.invalidate()
-//            
-//            NSLog("Game Over this round")
-//
-//            animateOutofGamePlayElements()
-//            animateOutofGamePlayElements_EverythingElse()
-//            
-//            // the above takes time so delay the following function
-//            delay(seconds:2, completion: {
-//                println("delay is over in counting and so calling remove game play elements")
-//                self.removeGamePlayElements()
-//                self.removeGamePlayElements_EverythingElse()
-//            })
-//
-//            animateIntoGameOverElements()
-//        }
+        // game over in 10 seconds for testing only
+        if 20 == timerCount {
+            println("Timer Count Reached")
+
+            timerCount = 0
+
+            timerRunning = false
+            myTimer.invalidate()
+            
+            NSLog("Game Over this round")
+
+            animateOutofGamePlayElements()
+            animateOutofGamePlayElements_EverythingElse()
+            
+            // the above takes time so delay the following function
+            delay(seconds:2, completion: {
+                println("delay is over in counting and so calling remove game play elements")
+                self.removeGamePlayElements()
+                self.removeGamePlayElements_EverythingElse()
+            })
+
+            settingUpGameOverElements()
+            
+            animateIntoGameOverElements()
+            
+            resetScores()
+        }
     }
 
+    func settingUpGameOverElements()->() {
+        labelObjectsTouchedValue.text = "\(intScore)"
+    }
+    
+    func resetScores()->() {
+        intScore = 0
+        labelGameStats1.text = "\(intScore)"
+        
+    }
+    
     // ################################################################################
     // ################################################################################
     // ################################################################################
@@ -535,7 +569,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 NSLog("CAME TO MAIN SCREEN")
                 
                 // ONLY FOR TESTING
-                self.tapPlayEvent(UIView)
+                //self.tapPlayEvent(UIView)
         })
     }
     
@@ -869,22 +903,33 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         
         var randomNumber1 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        var randomWinningElement : CGFloat = randomNumber1 * CGFloat(numberRowsOrColumns) * CGFloat(numberRowsOrColumns)
+        
+        //var randomWinningElement : CGFloat = randomNumber1 * CGFloat(numberRowsOrColumns) * CGFloat(numberRowsOrColumns)
+        var randomWinningElement : CGFloat = randomNumber1 * CGFloat(arrayActions.count)
+        
         println("randomNumber1 is \(randomNumber1)")
         println("randomWinningElement is \(randomWinningElement)")
-        
         
         arrayGameElements_WinningElement = Int(randomWinningElement)
         println("arrayGameElements_WinningElement is \(arrayGameElements_WinningElement)")
         
+        
+        labelAction.text = arrayActions[arrayGameElements_WinningElement]
 
+        
+        var randomNumber2 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        var randomWinningElementPlacement : CGFloat = randomNumber2 * CGFloat(numberRowsOrColumns  * numberRowsOrColumns)
+        randomWinningElementPlacementInt = Int(randomWinningElementPlacement)
+        println("randomWinningElementPlacementInt is \(randomWinningElementPlacementInt)")
+
+        
         for i in 0..<numberRowsOrColumns {
             
-            println("i is \(i)")
+            //println("i is \(i)")
             
             for j in 0..<numberRowsOrColumns {
             
-                println("j is \(j)")
+                //println("j is \(j)")
                 
                 elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * sizeElement01_Width))
                 elementDetailsObj.y_offset = (CGFloat(i) * (screenWidth * 0.01 * sizeElement01_Height)) + (screenHeight - screenWidth)/2
@@ -897,7 +942,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 recognizer.delegate = self
 
                 // Check whether you are at the winning element, if yes it is a different scenario
-                if ((i*numberRowsOrColumns + j*numberRowsOrColumns) == arrayGameElements_WinningElement) {
+                if ((i*numberRowsOrColumns + j) == randomWinningElementPlacementInt) {
+                //if ((i*numberRowsOrColumns + j) == arrayGameElements_WinningElement) {
                     elementDetailsObj.fillColor = arrayColors[arrayGameElements_WinningElement]
                 } else {
                     elementDetailsObj.fillColor = returnOtherColor(1.0, inGreen: 0.0, inBlue: 0.0)
@@ -923,10 +969,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         var tempElement = UIView(frame: CGRectMake(e_details.x_offset, e_details.y_offset, e_details.width, e_details.height))
         
-        tempElement.backgroundColor = UIColor.redColor()
+        tempElement.backgroundColor = UIColor(red: 204.0, green: 204.0, blue: 153.0, alpha: 1.0)
         
         tempElement.alpha = 0.0 // it is not visible when created, you will need to animated it.
-        
         
         
         // MAKING the LAYER
@@ -943,6 +988,14 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // width is used twice with intention
         // the RECT passed gives the top left and size of the Shape inside the superview
         
+//        oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(
+//            (e_details.width  - randomX * e_details.width )/2,
+//            (e_details.height - randomX * e_details.height)/2,
+//            randomX * e_details.width,
+//            randomX * e_details.height)).CGPath
+//        
+        
+        randomX = 0.70
         oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(
             (e_details.width  - randomX * e_details.width )/2,
             (e_details.height - randomX * e_details.height)/2,
@@ -1023,54 +1076,58 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func returnOtherColor(inRed: CGFloat, inGreen: CGFloat, inBlue: CGFloat)->(UIColor) {
+        
         var returnColor : UIColor
         var returnRedValue : CGFloat = 0.0
         var returnGreenValue : CGFloat = 0.0
         var returnBlueValue : CGFloat = 0.0
+        
+        var awayFactor : CGFloat = 0.30
         
         // all 3 values are between 0.00 and 1.00
         // so generate random colors which are away from these values for RGB
         
         // RED
         var randomGenerated1 = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        println("randomGenerated1 is \(randomGenerated1)")
+        //println("randomGenerated1 is \(randomGenerated1)")
         
-        if ((inRed + 0.10 < randomGenerated1) || (randomGenerated1 + 0.10 < inRed)) {
+        if ((inRed + awayFactor < randomGenerated1) || (randomGenerated1 + awayFactor < inRed)) {
             returnRedValue = randomGenerated1
         }
-        else if (randomGenerated1 - 0.10 > 0.00) {
-            returnRedValue = randomGenerated1 - 0.10
+        else if (randomGenerated1 - awayFactor > 0.00) {
+            returnRedValue = randomGenerated1 - awayFactor
         }
-        else if (randomGenerated1 + 0.10 < 1.00) {
-            returnRedValue = randomGenerated1 + 0.10
+        else if (randomGenerated1 + awayFactor < 1.00) {
+            returnRedValue = randomGenerated1 + awayFactor
         }
         // GREEN
         var randomGenerated2 = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        println("randomGenerated2 is \(randomGenerated2)")
+        //println("randomGenerated2 is \(randomGenerated2)")
         
-        if ((inGreen + 0.10 < randomGenerated2) || (randomGenerated2 + 0.10 < inGreen)) {
+        if ((inGreen + awayFactor < randomGenerated2) || (randomGenerated2 + awayFactor < inGreen)) {
             returnGreenValue = randomGenerated2
         }
-        else if (randomGenerated2 - 0.10 > 0.00) {
-            returnGreenValue = randomGenerated2 - 0.10
+        else if (randomGenerated2 - awayFactor > 0.00) {
+            returnGreenValue = randomGenerated2 - awayFactor
         }
-        else if (randomGenerated2 + 0.10 < 1.00) {
-            returnGreenValue = randomGenerated2 + 0.10
+        else if (randomGenerated2 + awayFactor < 1.00) {
+            returnGreenValue = randomGenerated2 + awayFactor
         }
         // BLUE
         var randomGenerated3 = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        println("randomGenerated3 is \(randomGenerated3)")
+        //println("randomGenerated3 is \(randomGenerated3)")
         
-        if ((inBlue + 0.10 < randomGenerated3) || (randomGenerated3 + 0.10 < inBlue)) {
+        if ((inBlue + awayFactor < randomGenerated3) || (randomGenerated3 + awayFactor < inBlue)) {
             returnBlueValue = randomGenerated3
         }
-        else if (randomGenerated3 - 0.10 > 0.00) {
-            returnBlueValue = randomGenerated3 - 0.10
+        else if (randomGenerated3 - awayFactor > 0.00) {
+            returnBlueValue = randomGenerated3 - awayFactor
         }
-        else if (randomGenerated3 + 0.10 < 1.00) {
-            returnBlueValue = randomGenerated3 + 0.10
+        else if (randomGenerated3 + awayFactor < 1.00) {
+            returnBlueValue = randomGenerated3 + awayFactor
         }
         
+        println("Returning red : \(returnRedValue) green : \(returnGreenValue) blue : \(returnBlueValue)")
         
         return UIColor(red: returnRedValue, green: returnGreenValue, blue: returnBlueValue, alpha: 1.0)
     }
@@ -1083,7 +1140,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 
                 // things need to be done here... like whether the user was right or wrong
          
-                if iCount == arrayGameElements_WinningElement {
+                if iCount == randomWinningElementPlacementInt {
+                //if iCount == arrayGameElements_WinningElement {
                     println("You Win")
                     handleOneRoundWin()
                     
@@ -1220,6 +1278,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     // ######################################################################
     // ######################################################################
 
+    
+    
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
