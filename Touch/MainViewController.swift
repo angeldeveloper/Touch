@@ -11,7 +11,7 @@ import UIKit
 class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // ################################################################################
-    let numberRowsOrColumns = 3
+    let numberRowsOrColumns = 4
     var intScore : Int = 0
     // ################################################################################
     
@@ -275,6 +275,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func resetScores()->() {
         intScore = 0
         labelGameStats1.text = "\(intScore)"
+        
+    }
+    
+    func bringAttentionToElement()->() {
         
     }
     
@@ -893,17 +897,45 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         
         let sizeElement01_Width : CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
-        let sizeElement01_Height :CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
+        let sizeElement01_Height : CGFloat = 100.0 / CGFloat(numberRowsOrColumns)
         
-        var Y_offset = ( screenHeight - screenWidth ) / 2
+        // how to choose the correct height and width where elements will go
+        // 60 % of height will be used 
+        // or width will be used if 60% of height is more than width
         
-        let pointTopLeftElement01 = CGPointMake(0, Y_offset)
+        println("ratio of width to height currently: \(screenWidth)\\\(screenHeight)")
+        
+        var usableHeightTotal : CGFloat = 0.60 * screenHeight
+        var usableWidthTotal : CGFloat = 0.00
+        
+        if usableHeightTotal > screenWidth {
+            usableHeightTotal = CGFloat(screenWidth)
+            usableWidthTotal = CGFloat(screenWidth)
+        } else {
+            // usableHeight has a good value
+            usableWidthTotal = usableHeightTotal
+        }
+        
+        var usableWidthElement : CGFloat = CGFloat(usableWidthTotal) / CGFloat(numberRowsOrColumns)
+        var usableHeightElement : CGFloat = CGFloat(usableWidthTotal) / CGFloat(numberRowsOrColumns)
+        
+        // ================================================================================
+        // ================================================================================
+        
+
+        // Offsets
+        var X_offset = ( screenWidth - usableWidthTotal ) / 2
+        var Y_offset = ( screenHeight - usableHeightTotal ) / 2
+        
+        
+        
+        let pointTopLeftElement01 = CGPointMake(X_offset, Y_offset)
+        
         
         var elementDetailsObj = ElementDetails()
-
+        
         
         var randomNumber1 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-        
         //var randomWinningElement : CGFloat = randomNumber1 * CGFloat(numberRowsOrColumns) * CGFloat(numberRowsOrColumns)
         var randomWinningElement : CGFloat = randomNumber1 * CGFloat(arrayActions.count)
         
@@ -913,15 +945,16 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         arrayGameElements_WinningElement = Int(randomWinningElement)
         println("arrayGameElements_WinningElement is \(arrayGameElements_WinningElement)")
         
-        
         labelAction.text = arrayActions[arrayGameElements_WinningElement]
 
+        
         
         var randomNumber2 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
         var randomWinningElementPlacement : CGFloat = randomNumber2 * CGFloat(numberRowsOrColumns  * numberRowsOrColumns)
         randomWinningElementPlacementInt = Int(randomWinningElementPlacement)
         println("randomWinningElementPlacementInt is \(randomWinningElementPlacementInt)")
 
+    
         
         for i in 0..<numberRowsOrColumns {
             
@@ -931,11 +964,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             
                 //println("j is \(j)")
                 
-                elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * sizeElement01_Width))
-                elementDetailsObj.y_offset = (CGFloat(i) * (screenWidth * 0.01 * sizeElement01_Height)) + (screenHeight - screenWidth)/2
+                //elementDetailsObj.x_offset = (CGFloat(j) * (screenWidth * 0.01 * sizeElement01_Width))
+                elementDetailsObj.x_offset = X_offset + (CGFloat(j) * usableWidthElement)
                 
-                elementDetailsObj.width = screenWidth * 0.01 * sizeElement01_Width
-                elementDetailsObj.height = screenWidth * 0.01 * sizeElement01_Width
+                //elementDetailsObj.y_offset = (CGFloat(i) * (screenWidth * 0.01 * sizeElement01_Height)) + (screenHeight - screenWidth)/2
+                elementDetailsObj.y_offset = Y_offset + (CGFloat(i) * usableHeightElement)
+                
+                
+                elementDetailsObj.width = usableWidthElement
+                elementDetailsObj.height = usableHeightElement
 
                 
                 let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
@@ -1002,49 +1039,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             randomX * e_details.width,
             randomX * e_details.height)).CGPath
 
-        
-//        switch(ElementType) {
-//        case 0:
-//            // first try
-//            // making a circle or oval
-//            //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, randomX * e_details.width, randomX * e_details.height)).CGPath
-//            oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(
-//                (e_details.width  - randomX * e_details.width )/2,
-//                (e_details.height - randomX * e_details.height)/2,
-//                randomX * e_details.width,
-//                randomX * e_details.height)).CGPath
-//            
-//        case 1:
-//            // second try
-//            // making a square or a rectangle
-//            oneLayer.path = UIBezierPath(rect: CGRectMake((e_details.width  - randomX * e_details.width )/2,
-//                (e_details.height - randomX * e_details.height)/2,
-//                randomX * e_details.width, randomX * e_details.height)).CGPath
-//            
-//        case 2:
-//            // third try
-//            var point = CGPointMake(50, 50)
-//            oneLayer.path = UIBezierPath(arcCenter:point, radius: 35, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
-//            
-//        case 3:
-//            
-//            // fourth try
-//            //making a triangle
-//            
-//            var triangle = UIBezierPath()
-//            triangle.moveToPoint(CGPointMake(10,10))
-//            triangle.addLineToPoint(CGPointMake(60, 40))
-//            triangle.addLineToPoint(CGPointMake(20, 60))
-//            triangle.closePath()
-//            //UIColor.redColor().set()
-//            //triangle.fill()
-//            
-//            oneLayer.path = triangle.CGPath
-//            
-//        default:
-//            println("default switch case")
-//        }
-        
         
         // attributes
         oneLayer.lineWidth = 4
