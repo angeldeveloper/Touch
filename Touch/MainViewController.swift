@@ -61,6 +61,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var randomWinningElementPlacementInt = -1
     
+    var getAttentionTimer = NSTimer()
+    var attentionSeconds : CGFloat = 5.0
+    
+    
     // ################################################################################
     
     
@@ -228,19 +232,29 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             myTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("Counting"), userInfo: nil, repeats: true)
             myTimer.tolerance = 0.10
             timerRunning = true
+            
+            // Attention Timer
+            getAttentionTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("bringAttentionToWinningElement"), userInfo: nil, repeats: true)
+            
         }
     }
     
     
     func Counting() {
+        
         //println(__FUNCTION__)
 
         timerCount += 1
         // this needs to be animated
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         
+//        if 4 == timerCount {
+//            //bringAttentionToElement(self.arrayGameElements[randomWinningElementPlacementInt])
+//        }
+//        
         // game over in 10 seconds for testing only
-        if 20 == timerCount {
+        if 24 == timerCount {
+            
             println("Timer Count Reached")
 
             timerCount = 0
@@ -250,6 +264,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             
             NSLog("Game Over this round")
 
+            
+            // Attention Timer
+            getAttentionTimer.invalidate()
+            
+            
             animateOutofGamePlayElements()
             animateOutofGamePlayElements_EverythingElse()
             
@@ -278,8 +297,22 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     
-    func bringAttentionToElement()->() {
+    
+    func bringAttentionToWinningElement() {
+
+        //getAttentionTimer.invalidate()
         
+        var movementValue : CGFloat = 10.0
+        
+        self.arrayGameElements[randomWinningElementPlacementInt].center.x += movementValue
+        
+        UIView.animateWithDuration(1.00, delay: 0.00, usingSpringWithDamping: 0.05, initialSpringVelocity: 0.00, options: nil, animations: {
+            
+            self.arrayGameElements[self.randomWinningElementPlacementInt].center.x -= movementValue
+            
+            }, completion: {_ in
+                println("Attention animation done")
+        })
     }
     
     // ################################################################################
@@ -573,7 +606,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 NSLog("CAME TO MAIN SCREEN")
                 
                 // ONLY FOR TESTING
-                //self.tapPlayEvent(UIView)
+                self.tapPlayEvent(UIView)
         })
     }
     
@@ -945,9 +978,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         arrayGameElements_WinningElement = Int(randomWinningElement)
         println("arrayGameElements_WinningElement is \(arrayGameElements_WinningElement)")
         
-        labelAction.text = arrayActions[arrayGameElements_WinningElement]
-
         
+        //labelAction.text = arrayActions[arrayGameElements_WinningElement]
+        labelAction.text = "BLACK DOT"
         
         var randomNumber2 : CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
         var randomWinningElementPlacement : CGFloat = randomNumber2 * CGFloat(numberRowsOrColumns  * numberRowsOrColumns)
@@ -981,7 +1014,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 // Check whether you are at the winning element, if yes it is a different scenario
                 if ((i*numberRowsOrColumns + j) == randomWinningElementPlacementInt) {
                 //if ((i*numberRowsOrColumns + j) == arrayGameElements_WinningElement) {
-                    elementDetailsObj.fillColor = arrayColors[arrayGameElements_WinningElement]
+                    //elementDetailsObj.fillColor = arrayColors[arrayGameElements_WinningElement]
+                    elementDetailsObj.fillColor = UIColor.blackColor()
                 } else {
                     elementDetailsObj.fillColor = returnOtherColor(1.0, inGreen: 0.0, inBlue: 0.0)
                 }
@@ -1047,8 +1081,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         //oneLayer.fillColor = UIColor.blueColor().CGColor
         oneLayer.fillColor = e_details.fillColor.CGColor
-        
-        
+//        // HARDCODING the fill color to BLACK
+//        oneLayer.fillColor = UIColor.blackColor().CGColor
         
         // Adding the Current Element
         tempElement.layer.addSublayer(oneLayer)
@@ -1128,6 +1162,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func handleTap(recognizer: UITapGestureRecognizer) {
 
+        // Attention timer
+        getAttentionTimer.invalidate()
+        getAttentionTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("bringAttentionToWinningElement"), userInfo: nil, repeats: true)
+
+        
         for iCount in 0..<arrayGameElements.count {
             if recognizer.view === arrayGameElements[iCount] {
                 println("User has tapped Element \(iCount)")
