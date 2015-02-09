@@ -53,12 +53,22 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     // Main Screen User Interface Elements
     
     var labelApplicationTitle: UILabel!
+    
     let consLabelApplicationTitleCenterX_MainScreen : CGFloat = 50.0 // percentage of screen
-    let consLabelApplicationTitleCenterY_MainScreen : CGFloat = 20.0 // percentage of screen
-    let consLabelApplicationTitleCenterX_GamePlayScreen : CGFloat = 20.0 // percentage of screen
+    let consLabelApplicationTitleCenterY_MainScreen : CGFloat = 25.0 // percentage of screen
+    
+    let consLabelApplicationTitleCenterX_GamePlayScreen : CGFloat = 50.0 // percentage of screen
     let consLabelApplicationTitleCenterY_GamePlayScreen : CGFloat = 10.0 // percentage of screen
     
+    let consLabelApplicationTitleWidth_MainScreen : CGFloat = 40.0 // percentage of screen
+    let consLabelApplicationTitleHeight_MainScreen : CGFloat = 10.0 // percentage of screen
+    
+    let consLabelApplicationTitleWidth_GamePlayScreen : CGFloat = 20.0 // percentage of screen
+    let consLabelApplicationTitleHeight_GamePlayScreen : CGFloat = 10.0 // percentage of screen
+    
+    
     var buttonPlay: UIButton!
+    
     let consButtonPlayCenterX : CGFloat = 50.0 // percentage of screen
     let consButtonPlayCenterY : CGFloat = 50.0 // percentage of screen
     
@@ -81,10 +91,16 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelGameStats4CenterX : CGFloat = 80.0 //
     let consLabelGameStats4CenterY : CGFloat = 92.0 //
     
+    var uiviewCountdownTimerView : UIView = UIView()
+    
     var buttonCountdownTimer: UIButton!
     let consButtonCountdownTimerCenterX : CGFloat = 90.0 // percentage of screen
     let consButtonCountdownTimerCenterY : CGFloat = 7.0 // percentage of screen
     
+    //var buttonCountdownTimer: UIButton!
+    let consUIViewCountdownTimerCenterX : CGFloat = 70.0 // percentage of screen
+    let consUIViewCountdownTimerCenterY : CGFloat = 7.0 // percentage of screen
+
     var labelGameStats1, labelGameStats2, labelGameStats3, labelGameStats4: UILabel!
     
     // ################################################################################
@@ -94,6 +110,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelGamePausedCenterX : CGFloat = 50.0 // percentage of screen
     let consLabelGamePausedCenterY : CGFloat = 30.0 // percentage of screen
 
+    
+    
     var buttonResume: UIButton!
     let consButtonResumeCenterX : CGFloat = 50.0 // percentage of screen
     let consButtonResumeCenterY : CGFloat = 70.0 // percentage of screen
@@ -269,7 +287,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         UIView.animateWithDuration(1.00, delay: 0.00, usingSpringWithDamping: 0.05, initialSpringVelocity: 0.00, options: nil, animations: {
             
-            self.arrayGameElements[self.randomWinningElementPlacementInt].center.x -= movementValue
+            // commented as this feature is not finalized just yet. TESTING FOR NOW
+            //self.arrayGameElements[self.randomWinningElementPlacementInt].center.x -= movementValue
             
             }, completion: {_ in
                 println("Attention animation done")
@@ -290,33 +309,46 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     func createMainScreenElements()->() {
         println(__FUNCTION__)
+        
+        // BUTTON PLAY
         buttonPlay = UIButton()
         buttonPlay.setTitle("PLAY", forState: UIControlState.Normal)
         buttonPlay.sizeToFit()
-        buttonPlay.backgroundColor = UIColor.blueColor()
-        buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlay.frame.width*2, buttonPlay.frame.height*2)
-        buttonPlay.layer.cornerRadius = 15.0
+        buttonPlay.backgroundColor = buttonBackgroundColor
         
-        //buttonPlay.center = CGPointMake(self.view.center.x, self.view.center.y)
+        var buttonPlayWidth = screenWidth * 0.30
+        var buttonPlayHeight = screenHeight * 0.10
+        //buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlay.frame.width*2, buttonPlay.frame.height*2)
+        buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlayWidth, buttonPlayHeight)
+        buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlayWidth, buttonPlayWidth)
+        
+        buttonPlay.layer.cornerRadius = buttonCornerRadius
+        buttonPlay.layer.borderWidth = buttonBorderWidth
+        buttonPlay.layer.borderColor = buttonBorderColor
+        
         buttonPlay.center = CGPointMake(offscreenXValue, offscreenYValue)
-        
         buttonPlay.addTarget(self, action: "tapPlayEvent:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(buttonPlay)
         
+        
+        // LABEL APPLICATION TITLE
         labelApplicationTitle = UILabel()
         labelApplicationTitle.text = "TOUCH"
         labelApplicationTitle.sizeToFit()
         labelApplicationTitle.textAlignment = NSTextAlignment.Center
         labelApplicationTitle.layer.cornerRadius = 15
-        labelApplicationTitle.frame = CGRectMake(labelApplicationTitle.frame.origin.x, labelApplicationTitle.frame.origin.y,
-            labelApplicationTitle.frame.width*2, labelApplicationTitle.frame.height*2)
 
+        var labelApplicationTitleWidth = screenWidth * 0.40
+        var labelApplicationTitleHeight = screenHeight * 0.10
+        //labelApplicationTitle.frame = CGRectMake(labelApplicationTitle.frame.origin.x, labelApplicationTitle.frame.origin.y, labelApplicationTitle.frame.width*2, labelApplicationTitle.frame.height*2)
+        labelApplicationTitle.frame = CGRectMake(labelApplicationTitle.frame.origin.x, labelApplicationTitle.frame.origin.y, labelApplicationTitleWidth, labelApplicationTitleWidth)
+        
         labelApplicationTitle.layer.backgroundColor = UIColor.brownColor().CGColor
-        //labelApplicationTitle.center = CGPointMake(self.view.center.x, self.view.center.y/2)
-        //labelApplicationTitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleCenterX, screenHeight * 0.01 * consLabelApplicationTitleCenterY)
         labelApplicationTitle.center = CGPointMake(offscreenXValue, offscreenYValue)
         self.view.addSubview(labelApplicationTitle)
+        
     }
+    
     
     func createGamePlayElements()->() {
         
@@ -333,6 +365,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonCountdownTimer.alpha = 0.0
         self.view.addSubview(buttonCountdownTimer)
         
+        uiviewCountdownTimerView = makeCountdownTimerView()
+        uiviewCountdownTimerView.center = CGPointMake(offscreenXValue, offscreenYValue)
+        self.view.addSubview(uiviewCountdownTimerView)
         
         labelGameStats1 = makeGameStatsLabel()
         //labelGameStats1.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats1CenterX, screenHeight * 0.01 * consLabelGameStats1CenterY)
@@ -524,6 +559,43 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         return tempLabel
     }
     
+    func makeCountdownTimerView()->(UIView) {
+        
+        var sizeOfTimer : CGFloat = 30.00
+        // UIView for the Countdown Timer (making a filling circle as time progresses)
+        // frame is x value offset, y value offset, width and then height
+        var returnUIView = UIView(frame: CGRectMake(0, 0, sizeOfTimer, sizeOfTimer))
+        //returnUIView.backgroundColor = UIColor(red: 204.0, green: 204.0, blue: 153.0, alpha: 1.0)
+        returnUIView.backgroundColor = UIColor.greenColor()
+        returnUIView.alpha = 1.0
+        
+        // MAKING the LAYER
+        // create and add Shape to the UI, can be circle square or triangle
+        let oneLayer = CAShapeLayer()
+        
+        //oneLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, sizeOfTimer, sizeOfTimer)).CGPath
+        var point = CGPointMake(sizeOfTimer/2, sizeOfTimer/2)
+        //oneLayer.path = UIBezierPath(arcCenter:point, radius: sizeOfTimer/2, startAngle: 0, endAngle: 3.14, clockwise: true).CGPath
+        var pi : CGFloat = 3.14
+        //oneLayer.path = UIBezierPath(arcCenter:point, radius: sizeOfTimer/2, startAngle: 0, endAngle: 1.57, clockwise: true).CGPath
+        //oneLayer.path = UIBezierPath(arcCenter:point, radius: sizeOfTimer/2, startAngle: 0, endAngle: 6.28, clockwise: true).CGPath
+        oneLayer.path = UIBezierPath(arcCenter:point, radius: sizeOfTimer/2, startAngle: 0, endAngle: 5.5, clockwise: true).CGPath
+
+        // attributes
+        oneLayer.lineWidth = 0
+        oneLayer.strokeColor = UIColor.magentaColor().CGColor
+        oneLayer.fillColor = UIColor.blueColor().CGColor
+        
+        // Adding the Current Element
+        returnUIView.layer.addSublayer(oneLayer)
+        
+        // Element attributes
+        returnUIView.layer.borderWidth = 0
+        returnUIView.layer.borderColor = UIColor.yellowColor().CGColor
+
+        return returnUIView
+    }
+    
     // ################################################################################
     // ################################################################################
     // ################################################################################
@@ -558,9 +630,23 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         UIView.animateWithDuration(1.0, animations: {
             
             self.buttonPlay.alpha = 0.0
-            self.labelApplicationTitle.alpha = 0.0
+            
+            //self.labelApplicationTitle.alpha = 0.0
+            
+            self.labelApplicationTitle.transform = CGAffineTransformMakeScale(self.consLabelApplicationTitleWidth_GamePlayScreen/self.consLabelApplicationTitleWidth_MainScreen,
+                                                                                self.consLabelApplicationTitleHeight_GamePlayScreen/self.consLabelApplicationTitleHeight_MainScreen)
+            
+            //self.labelApplicationTitle.textAlignment = NSTextAlignment.Center
+            
+            self.labelApplicationTitle.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelApplicationTitleCenterX_GamePlayScreen, self.screenHeight * 0.01 * self.consLabelApplicationTitleCenterY_GamePlayScreen)
+            
             
             }, completion: {_ in
+
+                self.labelApplicationTitle.transform = CGAffineTransformIdentity
+                
+                self.labelApplicationTitle.frame = CGRectMake(self.labelApplicationTitle.center.x, self.labelApplicationTitle.center.y, self.screenWidth * 0.01 * self.consLabelApplicationTitleWidth_GamePlayScreen, self.screenHeight * 0.01 * self.consLabelApplicationTitleHeight_GamePlayScreen)
+
                 self.removeMainScreenElements()
                 NSLog("OUT OF MAIN SCREEN")
         })
@@ -584,6 +670,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         buttonCountdownTimer.alpha = 0.0
         buttonCountdownTimer.center = CGPointMake(screenWidth * 0.01 * consButtonCountdownTimerCenterX, screenHeight * 0.01 * consButtonCountdownTimerCenterY)
+        
+        uiviewCountdownTimerView.center = CGPointMake(screenWidth * 0.01 * consUIViewCountdownTimerCenterX, screenHeight * 0.01 * consUIViewCountdownTimerCenterY)
         
         labelGameStats1.alpha = 0.0
         labelGameStats1.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats1CenterX, screenHeight * 0.01 * consLabelGameStats1CenterY)
@@ -623,40 +711,74 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func animateIntoGamePlayElements()->() {
         println(__FUNCTION__)
-        
-        var additiveDelay :Double = 0.05
-        var animationDuration : Double = 0.15
-        
-        for iCount in 0..<arrayGameElements.count {
-            arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
-            arrayGameElements[iCount].alpha = 1.0
-            
-            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
-                self.arrayGameElements[iCount].transform = CGAffineTransformIdentity
-                }, completion: {_ in
-                    //println("Animation completed \(iCount)")
-            })
+
+        for iCount in 0..<self.arrayGameElements.count {
+            self.arrayGameElements[iCount].center = CGPointMake(self.arrayGameElements[iCount].center.x + 1000, self.arrayGameElements[iCount].center.y)
+            self.arrayGameElements[iCount].alpha = 1.00
         }
+
+        var animationDuration : Double = duration_IntoGamePlayElements
         
+        UIView.animateWithDuration(animationDuration, delay: 0.00, options: .CurveEaseOut, animations: {
+            
+            for iCount in 0..<self.arrayGameElements.count {
+                self.arrayGameElements[iCount].center = CGPointMake(self.arrayGameElements[iCount].center.x - 500, self.arrayGameElements[iCount].center.y)
+            }
+
+            }, completion: {_ in
+                println("Animation completed animateIntoGamePlayElements")
+        })
+        
+//        var additiveDelay :Double = 0.05
+//        var animationDuration : Double = 0.15
+//        
+//        for iCount in 0..<arrayGameElements.count {
+//            arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+//            arrayGameElements[iCount].alpha = 1.0
+//            
+//            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
+//                self.arrayGameElements[iCount].transform = CGAffineTransformIdentity
+//                }, completion: {_ in
+//                    //println("Animation completed \(iCount)")
+//            })
+//        }
     }
+    
     
     func animateOutofGamePlayElements()->() {
         println(__FUNCTION__)
+
+        var animationDuration : Double = duration_OutofGamePlayElements
         
-        var additiveDelay :Double = 0.02
-        var animationDuration : Double = 0.10
-        
-        for iCount in 0..<arrayGameElements.count {
-            //arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
-            //arrayGameElements[iCount].alpha = 1.0
+        UIView.animateWithDuration(animationDuration, delay: 0.00, options: .CurveEaseOut, animations: {
             
-            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
-                //self.arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
-                self.arrayGameElements[iCount].alpha = 0.0
-                }, completion: {_ in
-                    println("out of game elements Animation completed \(iCount)")
-            })
-        }
+            // giving the constant here for 500 is not working, animationElementsToOffScreen_XValue
+            for iCount in 0..<self.arrayGameElements.count {
+                self.arrayGameElements[iCount].center = CGPointMake(self.arrayGameElements[iCount].center.x - 500, self.arrayGameElements[iCount].center.y)
+            }
+            
+            }, completion: {_ in
+                println("out of game elements Animation completed.")
+        })
+        
+
+        
+        
+        
+//        var additiveDelay :Double = 0.02
+//        var animationDuration : Double = 0.10
+//        
+//        for iCount in 0..<arrayGameElements.count {
+//            //arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+//            //arrayGameElements[iCount].alpha = 1.0
+//            
+//            UIView.animateWithDuration(animationDuration, delay: Double(iCount) * additiveDelay, options: .CurveEaseOut, animations: {
+//                //self.arrayGameElements[iCount].transform = CGAffineTransformMakeScale(0, 0)
+//                self.arrayGameElements[iCount].alpha = 0.0
+//                }, completion: {_ in
+//                    println("out of game elements Animation completed \(iCount)")
+//            })
+//        }
     }
     
     func animateOutofGamePlayElements_EverythingElse()->() {
@@ -793,7 +915,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func removeMainScreenElements()->() {
         println(__FUNCTION__)
         self.buttonPlay.center = CGPointMake(self.offscreenXValue, self.offscreenYValue)
-        self.labelApplicationTitle.center = CGPointMake(self.offscreenXValue, self.offscreenYValue)
+        //self.labelApplicationTitle.center = CGPointMake(self.offscreenXValue, self.offscreenYValue)
     }
 
     func removeGamePlayElements()->() {
@@ -936,6 +1058,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
                 
                 let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+                
+                recognizer.numberOfTapsRequired = 1
+                recognizer.numberOfTouchesRequired = 1
                 recognizer.delegate = self
 
                 // Check whether you are at the winning element, if yes it is a different scenario
@@ -955,6 +1080,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 //arrayGameElements[i * numberRowsOrColumns + j] = tempViewToAddToArray
                 arrayGameElements.insert(tempViewToAddToArray, atIndex: i * numberRowsOrColumns + j)
                 
+                tempViewToAddToArray.center = CGPointMake(tempViewToAddToArray.center.x - 500, tempViewToAddToArray.center.y)
+                
                 self.view.addSubview(tempViewToAddToArray)
                 
             }
@@ -970,7 +1097,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         tempElement.backgroundColor = UIColor(red: 204.0, green: 204.0, blue: 153.0, alpha: 1.0)
         
-        tempElement.alpha = 0.0 // it is not visible when created, you will need to animated it.
+        tempElement.alpha = 1.0
         
         
         // MAKING the LAYER
@@ -1141,7 +1268,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         
         // THIS DELAY SHOULD BE CORRECTLY CALCULATED FOR GETTING PROPER ANIMATIONS
-        var newRoundDelay : Double = 2.0
+        var newRoundDelay : Double = 0.50
         delay(seconds:newRoundDelay, completion: {
             println("finished delay and waiting")
             
