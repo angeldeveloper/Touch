@@ -23,15 +23,26 @@ let buttonBorderColor = UIColor.blackColor().CGColor
 
 let buttonBackgroundColor : UIColor = UIColor(red: 0.00, green: 0.00, blue: 1.00, alpha: 1.00)
 
+// ###################
+// Animation Durations
+let animateOutofMainScreenDuration : Double = 1.00
+
+let animateIntoGamePlayScreenDuration : Double = 1.00
+
+let animateIntoGamePlayElementsDuration : Double = 1.00
+
+let animateOutofGamePlayElementsDuration : Double = 1.00
+
+let bringAttentionToWinningElement_EveryXSeconds : Double = 2.00
+
+let cubeTransitionDuration : Double = 0.50
+
 // Animation Elements Out of Screen by Balue
 let animationElementsToOffScreen_XValue : Int = 500
 
 // Animation Constants - Out of Game Play Elements
 let delay_OutofGamePlayElements : CGFloat = 0.00
 let duration_OutofGamePlayElements : Double = 0.20
-
-// Animation Constants - Into Game Play Elements
-let duration_IntoGamePlayElements : Double = 0.20
 
 
 
