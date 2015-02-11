@@ -66,12 +66,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelApplicationTitleWidth_GamePlayScreen : CGFloat = 20.0 // percentage of screen
     let consLabelApplicationTitleHeight_GamePlayScreen : CGFloat = 10.0 // percentage of screen
     
-    
     var buttonPlay: UIButton!
     
     let consButtonPlayCenterX : CGFloat = 50.0 // percentage of screen
     let consButtonPlayCenterY : CGFloat = 50.0 // percentage of screen
-    
+
+    var labelApplicationTitleSubtitle: UILabel!
+    let consLabelApplicationTitleSubtitleCenterX_MainScreen : CGFloat = 50.0 // percentage of screen
+    let consLabelApplicationTitleSubtitleCenterY_MainScreen : CGFloat = 36.0 // percentage of screen
+
     // ################################################################################
     
 
@@ -248,17 +251,21 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             
             
             animateOutofGamePlayElements()
+            
             animateOutofGamePlayElements_EverythingElse()
             
             
             // the above takes time so delay the following function
-            delay(seconds:3, completion: {
+            delay(seconds:animateOutofGamePlayElementsDuration, completion: {
+                
+                // Stroke End should be 0 now, as this game is over
+                self.uiviewCountdownTimerViewLayer.strokeEnd = 0.00
+
                 println("delay is over in counting and so calling remove game play elements")
                 self.removeGamePlayElements()
                 self.removeGamePlayElements_EverythingElse()
             })
 
-            
             settingUpGameOverElements()
             
             animateIntoGameOverElements()
@@ -312,18 +319,52 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func createMainScreenElements()->() {
         println(__FUNCTION__)
         
+        
+        
         // ================================================================================
         // BUTTON PLAY
         buttonPlay = UIButton()
-        buttonPlay.setTitle("PLAY", forState: UIControlState.Normal)
-        buttonPlay.sizeToFit()
-        buttonPlay.backgroundColor = buttonBackgroundColor
         
-        var buttonPlayWidth = screenWidth * 0.30
-        var buttonPlayHeight = screenHeight * 0.10
+        // background color for buttons always comes from constants
+        buttonPlay.backgroundColor = buttonBackgroundColor
+
+        //var font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+
+        var stringButtonPlayText = "PLAY"
+        
+        var myMutableString = NSMutableAttributedString()
+        
+        myMutableString = NSMutableAttributedString(string: stringButtonPlayText, attributes: [
+            NSFontAttributeName:UIFont(name: "Georgia", size: 30.0)!,
+            NSTextEffectAttributeName : NSTextEffectLetterpressStyle,
+            ])
+        
+        //myMutableString.addAttribute(NSFontAttributeName, value: UIFont(name: "Georgia", size: 36.0)!, range: NSRange(location: 0,length: 4))
+        
+        //var font = UIFont(name: "Verdana-Bold", size: 24.0)
+        //var font = UIFont.
+        
+//        var textColor = UIColor.greenColor()
+//        
+//        var attributedText = NSMutableAttributedString(string: "PLAY")
+//        
+//        let textFontAttributes = [NSForegroundColorAttributeName: textColor, NSFontAttributeName : font, NSTextEffectAttributeName : NSTextEffectLetterpressStyle]
+//        
+//        attributedText.addAttributes(textFontAttributes, range: NSMakeRange(0, "PLAY".length))
+        
+        //buttonPlay.setAttributedTitle(attributedText, forState: UIControlState.Normal)
+        buttonPlay.setAttributedTitle(myMutableString, forState: UIControlState.Normal)
+        //buttonPlay.setTitle("PLAY", forState: UIControlState.Normal)
+        buttonPlay.sizeToFit()
+        // font end
+
+        var buttonPlayWidth = screenWidth * 0.40
+        //var buttonPlayHeight = screenHeight * 0.20
+        var buttonPlayHeight = buttonPlayWidth * 0.50
+        
         //buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlay.frame.width*2, buttonPlay.frame.height*2)
         buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlayWidth, buttonPlayHeight)
-        buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlayWidth, buttonPlayWidth)
+        //buttonPlay.frame = CGRectMake(buttonPlay.frame.origin.x, buttonPlay.frame.origin.y, buttonPlayWidth, buttonPlayWidth)
         
         buttonPlay.layer.cornerRadius = buttonCornerRadius
         buttonPlay.layer.borderWidth = buttonBorderWidth
@@ -331,7 +372,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         buttonPlay.center = CGPointMake(offscreenXValue, offscreenYValue)
         buttonPlay.addTarget(self, action: "tapPlayEvent:", forControlEvents: UIControlEvents.TouchUpInside)
+
+        
         self.view.addSubview(buttonPlay)
+        
+        
+        
         
         // ================================================================================
         // LABEL APPLICATION TITLE
@@ -349,6 +395,24 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelApplicationTitle.layer.backgroundColor = UIColor.brownColor().CGColor
         labelApplicationTitle.center = CGPointMake(offscreenXValue, offscreenYValue)
         self.view.addSubview(labelApplicationTitle)
+        
+        // ================================================================================
+        // LABEL APPLICATION TITLE SUBTITLE
+        labelApplicationTitleSubtitle = UILabel()
+        labelApplicationTitleSubtitle.text = "Can You Touch?"
+        labelApplicationTitleSubtitle.sizeToFit()
+        labelApplicationTitleSubtitle.textAlignment = NSTextAlignment.Center
+        labelApplicationTitleSubtitle.layer.cornerRadius = 5
+        
+        var labelApplicationTitleSubtitleWidth = screenWidth * 0.60
+        var labelApplicationTitleSubtitleHeight = screenHeight * 0.05
+        labelApplicationTitleSubtitle.frame = CGRectMake(labelApplicationTitleSubtitle.frame.origin.x, labelApplicationTitleSubtitle.frame.origin.y, labelApplicationTitleSubtitleWidth, labelApplicationTitleSubtitleHeight)
+        
+        labelApplicationTitleSubtitle.layer.backgroundColor = UIColor.brownColor().CGColor
+        labelApplicationTitleSubtitle.center = CGPointMake(offscreenXValue, offscreenYValue)
+        self.view.addSubview(labelApplicationTitleSubtitle)
+        
+        
     }
     
     
@@ -583,7 +647,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         uiviewCountdownTimerViewLayer.strokeColor = UIColor.greenColor().CGColor
         
         //oneLayer.fillColor = UIColor.blueColor().CGColor
-        uiviewCountdownTimerViewLayer.fillColor = colorAppBackground.CGColor
+        //uiviewCountdownTimerViewLayer.fillColor = colorAppBackground.CGColor
+        uiviewCountdownTimerViewLayer.fillColor = UIColor.blueColor().CGColor
         
         uiviewCountdownTimerViewLayer.strokeStart    = 0.00
         uiviewCountdownTimerViewLayer.strokeEnd      = 0.00
@@ -676,22 +741,25 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateIntoMainScreen () -> () {
         println(__FUNCTION__)
         
-        buttonPlay.alpha = 0.0
+        buttonPlay.alpha = 1.0
         buttonPlay.center = CGPointMake(screenWidth * 0.01 * consButtonPlayCenterX, screenHeight * 0.01 * consButtonPlayCenterY)
         
-        labelApplicationTitle.alpha = 0.0
+        labelApplicationTitle.alpha = 1.0
         labelApplicationTitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleCenterX_MainScreen, screenHeight * 0.01 * consLabelApplicationTitleCenterY_MainScreen)
+        
+        labelApplicationTitleSubtitle.alpha = 1.0
+        labelApplicationTitleSubtitle.center = CGPointMake(screenWidth * 0.01 * consLabelApplicationTitleSubtitleCenterX_MainScreen, screenHeight * 0.01 * consLabelApplicationTitleSubtitleCenterY_MainScreen)
         
         UIView.animateWithDuration(1.0, animations: {
             
-            self.buttonPlay.alpha = 1.0
-            self.labelApplicationTitle.alpha = 1.0
+            //self.buttonPlay.alpha = 1.0
+            //self.labelApplicationTitle.alpha = 1.0
             
             }, completion: {_ in
                 NSLog("CAME TO MAIN SCREEN")
                 
                 // ONLY FOR TESTING
-                self.tapPlayEvent(UIView)
+                //self.tapPlayEvent(UIView)
         })
     }
     
@@ -702,6 +770,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         UIView.animateWithDuration(animateOutofMainScreenDuration, animations: {
             
             self.buttonPlay.alpha = 0.0
+            
+            self.labelApplicationTitleSubtitle.alpha = 0.00
             
             //self.labelApplicationTitle.alpha = 0.0
             
@@ -741,37 +811,52 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //        labelAction.alpha = 0.0
 //        labelAction.center = CGPointMake(screenWidth * 0.01 * consLabelActionCenterX, screenHeight * 0.01 * consLabelActionCenterY)
 
-        buttonCountdownTimer.alpha = 0.0
+        buttonCountdownTimer.alpha = 1.00
         buttonCountdownTimer.center = CGPointMake(screenWidth * 0.01 * consButtonCountdownTimerCenterX, screenHeight * 0.01 * consButtonCountdownTimerCenterY)
         
-        uiviewCountdownTimerView.center = CGPointMake(screenWidth * 0.01 * consUIViewCountdownTimerCenterX, screenHeight * 0.01 * consUIViewCountdownTimerCenterY)
+        self.uiviewCountdownTimerView.alpha = 1.0
+        uiviewCountdownTimerView.center = CGPointMake(screenWidth * 0.01 * consUIViewCountdownTimerCenterX + movementCountdownTimerView,
+            screenHeight * 0.01 * consUIViewCountdownTimerCenterY)
+        self.uiviewCountdownTimerViewLayer.strokeStart = 0.00
+        self.uiviewCountdownTimerViewLayer.strokeEnd = 0.00
+
         
-        labelGameStats1.alpha = 0.0
-        labelGameStats1.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats1CenterX, screenHeight * 0.01 * consLabelGameStats1CenterY)
+        labelGameStats1.alpha = 1.0
+        labelGameStats2.alpha = 1.0
+        labelGameStats3.alpha = 1.0
+        labelGameStats4.alpha = 1.0
         
-        labelGameStats2.alpha = 0.0
-        labelGameStats2.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats2CenterX, screenHeight * 0.01 * consLabelGameStats2CenterY)
-        
-        labelGameStats3.alpha = 0.0
-        labelGameStats3.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats3CenterX, screenHeight * 0.01 * consLabelGameStats3CenterY)
-        
-        labelGameStats4.alpha = 0.0
-        labelGameStats4.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats4CenterX, screenHeight * 0.01 * consLabelGameStats4CenterY)
+        labelGameStats1.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats1CenterX, screenHeight * 0.01 * consLabelGameStats1CenterY + movementGameStatsLabel)
+        labelGameStats2.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats2CenterX, screenHeight * 0.01 * consLabelGameStats2CenterY + movementGameStatsLabel)
+        labelGameStats3.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats3CenterX, screenHeight * 0.01 * consLabelGameStats3CenterY + movementGameStatsLabel)
+        labelGameStats4.center = CGPointMake(screenWidth * 0.01 * consLabelGameStats4CenterX, screenHeight * 0.01 * consLabelGameStats4CenterY + movementGameStatsLabel)
         
         
-        UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: 0.0, options: nil, animations: {
+        UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: {
+
+            self.labelGameStats1.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats1CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats1CenterY - movementGameStatsLabel)
+            self.labelGameStats2.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats2CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats2CenterY - movementGameStatsLabel)
+            self.labelGameStats3.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats3CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats3CenterY - movementGameStatsLabel)
+            self.labelGameStats4.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats4CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats4CenterY - movementGameStatsLabel)
             
-            //self.labelApplicationTitle.alpha = 1.0
-            self.buttonCountdownTimer.alpha = 1.0
-            self.labelGameStats1.alpha = 1.0
-            self.labelGameStats2.alpha = 1.0
-            self.labelGameStats3.alpha = 1.0
-            self.labelGameStats4.alpha = 1.0
-            
+            self.uiviewCountdownTimerView.center = CGPointMake(self.screenWidth * 0.01 * self.consUIViewCountdownTimerCenterX - movementCountdownTimerView,
+                self.screenHeight * 0.01 * self.consUIViewCountdownTimerCenterY)
+
+//            self.buttonCountdownTimer.alpha = 1.0
+//            self.labelGameStats1.alpha = 1.0
+//            self.labelGameStats2.alpha = 1.0
+//            self.labelGameStats3.alpha = 1.0
+//            self.labelGameStats4.alpha = 1.0
+//            self.uiviewCountdownTimerView.alpha = 1.0
+
             }, completion: {_ in
                 NSLog("CAME TO GAME PLAY SCREEN")
                 
-                self.createGameElementsForNextRound()
+                
                 
         })
     }
@@ -848,22 +933,43 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateOutofGamePlayElements_EverythingElse()->() {
         println(__FUNCTION__)
 
-        var additiveDelay :Double = 0.02
-        var animationDuration : Double = 0.10
-        
-        UIView.animateWithDuration(animationDuration, delay: 1.0, options: .CurveEaseOut, animations: {
+        UIView.animateWithDuration(animateOutofGamePlayElementsDuration, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: {
+            
+            self.labelGameStats1.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats1CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats1CenterY + movementGameStatsLabel)
+            self.labelGameStats2.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats2CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats2CenterY + movementGameStatsLabel)
+            self.labelGameStats3.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats3CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats3CenterY + movementGameStatsLabel)
+            self.labelGameStats4.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelGameStats4CenterX,
+                self.screenHeight * 0.01 * self.consLabelGameStats4CenterY + movementGameStatsLabel)
 
-            self.labelGameStats1.alpha = 0.0
-            self.labelGameStats2.alpha = 0.0
-            self.labelGameStats3.alpha = 0.0
-            self.labelGameStats4.alpha = 0.0
-            self.buttonCountdownTimer.alpha = 0.0
-            self.uiviewCountdownTimerView.alpha = 0.0
-//            self.labelAction.alpha = 0.0
+            
+            //self.buttonCountdownTimer.center =
+            self.uiviewCountdownTimerView.center = CGPointMake(self.screenWidth * 0.01 * self.consUIViewCountdownTimerCenterX + movementCountdownTimerView,
+                self.screenHeight * 0.01 * self.consUIViewCountdownTimerCenterY)
 
-                }, completion: {_ in
-                    println("animation complete everything else game play elements")
+            }, completion: {_ in
+                NSLog("CAME TO GAME PLAY SCREEN")
         })
+        
+        
+        
+//        var additiveDelay :Double = 0.02
+//        var animationDuration : Double = 0.10
+//        
+//        UIView.animateWithDuration(animationDuration, delay: 1.0, options: .CurveEaseOut, animations: {
+//
+////            self.labelGameStats1.alpha = 0.0
+////            self.labelGameStats2.alpha = 0.0
+////            self.labelGameStats3.alpha = 0.0
+////            self.labelGameStats4.alpha = 0.0
+////            self.buttonCountdownTimer.alpha = 0.0
+////            self.uiviewCountdownTimerView.alpha = 0.0
+//
+//                }, completion: {_ in
+//                    println("animation complete everything else game play elements")
+//        })
     }
 
     
@@ -962,6 +1068,21 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         })
     }
     
+    func animateOutOfGameOverElements()->() {
+        println(__FUNCTION__)
+        
+        UIView.animateWithDuration(animateOutOfGameOverElementsDuration, delay: 0.00, options: .CurveEaseOut, animations: {
+            
+            self.labelApplicationTitle.transform = CGAffineTransformIdentity
+            self.labelApplicationTitle.center = CGPointMake(self.screenWidth * 0.01 * self.consLabelApplicationTitleCenterX_MainScreen, self.screenHeight * 0.01 * self.consLabelApplicationTitleCenterY_MainScreen)
+
+            }, completion: {_ in
+                println("")
+                self.buttonCountdownTimer.setTitle("\(self.timerCount)", forState: UIControlState.Normal)
+        })
+        
+        
+    }
     // Animation Functions - END
     // ################################################################################
     // ################################################################################
@@ -980,6 +1101,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func removeMainScreenElements()->() {
         println(__FUNCTION__)
         self.buttonPlay.center = CGPointMake(self.offscreenXValue, self.offscreenYValue)
+        self.labelApplicationTitleSubtitle.center = CGPointMake(self.offscreenXValue, self.offscreenYValue)
         //self.labelApplicationTitle.center = CGPointMake(self.offscreenXValue, self.offscreenYValue)
     }
 
@@ -1023,8 +1145,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelGameStats2.center = CGPointMake(offscreenXValue, offscreenYValue)
         labelGameStats3.center = CGPointMake(offscreenXValue, offscreenYValue)
         labelGameStats4.center = CGPointMake(offscreenXValue, offscreenYValue)
+
         buttonCountdownTimer.center = CGPointMake(offscreenXValue, offscreenYValue)
         uiviewCountdownTimerView.center = CGPointMake(offscreenXValue, offscreenYValue)
+        
 //        labelAction.center = CGPointMake(offscreenXValue, offscreenYValue)
     }
 
@@ -1285,15 +1409,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             // that delay is used in the next line
             self.createGameElementsForNextRound()
 
-            self.delay(seconds:animateIntoGamePlayElementsDuration, completion: {
-                self.timerGetAttention =
-                    NSTimer.scheduledTimerWithTimeInterval(
-                        bringAttentionToWinningElement_EveryXSeconds,
-                        target: self,
-                        selector: Selector("bringAttentionToWinningElement"),
-                        userInfo: nil,
-                        repeats: true)
-            })
+//            self.delay(seconds:animateIntoGamePlayElementsDuration, completion: {
+//                self.timerGetAttention =
+//                    NSTimer.scheduledTimerWithTimeInterval(
+//                        bringAttentionToWinningElement_EveryXSeconds,
+//                        target: self,
+//                        selector: Selector("bringAttentionToWinningElement"),
+//                        userInfo: nil,
+//                        repeats: true)
+//            })
         })
     }
     
@@ -1388,15 +1512,24 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         removeGameOverElements()
         removeGamePausedElements()
         
+        //self.labelApplicationTitle.transform = CGAffineTransformMakeScale(1.00/0.25, 1.00/0.25)
+        //self.labelApplicationTitle.transform = CGAffineTransformIdentity
+        
+        animateOutOfGameOverElements()
+        
         //removeGameOverElements_EverythingElse()
         // get into the main screen now
-        animateIntoMainScreen()
+        delay(seconds:animateOutOfGameOverElementsDuration, completion: {
+            self.animateIntoMainScreen()
+        })
     }
     
     func tapTryAgainEvent(sender: AnyObject) {
         println(__FUNCTION__)
+        
         // remove from visible region all the game over elements
         removeGameOverElements()
+        
         self.tapPlayEvent(UIView)
     }
     
@@ -1425,9 +1558,14 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func tapPlayEvent(sender: AnyObject) {
         animateOutofMainScreen()
+        
         delay(seconds:animateOutofMainScreenDuration, completion: {
             println("delay animateOutofMainScreenDuration introduced here!")
+
             self.animateIntoGamePlayScreen()
+            
+            self.createGameElementsForNextRound()
+            
             
             self.delay(seconds:animateIntoGamePlayScreenDuration+animateIntoGamePlayElementsDuration, completion: {
                 self.startAllTimers()
