@@ -14,17 +14,23 @@ let blackDotSize : CGFloat = 0.50 // it is a percentage size
 
 // Game Loop Duration
 //let intGameLoopDuration : Int = 3 // duration of each game play
-let intGameLoopDuration : Int = 6 // duration of each game play
+let intGameLoopDuration : Int = 10 // duration of each game play
 
 let numberRowsOrColumns = 5
 
+// Button Attributes
 let buttonCornerRadius : CGFloat = 10.0
-let buttonBorderWidth : CGFloat = 1.0
+let buttonBorderWidth : CGFloat = 1.00
 let buttonBorderColor = UIColor.blackColor().CGColor
 
 //let buttonBackgroundColor : UIColor = UIColor(red: 0.00, green: 0.00, blue: 1.00, alpha: 1.00)
 let buttonBackgroundColor : UIColor = UIColor.greenColor()
 //let buttonBackgroundColor : UIColor = UIColor.clearColor()
+
+// Label Attributes
+let labelCornerRadius : CGFloat = 0.00
+let labelBorderWidth : CGFloat = 0.00
+let labelBorderColor = UIColor.blackColor().CGColor
 
 // ###################
 // Animation Durations
@@ -50,7 +56,7 @@ let delay_OutofGamePlayElements : CGFloat = 0.00
 let duration_OutofGamePlayElements : Double = 0.20
 
 // Game Stats Label Movement
-let movementGameStatsLabel : CGFloat = 80.00
+let movementGameStatsLabel : CGFloat = 160.00
 let movementCountdownTimerView : CGFloat = 100.00
 
 
