@@ -10,5 +10,6 @@ import Foundation
 import UIKit
 
 // App Background Color
-let colorAppBackground = UIColor(red: 255.00/255.00, green: 246.00/255.00, blue: 186.00/255.00, alpha:1.00)
+//let colorAppBackground = UIColor(red: 255.00/255.00, green: 246.00/255.00, blue: 186.00/255.00, alpha:1.00)
+let colorAppBackground = UIColor.whiteColor()
 
