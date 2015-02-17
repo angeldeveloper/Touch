@@ -94,6 +94,13 @@ let notificationName_applicationDidEnterBackground  = "NotificationapplicationDi
 
 var boolJustLaunched = false
 
+// ###################
+// Font Size
+let fontsize_ExtraSmall : CGFloat   = 12.0
+let fontsize_Small : CGFloat        = 14.0
+let fontsize_Medium : CGFloat       = 24.0
+let fontsize_Large : CGFloat        = 30.0
+let fontsize_ExtraLarge : CGFloat   = 40.0
 
 
 

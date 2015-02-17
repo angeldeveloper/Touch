@@ -26,15 +26,27 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
     var intScore : Int = 0
     
-    var offscreenXValue: CGFloat = -300.0
+    var offscreenXValue: CGFloat = -500.0
 
-    var offscreenYValue: CGFloat = -300.0
+    var offscreenYValue: CGFloat = -500.0
     
     var screenWidth, screenHeight : CGFloat!
     
     var randomWinningElementPlacementInt = -1
     
     var animationInProgressGamePlayElements = false
+    
+    var gameloopTimerFrequencyCallsPerSecond : Int = 1
+
+    var boolElementsDisabled = false
+    
+    var averageTimePerTouch : CGFloat = 0.00
+    
+    var objectsTouchedInThisGameLoop : CGFloat = 0
+    
+    //var currentObjectTouchTime : CGFloat = 0.00
+    
+    var touchTimeStartAt = CFAbsoluteTimeGetCurrent() // the default will not be used
     
     // ################################################################################
     
@@ -43,6 +55,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     // Timers
     
     var timerCount = 0
+    var timerCountLocal = 0
+    
     var timerRunning = false
     var timerGameLoopCountdown = NSTimer()
     
@@ -270,9 +284,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         if false == timerRunning {
             
             // Game Loop Countdown Timer
-            timerGameLoopCountdown = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("eventGameLoopOneSecond"), userInfo: nil, repeats: true)
+            timerGameLoopCountdown = NSTimer.scheduledTimerWithTimeInterval(Double(1.00/Double(gameloopTimerFrequencyCallsPerSecond)), target: self, selector: Selector("eventGameLoop"), userInfo: nil, repeats: true)
             //timerGameLoopCountdown = NSTimer.scheduledTimerWithTimeInterval(0.50, target: self, selector: Selector("eventGameLoopOneSecond"), userInfo: nil, repeats: true)
-            timerGameLoopCountdown.tolerance = 0.10
+            //timerGameLoopCountdown.tolerance = 0.10
             timerRunning = true
             
             self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount + 1)/CGFloat(intGameLoopDuration)
@@ -290,16 +304,51 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func eventGameLoopOneSecond() {
+    func eventGameLoop() {
         //println(__FUNCTION__)
-
+        
+//        // =====
+//        // Timer Strokes
+//        var strokeEnd : CGFloat = 0.00
+//        strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
+//        strokeEnd += CGFloat(timerCountLocal/(gameloopTimerFrequencyCallsPerSecond*intGameLoopDuration))
+//        
+//        
+//        println("\(strokeEnd)")
+//        self.uiviewCountdownTimerViewLayer.strokeEnd = strokeEnd
+//        // =====
+//
+//        timerCountLocal += 1
+//        
+//        // Stroke is irrespective of whether there will be a match
+//        // Stroke Start increase by the amount required
+//        //self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(0.50) / CGFloat(intGameLoopDuration)
+//
+//        
+//        if timerCountLocal >= gameloopTimerFrequencyCallsPerSecond {
+//            println("inside to try match and YES")
+//            
+//            if timerCount < intGameLoopDuration {
+//                println("inside timer count increate")
+//                timerCount += 1
+//            }
+//            
+//            timerCountLocal = 0
+//
+//        } else {
+//            println("inside to try match and NO")
+//            println("returning")
+//            
+//            return
+//        }
+        
+        
         if timerCount < intGameLoopDuration {
             timerCount += 1
         }
         
-        // Stroke Start increase by the amount required
-        self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount+1)/CGFloat(intGameLoopDuration)
-        
+        self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
+
         // this needs to be animated somehow
         // I will use an entirely different element to show this element
         buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
@@ -309,6 +358,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             
             // end in the next loop if animation is in progress
             if animationInProgressGamePlayElements {
+                boolElementsDisabled = true
                 return
             }
             
@@ -337,29 +387,49 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.settingUpGameOverElements()
                 
                 self.animateIntoGameOverElements()
-
+                
+                // now the buttons can be enabled again
+                // this current game loop is done
+                self.boolElementsDisabled = false
+                
+                self.resetScores()
+                
             })
-
-            
-            resetScores()
         }
     }
 
     func settingUpGameOverElements()->() {
         var objCommon = CommonFunctions()
-        labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:20)
+        
+        labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
+        
+        let formatter = NSNumberFormatter()
+        formatter.minimumIntegerDigits = 1
+        formatter.maximumIntegerDigits = 100
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        labelSpeedValue.attributedText = objCommon.attributedTextForText(formatter.stringFromNumber(averageTimePerTouch)!, fontSize:fontsize_Medium)
+        
+        // Calculate the Score based on total black dots collected and the average time of touches
+        var scoreValueLocal = (CGFloat(intScore) * 10) * (2 / averageTimePerTouch)
+        
+        labelScoreValue.attributedText = objCommon.attributedTextForText(formatter.stringFromNumber(scoreValueLocal)!, fontSize:fontsize_Medium)
+        
     }
     
     func resetScores()->() {
         intScore = 0
+        averageTimePerTouch = 0.00
         
-        var objCommon = CommonFunctions()
+//        var objCommon = CommonFunctions()
         
         //newLabel.text = text
-        labelGameStats1.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:20)
-        labelGameStats2.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:20)
-        labelGameStats3.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:20)
-        labelGameStats4.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:20)
+//        labelGameStats1.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
+//
+//        labelGameStats2.attributedText = objCommon.attributedTextForText("\(averageTimePerTouch)", fontSize:fontsize_Medium)
+//        labelGameStats3.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
+//        labelGameStats4.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
 
 //        labelGameStats1.text = "\(intScore)"
 //        
@@ -406,7 +476,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonPlay.backgroundColor = buttonBackgroundColor
 
         var objCommon = CommonFunctions()
-        buttonPlay.setAttributedTitle(objCommon.attributedTextForText("P L A Y", fontSize:40), forState: UIControlState.Normal)
+        buttonPlay.setAttributedTitle(objCommon.attributedTextForText("P L A Y", fontSize:fontsize_ExtraLarge), forState: UIControlState.Normal)
         buttonPlay.sizeToFit()
 
         // ====
@@ -428,7 +498,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // LABEL APPLICATION TITLE
 
         labelApplicationTitle = UILabel()
-        labelApplicationTitle.attributedText = objCommon.attributedTextForText("T o u c h", fontSize:40)
+        labelApplicationTitle.attributedText = objCommon.attributedTextForText("T o u c h", fontSize:fontsize_ExtraLarge)
         labelApplicationTitle.sizeToFit()
         
         labelApplicationTitle.textAlignment = NSTextAlignment.Center
@@ -452,7 +522,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // LABEL APPLICATION TITLE SUBTITLE
 
         labelApplicationTitleSubtitle = UILabel()
-        labelApplicationTitleSubtitle.attributedText = objCommon.attributedTextForText("follow the black dot", fontSize:15)
+        labelApplicationTitleSubtitle.attributedText = objCommon.attributedTextForText("follow the black dot", fontSize:fontsize_Small)
         labelApplicationTitleSubtitle.sizeToFit()
         
         labelApplicationTitleSubtitle.textAlignment = NSTextAlignment.Center
@@ -480,7 +550,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         var versionString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as String
         
         labelVersion = UILabel()
-        labelVersion.attributedText = objCommon.attributedTextForText(versionString, fontSize:15)
+        labelVersion.attributedText = objCommon.attributedTextForText(versionString, fontSize:fontsize_Small)
         labelVersion.sizeToFit()
         
         labelVersion.textAlignment = NSTextAlignment.Center
@@ -565,7 +635,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonResume = UIButton()
         buttonResume.backgroundColor = buttonBackgroundColor
         
-        buttonResume.setAttributedTitle(objCommon.attributedTextForText("R E S U M E", fontSize:20), forState: UIControlState.Normal)
+        buttonResume.setAttributedTitle(objCommon.attributedTextForText("R E S U M E", fontSize:fontsize_Medium), forState: UIControlState.Normal)
         buttonResume.sizeToFit()
         
         // ====
@@ -592,7 +662,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         labelGameOver = createLabelGameOver()
         
-        labelGameOver.attributedText = objCommon.attributedTextForText("Game Over", fontSize:20)
+        labelGameOver.attributedText = objCommon.attributedTextForText("Game Over", fontSize:fontsize_Medium)
         
         labelGameOver.sizeToFit()
         
@@ -602,12 +672,13 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         self.view.addSubview(labelGameOver)
         
+        
         // ================================================================================
         // LABEL Objects touched
         
         labelObjectsTouched = createLabelGameOver()
 
-        labelObjectsTouched.attributedText = objCommon.attributedTextForText("Objects Touched", fontSize:20)
+        labelObjectsTouched.attributedText = objCommon.attributedTextForText("Dots Collected", fontSize:fontsize_Medium)
 
         labelObjectsTouched.sizeToFit()
         
@@ -623,7 +694,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         labelObjectsTouchedValue = createLabelGameOver()
         
-        labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("0", fontSize:20)
+        labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
 
         labelObjectsTouchedValue.sizeToFit()
         
@@ -634,11 +705,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         self.view.addSubview(labelObjectsTouchedValue)
         
+        
         // ================================================================================
         // LABEL speed
         labelSpeed = createLabelGameOver()
 
-        labelSpeed.attributedText = objCommon.attributedTextForText("Speed", fontSize:20)
+        labelSpeed.attributedText = objCommon.attributedTextForText("Average Time", fontSize:fontsize_Medium)
 
         labelSpeed.sizeToFit()
         
@@ -652,7 +724,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // ================================================================================
         labelSpeedValue = createLabelGameOver()
 
-        labelSpeedValue.attributedText = objCommon.attributedTextForText("0", fontSize:20)
+        labelSpeedValue.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
 
         labelSpeedValue.sizeToFit()
         
@@ -663,10 +735,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         self.view.addSubview(labelSpeedValue)
         
+        
         // ================================================================================
         labelScore = createLabelGameOver()
         
-        labelScore.attributedText = objCommon.attributedTextForText("Score", fontSize:20)
+        labelScore.attributedText = objCommon.attributedTextForText("Score", fontSize:fontsize_Medium)
 
         labelScore.sizeToFit()
         
@@ -679,7 +752,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // ================================================================================
         labelScoreValue = createLabelGameOver()
 
-        labelScoreValue.attributedText = objCommon.attributedTextForText("0", fontSize:20)
+        labelScoreValue.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
 
         labelScoreValue.sizeToFit()
         
@@ -692,7 +765,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // ================================================================================
         buttonTryAgain = createButtonGameOver()
         
-        buttonTryAgain.setAttributedTitle(objCommon.attributedTextForText("Try Again", fontSize:20), forState: UIControlState.Normal)
+        buttonTryAgain.setAttributedTitle(objCommon.attributedTextForText("Try Again", fontSize:fontsize_Medium), forState: UIControlState.Normal)
         
         buttonTryAgain.sizeToFit()
 
@@ -709,7 +782,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // ================================================================================
         buttonQuit = createButtonGameOver()
         
-        buttonQuit.setAttributedTitle(objCommon.attributedTextForText("Quit", fontSize:20), forState: UIControlState.Normal)
+        buttonQuit.setAttributedTitle(objCommon.attributedTextForText("Quit", fontSize:fontsize_Medium), forState: UIControlState.Normal)
 
         buttonQuit.sizeToFit()
         
@@ -757,7 +830,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         var tempLabel = UILabel()
         var objCommon = CommonFunctions()
 
-        tempLabel.attributedText = objCommon.attributedTextForText("0", fontSize:20)
+        tempLabel.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
         
         tempLabel.sizeToFit()
         
@@ -910,19 +983,19 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         buttonCountdownTimer.alpha = 0.00
         buttonCountdownTimer.center = CGPointMake(screenWidth * consButtonCountdownTimerCenterX, screenHeight * consButtonCountdownTimerCenterY)
         
-        self.uiviewCountdownTimerView.alpha = 1.0
+        self.uiviewCountdownTimerView.alpha = 1.00
         uiviewCountdownTimerView.center = CGPointMake(
             screenWidth * consUIViewCountdownTimerCenterX + movementCountdownTimerView,
             screenHeight * consUIViewCountdownTimerCenterY)
         self.uiviewCountdownTimerViewLayer.strokeStart = 0.00
         self.uiviewCountdownTimerViewLayer.strokeEnd = 0.00
 
-        labelGameStats1.alpha = 1.0
-        labelGameStats2.alpha = 1.0
-        labelGameStats3.alpha = 1.0
-        labelGameStats4.alpha = 1.0
+        labelGameStats1.alpha = 1.00
+        labelGameStats2.alpha = 1.00
+        labelGameStats3.alpha = 1.00
+        labelGameStats4.alpha = 1.00
         
-        UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: {
+        UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: 0.00, options: UIViewAnimationOptions.CurveLinear, animations: {
 
             self.labelGameStats1.center = CGPointMake(self.labelGameStats1.center.x, self.labelGameStats1.center.y - movementGameStatsLabel)
             self.labelGameStats2.center = CGPointMake(self.labelGameStats2.center.x, self.labelGameStats2.center.y - movementGameStatsLabel)
@@ -959,6 +1032,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             }, completion: {_ in
                 println("Animation completed animateIntoGamePlayElements")
                 self.animationInProgressGamePlayElements = false
+                self.touchTimeStartAt = CFAbsoluteTimeGetCurrent()
             }
         )
         
@@ -1052,14 +1126,14 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateIntoGamePausedElements()->() {
         println(__FUNCTION__)
 
-        var animationDelay :Double = 0.0
-        var animationDuration : Double = 0.5
+        var animationDelay :Double = 0.00
+        var animationDuration : Double = 0.50
 
         // i have removed quit button from this screen
-        buttonQuit.alpha = 0.0
+        buttonQuit.alpha = 0.00
         
-        labelGamePaused.alpha = 0.0
-        buttonResume.alpha = 0.0
+        labelGamePaused.alpha = 0.00
+        buttonResume.alpha = 0.00
         
         labelGamePaused.center = CGPointMake(screenWidth * consLabelGamePausedCenterX, screenHeight * consLabelGamePausedCenterY)
         buttonResume.center = CGPointMake(screenWidth * consButtonResumeCenterX, screenHeight * consButtonResumeCenterY)
@@ -1067,8 +1141,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         UIView.animateWithDuration(animationDuration, delay: animationDelay, options: .CurveEaseOut, animations: {
             
-            self.labelGamePaused.alpha  = 1.0
-            self.buttonResume.alpha     = 1.0
+            self.labelGamePaused.alpha  = 1.00
+            self.buttonResume.alpha     = 1.00
             
             }, completion: {_ in
                 println("Animation Game Paused Completed!")
@@ -1077,7 +1151,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func animateOutofGamePausedElements()->() {
         println(__FUNCTION__)
-        UIView.animateWithDuration(animateOutofGamePausedElementsDuration, delay: 0.0, options: .CurveEaseOut, animations: {
+        UIView.animateWithDuration(animateOutofGamePausedElementsDuration, delay: 0.00, options: .CurveEaseOut, animations: {
             self.labelGamePaused.alpha = 0.00
             self.buttonResume.alpha = 0.00
             self.buttonQuit.alpha = 0.00
@@ -1094,15 +1168,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         // Game Over Elements
         
-        labelGameOver.alpha = 0.0
-        labelObjectsTouched.alpha = 0.0
-        labelObjectsTouchedValue.alpha = 0.0
-        labelSpeed.alpha = 0.0
-        labelSpeedValue.alpha = 0.0
-        labelScore.alpha = 0.0
-        labelScoreValue.alpha = 0.0
-        buttonTryAgain.alpha = 0.0
-        buttonQuit.alpha = 0.0
+        labelGameOver.alpha = 0.00
+        labelObjectsTouched.alpha = 0.00
+        labelObjectsTouchedValue.alpha = 0.00
+        labelSpeed.alpha = 0.00
+        labelSpeedValue.alpha = 0.00
+        labelScore.alpha = 0.00
+        labelScoreValue.alpha = 0.00
+        buttonTryAgain.alpha = 0.00
+        buttonQuit.alpha = 0.00
         
         
         labelGameOver.center = CGPointMake(screenWidth * consLabelGameOverCenterX, screenHeight * consLabelGameOverCenterY)
@@ -1468,6 +1542,33 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func handleTap(recognizer: UITapGestureRecognizer) {
         println(__FUNCTION__)
 
+        // The Game loop is over and we are just waiting for the animation to get over
+        // So don't handle this tap and the next loop will make everything right.
+        if true == boolElementsDisabled {
+            // this will ignore the current touch
+            return
+        }
+        
+        // Calculation of avergage time
+        objectsTouchedInThisGameLoop += 1
+        
+        println(CFAbsoluteTimeGetCurrent() - touchTimeStartAt)
+        
+        var numerator = (averageTimePerTouch * (objectsTouchedInThisGameLoop - 1)) + CGFloat(CFAbsoluteTimeGetCurrent() - touchTimeStartAt)
+        var denominator = objectsTouchedInThisGameLoop
+        
+        averageTimePerTouch =  numerator / denominator
+        
+        //println(averageTimePerTouch)
+        
+        let formatter = NSNumberFormatter()
+        formatter.minimumIntegerDigits = 1
+        formatter.maximumIntegerDigits = 100
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        cubeTransition(labelGameStats2, text: formatter.stringFromNumber(averageTimePerTouch)!, direction: AnimationDirection.Negative)
+        
         // Attention timer invalidate
         timerGetAttention.invalidate()
         
@@ -1553,9 +1654,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         cubeTransition(labelGameStats1, text: "\(intScore)", direction: AnimationDirection.Negative)
         
-        cubeTransition(labelGameStats2, text: "\(intScore)", direction: AnimationDirection.Negative)
-        cubeTransition(labelGameStats3, text: "\(intScore)", direction: AnimationDirection.Negative)
-        cubeTransition(labelGameStats4, text: "\(intScore)", direction: AnimationDirection.Negative)
+//        cubeTransition(labelGameStats2, text: "\(intScore)", direction: AnimationDirection.Negative)
+//        cubeTransition(labelGameStats3, text: "\(intScore)", direction: AnimationDirection.Negative)
+//        cubeTransition(labelGameStats4, text: "\(intScore)", direction: AnimationDirection.Negative)
 
 //        labelGameStats2.text = "\(intScore)"
 //        labelGameStats3.text = "\(intScore)"

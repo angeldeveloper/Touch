@@ -13,8 +13,10 @@ class CommonFunctions : UIViewController {
     
     func attributedTextForText(inString: String, fontSize : CGFloat) -> (NSMutableAttributedString) {
         println(__FUNCTION__)
+        
+        //return NSMutableAttributedString(string: inString)
+        
         var attributedstringReturn = NSMutableAttributedString()
-        //attributedstringReturn = NSMutableAttributedString(string: "Testing")
         attributedstringReturn = NSMutableAttributedString(string: inString, attributes: [
             NSFontAttributeName:UIFont(name: "Georgia", size: fontSize)!,
             NSTextEffectAttributeName : NSTextEffectLetterpressStyle,
