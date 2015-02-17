@@ -16,9 +16,9 @@ let blackDotSize : CGFloat = 0.70 // it is a percentage size
 // ###################
 // Game Loop Duration
 //let intGameLoopDuration : Int = 3 // duration of each game play
-let intGameLoopDuration : Int = 6 // duration of each game play
+//let intGameLoopDuration : Int = 6 // duration of each game play
 //let intGameLoopDuration : Int = 10 // duration of each game play
-//let intGameLoopDuration : Int = 15 // duration of each game play
+let intGameLoopDuration : Int = 15 // duration of each game play
 //let intGameLoopDuration : Int = 15000 // duration of each game play
 
 // ###################
@@ -45,23 +45,23 @@ let labelBorderColor = UIColor.blackColor().CGColor
 
 // ###################
 // Animation Durations
-let animateOutofMainScreenDuration : Double = 0.40
 
-let animateIntoGamePlayScreenDuration : Double = 0.40
+let animateIntoMainScreenDuration : Double = 0.20
+let animateOutofMainScreenDuration : Double = 0.20
 
-let animateIntoGamePlayElementsDuration : Double = 0.40
+let animateIntoGamePlayScreenDuration : Double = 0.20
 
-let animateOutofGamePlayElementsDuration : Double = 0.40
+let animateIntoGamePlayElementsDuration : Double = 0.20
+let animateOutofGamePlayElementsDuration : Double = 0.20
 
-let animateOutOfGameOverElementsDuration : Double = 0.40
+let animateIntoGameOverElementsDuration : Double = 0.20
+let animateOutOfGameOverElementsDuration : Double = 0.20
 
-let animateIntoGameOverElementsDuration : Double = 0.40
-
-let animateOutofGamePausedElementsDuration : Double = 0.40
+let animateOutofGamePausedElementsDuration : Double = 0.20
 
 let bringAttentionToWinningElement_EveryXSeconds : Double = 10.00
 
-let cubeTransitionDuration : Double = 0.50
+let cubeTransitionDuration : Double = 0.20
 
 // ###################
 // Animation Elements Out of Screen by Balue

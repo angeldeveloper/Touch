@@ -43,9 +43,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     var averageTimePerTouch : CGFloat = 0.00
     
     var objectsTouchedInThisGameLoop : CGFloat = 0
-    
-    //var currentObjectTouchTime : CGFloat = 0.00
-    
+        
     var touchTimeStartAt = CFAbsoluteTimeGetCurrent() // the default will not be used
     
     // ################################################################################
@@ -117,11 +115,10 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     var uiviewCountdownTimerView : UIView = UIView()
     var uiviewCountdownTimerViewLayer : CAShapeLayer = CAShapeLayer()
     
-    var buttonCountdownTimer: UIButton!
-    let consButtonCountdownTimerCenterX : CGFloat = 0.90 // percentage of screen
-    let consButtonCountdownTimerCenterY : CGFloat = 0.07 // percentage of screen
+//    var buttonCountdownTimer: UIButton!
+//    let consButtonCountdownTimerCenterX : CGFloat = 0.90 // percentage of screen
+//    let consButtonCountdownTimerCenterY : CGFloat = 0.07 // percentage of screen
     
-    //var buttonCountdownTimer: UIButton!
     let consUIViewCountdownTimerCenterX : CGFloat = 0.85 // percentage of screen
     let consUIViewCountdownTimerCenterY : CGFloat = 0.10 // percentage of screen
 
@@ -260,11 +257,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func onNotification_applicationDidBecomeActive(notification: NSNotification) {
         println(__FUNCTION__)
-//        // resume the application with animation
-//        self.unhideForPausedGamePlayElements()
-//        animateOutofGamePausedElements()
-//        // Create and Add the timer Again
-//        startAllTimers()
     }
     
     func onNotification_applicationDidEnterBackground(notification: NSNotification) {
@@ -277,6 +269,16 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+    func returnFloatFormattedDecimals (inUnformattedValue: CGFloat) -> (String!) {
+        
+        let formatter = NSNumberFormatter()
+        formatter.minimumIntegerDigits = 1
+        formatter.maximumIntegerDigits = 100
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        return formatter.stringFromNumber(inUnformattedValue)!
+    }
     
     func startAllTimers() {
         //println(__FUNCTION__)
@@ -306,43 +308,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func eventGameLoop() {
         //println(__FUNCTION__)
-        
-//        // =====
-//        // Timer Strokes
-//        var strokeEnd : CGFloat = 0.00
-//        strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
-//        strokeEnd += CGFloat(timerCountLocal/(gameloopTimerFrequencyCallsPerSecond*intGameLoopDuration))
-//        
-//        
-//        println("\(strokeEnd)")
-//        self.uiviewCountdownTimerViewLayer.strokeEnd = strokeEnd
-//        // =====
-//
-//        timerCountLocal += 1
-//        
-//        // Stroke is irrespective of whether there will be a match
-//        // Stroke Start increase by the amount required
-//        //self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(0.50) / CGFloat(intGameLoopDuration)
-//
-//        
-//        if timerCountLocal >= gameloopTimerFrequencyCallsPerSecond {
-//            println("inside to try match and YES")
-//            
-//            if timerCount < intGameLoopDuration {
-//                println("inside timer count increate")
-//                timerCount += 1
-//            }
-//            
-//            timerCountLocal = 0
-//
-//        } else {
-//            println("inside to try match and NO")
-//            println("returning")
-//            
-//            return
-//        }
-        
-        
+
         if timerCount < intGameLoopDuration {
             timerCount += 1
         }
@@ -351,7 +317,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         // this needs to be animated somehow
         // I will use an entirely different element to show this element
-        buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
+//        buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         
         // game over in 10 seconds for testing only
         if intGameLoopDuration == timerCount {
@@ -382,7 +348,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 println("delay is over in counting and so calling remove game play elements")
                 
                 self.removeGamePlayElements()
-//                self.removeGamePlayElements_EverythingElse()
                 
                 self.settingUpGameOverElements()
                 
@@ -400,44 +365,30 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     func settingUpGameOverElements()->() {
         var objCommon = CommonFunctions()
-        
         labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
-        
-        let formatter = NSNumberFormatter()
-        formatter.minimumIntegerDigits = 1
-        formatter.maximumIntegerDigits = 100
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        
-        labelSpeedValue.attributedText = objCommon.attributedTextForText(formatter.stringFromNumber(averageTimePerTouch)!, fontSize:fontsize_Medium)
-        
+        labelSpeedValue.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(averageTimePerTouch), fontSize:fontsize_Medium)
+
         // Calculate the Score based on total black dots collected and the average time of touches
-        var scoreValueLocal = (CGFloat(intScore) * 10) * (2 / averageTimePerTouch)
-        
-        labelScoreValue.attributedText = objCommon.attributedTextForText(formatter.stringFromNumber(scoreValueLocal)!, fontSize:fontsize_Medium)
-        
+        var scoreValueLocal : CGFloat
+        if 0 != averageTimePerTouch {
+            scoreValueLocal = (CGFloat(intScore) * 10) * (2 / averageTimePerTouch)
+        } else {
+            scoreValueLocal = 0.00
+        }
+        labelScoreValue.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(scoreValueLocal), fontSize:fontsize_Medium)
     }
     
     func resetScores()->() {
         intScore = 0
         averageTimePerTouch = 0.00
-        
-//        var objCommon = CommonFunctions()
-        
-        //newLabel.text = text
-//        labelGameStats1.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
-//
-//        labelGameStats2.attributedText = objCommon.attributedTextForText("\(averageTimePerTouch)", fontSize:fontsize_Medium)
-//        labelGameStats3.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
-//        labelGameStats4.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
-
-//        labelGameStats1.text = "\(intScore)"
-//        
-//        labelGameStats2.text = "\(intScore)"
-//        labelGameStats3.text = "\(intScore)"
-//        labelGameStats4.text = "\(intScore)"
     }
     
+    
+    func resetGameStatsLabels() {
+        var objCommon = CommonFunctions()
+        labelGameStats1.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
+        labelGameStats2.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(averageTimePerTouch), fontSize:fontsize_Medium)
+    }
     
     func bringAttentionToWinningElement() {
 
@@ -575,18 +526,18 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func createGamePlayElements()->() {
         
-        // ================================================================================
-        buttonCountdownTimer = UIButton()
-        buttonCountdownTimer.setTitle("0", forState: UIControlState.Normal)
-        buttonCountdownTimer.sizeToFit()
-        buttonCountdownTimer.backgroundColor = UIColor.blueColor()
-        buttonCountdownTimer.frame = CGRectMake(buttonCountdownTimer.frame.origin.x, buttonCountdownTimer.frame.origin.y,
-            buttonCountdownTimer.frame.width * 1.50, buttonCountdownTimer.frame.height * 1.00)
-        buttonCountdownTimer.layer.cornerRadius = 5.0
-        buttonCountdownTimer.center = CGPointMake(-offscreenXValue, offscreenYValue)
-//        buttonCountdownTimer.addTarget(self, action: "tapCountdownTimerEvent:", forControlEvents: UIControlEvents.TouchUpInside)
-        buttonCountdownTimer.alpha = 0.0
-        self.view.addSubview(buttonCountdownTimer)
+//        // ================================================================================
+//        buttonCountdownTimer = UIButton()
+//        buttonCountdownTimer.setTitle("0", forState: UIControlState.Normal)
+//        buttonCountdownTimer.sizeToFit()
+//        buttonCountdownTimer.backgroundColor = UIColor.blueColor()
+//        buttonCountdownTimer.frame = CGRectMake(buttonCountdownTimer.frame.origin.x, buttonCountdownTimer.frame.origin.y,
+//            buttonCountdownTimer.frame.width * 1.50, buttonCountdownTimer.frame.height * 1.00)
+//        buttonCountdownTimer.layer.cornerRadius = 5.0
+//        buttonCountdownTimer.center = CGPointMake(-offscreenXValue, offscreenYValue)
+////        buttonCountdownTimer.addTarget(self, action: "tapCountdownTimerEvent:", forControlEvents: UIControlEvents.TouchUpInside)
+//        buttonCountdownTimer.alpha = 0.0
+//        self.view.addSubview(buttonCountdownTimer)
         
         // ================================================================================
         makeCountdownTimerView()
@@ -920,17 +871,17 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateIntoMainScreen () -> () {
         println(__FUNCTION__)
         
-        labelApplicationTitle.alpha = 1.0
+        labelApplicationTitle.alpha = 1.00
         labelApplicationTitle.center = CGPointMake(screenWidth * consLabelApplicationTitleCenterX_MainScreen,
             screenHeight * consLabelApplicationTitleCenterY_MainScreen)
         
 
         //buttonPlay.alpha = 1.0
-        buttonPlay.alpha = 0.0
+        buttonPlay.alpha = 0.00
         buttonPlay.center = CGPointMake(screenWidth * consButtonPlayCenterX, screenHeight * consButtonPlayCenterY)
         
         //labelApplicationTitleSubtitle.alpha = 1.0
-        labelApplicationTitleSubtitle.alpha = 0.0
+        labelApplicationTitleSubtitle.alpha = 0.00
         labelApplicationTitleSubtitle.center = CGPointMake(screenWidth * consLabelApplicationTitleSubtitleCenterX_MainScreen,
             screenHeight * consLabelApplicationTitleSubtitleCenterY_MainScreen)
         
@@ -939,14 +890,15 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelVersion.center = CGPointMake(screenWidth * consLabelVersionCenterX, screenHeight * consLabelVersionCenterY)
         
         
-        UIView.animateWithDuration(1.0, animations: {
+        UIView.animateWithDuration(animateIntoMainScreenDuration, animations: {
             
-            self.buttonPlay.alpha = 1.0
-            self.labelApplicationTitleSubtitle.alpha = 1.0
+            self.buttonPlay.alpha = 1.00
+            self.labelApplicationTitleSubtitle.alpha = 1.00
             self.labelVersion.alpha = 1.00
             
             }, completion: {_ in
                 NSLog("CAME TO MAIN SCREEN")
+                
                 // ONLY FOR TESTING
                 //self.tapPlayEvent(UIView)
             })
@@ -957,9 +909,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         UIView.animateWithDuration(animateOutofMainScreenDuration, animations: {
             
-            self.buttonPlay.alpha = 0.0
+            self.buttonPlay.alpha = 0.00
             self.labelApplicationTitleSubtitle.alpha = 0.00
-            //self.labelApplicationTitle.alpha = 0.0
+            //self.labelApplicationTitle.alpha = 0.00
             self.labelVersion.alpha = 0.00
             
             self.labelApplicationTitle.transform = CGAffineTransformMakeScale(0.50, 0.50)
@@ -979,9 +931,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateIntoGamePlayScreen () -> () {
         println(__FUNCTION__)
 
-        // not visible at 0.00 alpha
-        buttonCountdownTimer.alpha = 0.00
-        buttonCountdownTimer.center = CGPointMake(screenWidth * consButtonCountdownTimerCenterX, screenHeight * consButtonCountdownTimerCenterY)
+//        // not visible at 0.00 alpha
+//        buttonCountdownTimer.alpha = 0.00
+//        buttonCountdownTimer.center = CGPointMake(screenWidth * consButtonCountdownTimerCenterX, screenHeight * consButtonCountdownTimerCenterY)
         
         self.uiviewCountdownTimerView.alpha = 1.00
         uiviewCountdownTimerView.center = CGPointMake(
@@ -1229,7 +1181,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
             }, completion: {_ in
                 println("")
-                self.buttonCountdownTimer.setTitle("\(self.timerCount)", forState: UIControlState.Normal)
+                //self.buttonCountdownTimer.setTitle("\(self.timerCount)", forState: UIControlState.Normal)
         })
     }
     
@@ -1561,13 +1513,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         //println(averageTimePerTouch)
         
-        let formatter = NSNumberFormatter()
-        formatter.minimumIntegerDigits = 1
-        formatter.maximumIntegerDigits = 100
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        
-        cubeTransition(labelGameStats2, text: formatter.stringFromNumber(averageTimePerTouch)!, direction: AnimationDirection.Negative)
+        cubeTransition(labelGameStats2, text: returnFloatFormattedDecimals(averageTimePerTouch), direction: AnimationDirection.Negative)
         
         // Attention timer invalidate
         timerGetAttention.invalidate()
@@ -1769,6 +1715,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func tapResumeEvent(sender: AnyObject) {
         println(__FUNCTION__)
+
+        self.touchTimeStartAt = CFAbsoluteTimeGetCurrent()
         
         animateOutofGamePausedElements()
 
@@ -1803,6 +1751,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     */
     
     func tapPlayEvent(sender: AnyObject) {
+        
+        resetGameStatsLabels()
         
         animateOutofMainScreen()
         
