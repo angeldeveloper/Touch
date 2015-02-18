@@ -115,9 +115,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     var uiviewCountdownTimerView : UIView = UIView()
     var uiviewCountdownTimerViewLayer : CAShapeLayer = CAShapeLayer()
     
-//    var buttonCountdownTimer: UIButton!
-//    let consButtonCountdownTimerCenterX : CGFloat = 0.90 // percentage of screen
-//    let consButtonCountdownTimerCenterY : CGFloat = 0.07 // percentage of screen
+    var buttonCountdownTimer: UIButton!
+    let consButtonCountdownTimerCenterX : CGFloat = 0.85 // percentage of screen
+    let consButtonCountdownTimerCenterY : CGFloat = 0.10 // percentage of screen
     
     let consUIViewCountdownTimerCenterX : CGFloat = 0.85 // percentage of screen
     let consUIViewCountdownTimerCenterY : CGFloat = 0.10 // percentage of screen
@@ -313,12 +313,17 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             timerCount += 1
         }
         
-        self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
-
         // this needs to be animated somehow
         // I will use an entirely different element to show this element
-//        buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
+        var objCommon = CommonFunctions()
+        //buttonCountdownTimer.titleLabel?.attributedText = objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small)
+        buttonCountdownTimer.setAttributedTitle(objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small), forState: UIControlState.Normal)
+
+        //buttonCountdownTimer.setTitle("\(intGameLoopDuration-timerCount)", forState: UIControlState.Normal)
         
+        self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
+        
+
         // game over in 10 seconds for testing only
         if intGameLoopDuration == timerCount {
             
@@ -526,22 +531,36 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func createGamePlayElements()->() {
         
-//        // ================================================================================
-//        buttonCountdownTimer = UIButton()
-//        buttonCountdownTimer.setTitle("0", forState: UIControlState.Normal)
-//        buttonCountdownTimer.sizeToFit()
-//        buttonCountdownTimer.backgroundColor = UIColor.blueColor()
-//        buttonCountdownTimer.frame = CGRectMake(buttonCountdownTimer.frame.origin.x, buttonCountdownTimer.frame.origin.y,
-//            buttonCountdownTimer.frame.width * 1.50, buttonCountdownTimer.frame.height * 1.00)
-//        buttonCountdownTimer.layer.cornerRadius = 5.0
-//        buttonCountdownTimer.center = CGPointMake(-offscreenXValue, offscreenYValue)
-////        buttonCountdownTimer.addTarget(self, action: "tapCountdownTimerEvent:", forControlEvents: UIControlEvents.TouchUpInside)
-//        buttonCountdownTimer.alpha = 0.0
-//        self.view.addSubview(buttonCountdownTimer)
-        
         // ================================================================================
         makeCountdownTimerView()
         self.view.addSubview(uiviewCountdownTimerView)
+        
+        // ================================================================================
+        buttonCountdownTimer = UIButton()
+        
+        //buttonCountdownTimer.setTitle("\(intGameLoopDuration-timerCount)", forState: UIControlState.Normal)
+        
+        buttonCountdownTimer.sizeToFit()
+        //buttonCountdownTimer.backgroundColor = UIColor.blueColor()
+        buttonCountdownTimer.backgroundColor = UIColor.clearColor()
+        
+        var objCommon = CommonFunctions()
+        //buttonCountdownTimer.titleLabel?.attributedText = objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small)
+        buttonCountdownTimer.setAttributedTitle(objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small), forState: UIControlState.Normal)
+
+        
+//        buttonCountdownTimer.frame = CGRectMake(buttonCountdownTimer.frame.origin.x, buttonCountdownTimer.frame.origin.y,
+//            buttonCountdownTimer.frame.width * 1.50, buttonCountdownTimer.frame.height * 1.00)
+        buttonCountdownTimer.frame = CGRectMake(uiviewCountdownTimerView.frame.origin.x, uiviewCountdownTimerView.frame.origin.y,
+            uiviewCountdownTimerView.frame.width, uiviewCountdownTimerView.frame.height)
+
+        
+        buttonCountdownTimer.layer.cornerRadius = 5.00
+        buttonCountdownTimer.center = CGPointMake(-offscreenXValue, offscreenYValue)
+//        buttonCountdownTimer.addTarget(self, action: "tapCountdownTimerEvent:", forControlEvents: UIControlEvents.TouchUpInside)
+
+        buttonCountdownTimer.alpha = 1.00
+        self.view.addSubview(buttonCountdownTimer)
         
         // ================================================================================
         
@@ -815,10 +834,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         var localLineWidth : CGFloat = sizeOfTimer / 2
         
-        uiviewCountdownTimerViewLayer.path = UIBezierPath(arcCenter:point, radius: (sizeOfTimer-localLineWidth)/2, startAngle: 0, endAngle: 2 * pi, clockwise: true).CGPath
+        //uiviewCountdownTimerViewLayer.path = UIBezierPath(arcCenter:point, radius: (sizeOfTimer-localLineWidth)/2, startAngle: 0, endAngle: 2 * pi, clockwise: true).CGPath
+        uiviewCountdownTimerViewLayer.path = UIBezierPath(ovalInRect: CGRectMake(0, 0, sizeOfTimer, sizeOfTimer)).CGPath
         
         // Attributes for the Shape
-        uiviewCountdownTimerViewLayer.lineWidth = localLineWidth
+        //uiviewCountdownTimerViewLayer.lineWidth = localLineWidth
+        uiviewCountdownTimerViewLayer.lineWidth = 6
         uiviewCountdownTimerViewLayer.lineCap = kCALineCapButt
         uiviewCountdownTimerViewLayer.strokeColor = UIColor.greenColor().CGColor
         
@@ -841,7 +862,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         uiviewCountdownTimerView.alpha = 1.0
         
         // Attributes for the Return View
-        uiviewCountdownTimerView.layer.borderWidth = 1
+        uiviewCountdownTimerView.layer.borderWidth = 0
         uiviewCountdownTimerView.layer.borderColor = UIColor.blackColor().CGColor
 
         //uiviewCountdownTimerView.center = CGPointMake(offscreenXValue, offscreenYValue)
@@ -900,7 +921,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 NSLog("CAME TO MAIN SCREEN")
                 
                 // ONLY FOR TESTING
-                //self.tapPlayEvent(UIView)
+                self.tapPlayEvent(UIView)
             })
     }
     
@@ -932,9 +953,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         println(__FUNCTION__)
 
 //        // not visible at 0.00 alpha
-//        buttonCountdownTimer.alpha = 0.00
-//        buttonCountdownTimer.center = CGPointMake(screenWidth * consButtonCountdownTimerCenterX, screenHeight * consButtonCountdownTimerCenterY)
-        
+        var objCommon = CommonFunctions()
+        buttonCountdownTimer.alpha = 1.00
+        buttonCountdownTimer.center = CGPointMake(screenWidth * consButtonCountdownTimerCenterX + movementCountdownTimerView, screenHeight * consButtonCountdownTimerCenterY)
+        buttonCountdownTimer.setAttributedTitle(objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small), forState: UIControlState.Normal)
+
         self.uiviewCountdownTimerView.alpha = 1.00
         uiviewCountdownTimerView.center = CGPointMake(
             screenWidth * consUIViewCountdownTimerCenterX + movementCountdownTimerView,
@@ -957,6 +980,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.uiviewCountdownTimerView.center = CGPointMake(
                 self.uiviewCountdownTimerView.center.x - movementCountdownTimerView,
                 self.uiviewCountdownTimerView.center.y)
+
+            self.buttonCountdownTimer.center = CGPointMake(self.buttonCountdownTimer.center.x - movementCountdownTimerView, self.buttonCountdownTimer.center.y)
 
             }, completion: {_ in
                 NSLog("Completed animation: \(__FUNCTION__)")
@@ -1051,27 +1076,16 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.uiviewCountdownTimerView.center.x + movementCountdownTimerView,
                 self.uiviewCountdownTimerView.center.y)
 
+            self.buttonCountdownTimer.center = CGPointMake(
+                self.buttonCountdownTimer.center.x + movementCountdownTimerView,
+                self.buttonCountdownTimer.center.y)
+            
             }, completion: {_ in
                 NSLog("CAME TO GAME PLAY SCREEN")
         })
         
         
-        
-//        var additiveDelay :Double = 0.02
-//        var animationDuration : Double = 0.10
-//        
-//        UIView.animateWithDuration(animationDuration, delay: 1.0, options: .CurveEaseOut, animations: {
-//
-////            self.labelGameStats1.alpha = 0.0
-////            self.labelGameStats2.alpha = 0.0
-////            self.labelGameStats3.alpha = 0.0
-////            self.labelGameStats4.alpha = 0.0
-////            self.buttonCountdownTimer.alpha = 0.0
-////            self.uiviewCountdownTimerView.alpha = 0.0
-//
-//                }, completion: {_ in
-//                    println("animation complete everything else game play elements")
-//        })
+
     }
 
     
