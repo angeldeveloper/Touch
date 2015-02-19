@@ -46,13 +46,15 @@ let labelBorderColor = UIColor.blackColor().CGColor
 // ###################
 // Animation Durations
 
-let animateIntoMainScreenDuration : Double = 0.20
-let animateOutofMainScreenDuration : Double = 0.20
+let animateIntoMainScreenDuration : Double = 0.28
+let animateOutofMainScreenDuration : Double = 0.28
 
 let animateIntoGamePlayScreenDuration : Double = 0.20
 
-let animateIntoGamePlayElementsDuration : Double = 0.20
-let animateOutofGamePlayElementsDuration : Double = 0.20
+let animateIntoGamePlayElementsDuration : Double = 0.30
+let animateOutofGamePlayElementsDuration : Double = 0.30
+
+let animateGameStats_InAndOut : Double = 0.07
 
 let animateIntoGameOverElementsDuration : Double = 0.20
 let animateOutOfGameOverElementsDuration : Double = 0.20
@@ -73,14 +75,14 @@ let animationElementsToOffScreen_XValue : CGFloat = 700
 
 // ###################
 // Game Stats Label Movement
-let movementGameStatsLabel : CGFloat = 160.00
+let movementGameStatsLabel : CGFloat = 260.00
 
 // ###################
 let movementCountdownTimerView : CGFloat = 160.00
 
 // ###################
 // Width Height of elements
-let sizeSquareObjectsSmall : CGFloat = 0.10
+let sizeSquareObjectsSmall : CGFloat = 0.06
 
 let sizeButtonWidthSmall : CGFloat = 0.40
 //let sizeButtonWidthSmall : CGFloat = 0.20
@@ -101,6 +103,8 @@ let fontsize_Small : CGFloat        = 14.0
 let fontsize_Medium : CGFloat       = 24.0
 let fontsize_Large : CGFloat        = 30.0
 let fontsize_ExtraLarge : CGFloat   = 40.0
+
+let fontsize_GameStatsLabel : CGFloat = fontsize_Small
 
 
 
