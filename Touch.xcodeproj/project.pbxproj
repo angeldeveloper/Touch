@@ -13,7 +13,17 @@
 		100D30A91A77D207008F3FBF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 100D30A81A77D207008F3FBF /* Images.xcassets */; };
 		100D30AC1A77D207008F3FBF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 100D30AA1A77D207008F3FBF /* LaunchScreen.xib */; };
 		100D30B81A77D207008F3FBF /* TouchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100D30B71A77D207008F3FBF /* TouchTests.swift */; };
+		103E44691A9E935500BDD660 /* CommonMonetizationClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103E44681A9E935500BDD660 /* CommonMonetizationClass.swift */; };
+		103E446E1A9E954500BDD660 /* Chartboost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 103E446D1A9E954500BDD660 /* Chartboost.framework */; };
+		103E44701A9E95A200BDD660 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 103E446F1A9E95A200BDD660 /* StoreKit.framework */; };
+		103E44721A9E95A900BDD660 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 103E44711A9E95A900BDD660 /* Foundation.framework */; };
+		103E44741A9E95AE00BDD660 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 103E44731A9E95AE00BDD660 /* CoreGraphics.framework */; };
+		103E44761A9E95B400BDD660 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 103E44751A9E95B400BDD660 /* UIKit.framework */; };
 		1048B1061A7FE0DF0013A553 /* AnimationsLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1048B1051A7FE0DF0013A553 /* AnimationsLibrary.swift */; };
+		106889C61A97C46700D156D8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 106889C51A97C46700D156D8 /* AVFoundation.framework */; };
+		106889C81A97C56200D156D8 /* Wallpaper.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 106889C71A97C56200D156D8 /* Wallpaper.mp3 */; };
+		106889CA1A97CAE100D156D8 /* party_crowd_1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 106889C91A97CAE100D156D8 /* party_crowd_1.wav */; };
+		106889CC1A97CC9C00D156D8 /* DST-10Class.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 106889CB1A97CC9C00D156D8 /* DST-10Class.mp3 */; };
 		107C590C1A8415AB00DD6B58 /* ColorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107C590B1A8415AB00DD6B58 /* ColorConstants.swift */; };
 		107C590E1A8419BC00DD6B58 /* TouchAppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107C590D1A8419BC00DD6B58 /* TouchAppConstants.swift */; };
 		109C82C01A8B9BC8001A64C3 /* CommonFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109C82BF1A8B9BC8001A64C3 /* CommonFunctions.swift */; };
@@ -41,7 +51,18 @@
 		100D30B11A77D207008F3FBF /* TouchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		100D30B61A77D207008F3FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		100D30B71A77D207008F3FBF /* TouchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchTests.swift; sourceTree = "<group>"; };
+		103E44681A9E935500BDD660 /* CommonMonetizationClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMonetizationClass.swift; sourceTree = "<group>"; };
+		103E446D1A9E954500BDD660 /* Chartboost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Chartboost.framework; path = Touch/Chartboost.framework; sourceTree = "<group>"; };
+		103E446F1A9E95A200BDD660 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		103E44711A9E95A900BDD660 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		103E44731A9E95AE00BDD660 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		103E44751A9E95B400BDD660 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1048B1051A7FE0DF0013A553 /* AnimationsLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationsLibrary.swift; sourceTree = "<group>"; };
+		106889C51A97C46700D156D8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		106889C71A97C56200D156D8 /* Wallpaper.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Wallpaper.mp3; path = Touch/Wallpaper.mp3; sourceTree = "<group>"; };
+		106889C91A97CAE100D156D8 /* party_crowd_1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = party_crowd_1.wav; path = Touch/party_crowd_1.wav; sourceTree = "<group>"; };
+		106889CB1A97CC9C00D156D8 /* DST-10Class.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "DST-10Class.mp3"; path = "Touch/DST-10Class.mp3"; sourceTree = "<group>"; };
+		1074329F1A9E99A0007B4DC0 /* Touch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Touch-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		107C590B1A8415AB00DD6B58 /* ColorConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorConstants.swift; sourceTree = "<group>"; };
 		107C590D1A8419BC00DD6B58 /* TouchAppConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchAppConstants.swift; sourceTree = "<group>"; };
 		109C82BF1A8B9BC8001A64C3 /* CommonFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
@@ -53,6 +74,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				103E44761A9E95B400BDD660 /* UIKit.framework in Frameworks */,
+				103E44741A9E95AE00BDD660 /* CoreGraphics.framework in Frameworks */,
+				103E44721A9E95A900BDD660 /* Foundation.framework in Frameworks */,
+				103E44701A9E95A200BDD660 /* StoreKit.framework in Frameworks */,
+				106889C61A97C46700D156D8 /* AVFoundation.framework in Frameworks */,
+				103E446E1A9E954500BDD660 /* Chartboost.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +96,8 @@
 		100D30931A77D206008F3FBF = {
 			isa = PBXGroup;
 			children = (
+				104611B01AA8EB8C00C3B7CB /* Media */,
+				104611AF1AA8EB6A00C3B7CB /* Frameworks */,
 				100D309E1A77D207008F3FBF /* Touch */,
 				100D30B41A77D207008F3FBF /* TouchTests */,
 				100D309D1A77D207008F3FBF /* Products */,
@@ -88,14 +117,16 @@
 			isa = PBXGroup;
 			children = (
 				100D30A11A77D207008F3FBF /* AppDelegate.swift */,
-				107C590D1A8419BC00DD6B58 /* TouchAppConstants.swift */,
-				107C590B1A8415AB00DD6B58 /* ColorConstants.swift */,
-				109C82BF1A8B9BC8001A64C3 /* CommonFunctions.swift */,
 				100D30A31A77D207008F3FBF /* MainViewController.swift */,
+				109C82BF1A8B9BC8001A64C3 /* CommonFunctions.swift */,
+				103E44681A9E935500BDD660 /* CommonMonetizationClass.swift */,
+				107C590B1A8415AB00DD6B58 /* ColorConstants.swift */,
+				107C590D1A8419BC00DD6B58 /* TouchAppConstants.swift */,
+				1074329F1A9E99A0007B4DC0 /* Touch-Bridging-Header.h */,
 				100D30A51A77D207008F3FBF /* Touch_Main.storyboard */,
-				100D30A81A77D207008F3FBF /* Images.xcassets */,
 				1048B1051A7FE0DF0013A553 /* AnimationsLibrary.swift */,
 				10EB77B51A7924E60075E089 /* GameElement.swift */,
+				100D30A81A77D207008F3FBF /* Images.xcassets */,
 				100D30AA1A77D207008F3FBF /* LaunchScreen.xib */,
 				100D309F1A77D207008F3FBF /* Supporting Files */,
 			);
@@ -125,6 +156,29 @@
 				100D30B61A77D207008F3FBF /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		104611AF1AA8EB6A00C3B7CB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				103E446D1A9E954500BDD660 /* Chartboost.framework */,
+				103E44751A9E95B400BDD660 /* UIKit.framework */,
+				103E44731A9E95AE00BDD660 /* CoreGraphics.framework */,
+				103E44711A9E95A900BDD660 /* Foundation.framework */,
+				103E446F1A9E95A200BDD660 /* StoreKit.framework */,
+				106889C51A97C46700D156D8 /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		104611B01AA8EB8C00C3B7CB /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				106889C71A97C56200D156D8 /* Wallpaper.mp3 */,
+				106889C91A97CAE100D156D8 /* party_crowd_1.wav */,
+				106889CB1A97CC9C00D156D8 /* DST-10Class.mp3 */,
+			);
+			name = Media;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,6 +230,7 @@
 				TargetAttributes = {
 					100D309B1A77D207008F3FBF = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 9743PQ6VX8;
 					};
 					100D30B01A77D207008F3FBF = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -207,9 +262,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				106889CC1A97CC9C00D156D8 /* DST-10Class.mp3 in Resources */,
 				100D30A71A77D207008F3FBF /* Touch_Main.storyboard in Resources */,
 				100D30AC1A77D207008F3FBF /* LaunchScreen.xib in Resources */,
 				100D30A91A77D207008F3FBF /* Images.xcassets in Resources */,
+				106889CA1A97CAE100D156D8 /* party_crowd_1.wav in Resources */,
+				106889C81A97C56200D156D8 /* Wallpaper.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				103E44691A9E935500BDD660 /* CommonMonetizationClass.swift in Sources */,
 				100D30A41A77D207008F3FBF /* MainViewController.swift in Sources */,
 				100D30A21A77D207008F3FBF /* AppDelegate.swift in Sources */,
 				109C82C01A8B9BC8001A64C3 /* CommonFunctions.swift in Sources */,
@@ -358,9 +417,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Touch",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Touch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Touch-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -368,9 +436,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Touch",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Touch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Touch-Bridging-Header.h";
 			};
 			name = Release;
 		};

@@ -17,17 +17,18 @@ let blackDotSize : CGFloat = 0.70 // it is a percentage size
 // Game Loop Duration
 //let intGameLoopDuration : Int = 3 // duration of each game play
 //let intGameLoopDuration : Int = 6 // duration of each game play
-//let intGameLoopDuration : Int = 10 // duration of each game play
-let intGameLoopDuration : Int = 15 // duration of each game play
+let intGameLoopDuration : Int = 10 // duration of each game play
+//let intGameLoopDuration : Int = 15 // duration of each game play
+//let intGameLoopDuration : Int = 60 // duration of each game play
 //let intGameLoopDuration : Int = 15000 // duration of each game play
 
 // ###################
-let numberRowsOrColumns = 4
+let numberRowsOrColumns = 6
 
 // ###################
 // Button Attributes
 let buttonCornerRadius : CGFloat = 10.0
-let buttonBorderWidth : CGFloat = 1.00
+let buttonBorderWidth : CGFloat = 2.00
 //let buttonBorderColor = UIColor.blackColor().CGColor
 let buttonBorderColor = UIColor.redColor().CGColor
 
@@ -39,7 +40,7 @@ let buttonBackgroundColor : UIColor = UIColor.greenColor()
 
 // ###################
 // Label Attributes
-let labelCornerRadius : CGFloat = 0.00
+let labelCornerRadius : CGFloat = 3.00
 let labelBorderWidth : CGFloat = 0.00
 let labelBorderColor = UIColor.blackColor().CGColor
 
@@ -52,6 +53,7 @@ let animateOutofMainScreenDuration : Double = 0.28
 let animateIntoGamePlayScreenDuration : Double = 0.20
 
 let animateIntoGamePlayElementsDuration : Double = 0.30
+//let animateIntoGamePlayElementsDuration : Double = 2.00
 let animateOutofGamePlayElementsDuration : Double = 0.30
 
 let animateGameStats_InAndOut : Double = 0.07
@@ -78,7 +80,7 @@ let animationElementsToOffScreen_XValue : CGFloat = 700
 let movementGameStatsLabel : CGFloat = 260.00
 
 // ###################
-let movementCountdownTimerView : CGFloat = 160.00
+let movementCountdownTimerView : CGFloat = 260.00
 
 // ###################
 // Width Height of elements
@@ -97,14 +99,40 @@ let notificationName_applicationDidEnterBackground  = "NotificationapplicationDi
 var boolJustLaunched = false
 
 // ###################
-// Font Size
+// Font Size - Defining the Available sizes - total 9
+let fontsize_XXXSmall : CGFloat     =  8.0
+let fontsize_XSmall : CGFloat       = 10.0
 let fontsize_ExtraSmall : CGFloat   = 12.0
 let fontsize_Small : CGFloat        = 14.0
-let fontsize_Medium : CGFloat       = 24.0
-let fontsize_Large : CGFloat        = 30.0
-let fontsize_ExtraLarge : CGFloat   = 40.0
+let fontsize_Medium : CGFloat       = 20.0
+let fontsize_Large : CGFloat        = 24.0
+let fontsize_ExtraLarge : CGFloat   = 30.0
+let fontsize_XLarge : CGFloat       = 40.0
+let fontsize_XXXLarge : CGFloat     = 50.0
+
+// ###################
+// Defining what sizes to use in the actual game
+let fontsize_ApplicationTitleLabel : CGFloat    = fontsize_XLarge
+let fontsize_PlayButton : CGFloat               = fontsize_XLarge
 
 let fontsize_GameStatsLabel : CGFloat = fontsize_Small
+let fontsize_CountdownTimerButton : CGFloat = fontsize_Medium
+
+
+// ###################
+// Defining font foreground color for all ui elements
+let fontForeGroundColor_Default : UIColor                   = UIColor.blackColor()
+
+let fontForeGroundColor_ApplicationTitleLabel : UIColor     = fontForeGroundColor_Default
+let fontForeGroundColor_ApplicationTitleSubtitleLabel : UIColor     = fontForeGroundColor_Default
+let fontForeGroundColor_CountdownTimerButton : UIColor      = fontForeGroundColor_Default
+let fontForeGroundColor_GameStatsLabel : UIColor            = fontForeGroundColor_Default
+
+
+
+
+
+
 
 
 

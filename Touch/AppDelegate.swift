@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         boolJustLaunched = true
         
+//        var commonMon = CommonMonetizationClass()
+        
         return true
     }
 
