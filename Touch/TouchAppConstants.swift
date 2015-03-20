@@ -16,14 +16,14 @@ let blackDotSize : CGFloat = 0.70 // it is a percentage size
 // ###################
 // Game Loop Duration
 //let intGameLoopDuration : Int = 3 // duration of each game play
-//let intGameLoopDuration : Int = 6 // duration of each game play
-let intGameLoopDuration : Int = 10 // duration of each game play
+let intGameLoopDuration : Int = 6 // duration of each game play
+//let intGameLoopDuration : Int = 10 // duration of each game play
 //let intGameLoopDuration : Int = 15 // duration of each game play
 //let intGameLoopDuration : Int = 60 // duration of each game play
 //let intGameLoopDuration : Int = 15000 // duration of each game play
 
 // ###################
-let numberRowsOrColumns = 6
+let numberRowsOrColumns = 4
 
 // ###################
 // Button Attributes
@@ -112,9 +112,6 @@ let fontsize_XXXLarge : CGFloat     = 50.0
 
 // ###################
 // Defining what sizes to use in the actual game
-let fontsize_ApplicationTitleLabel : CGFloat    = fontsize_XLarge
-let fontsize_PlayButton : CGFloat               = fontsize_XLarge
-
 let fontsize_GameStatsLabel : CGFloat = fontsize_Small
 let fontsize_CountdownTimerButton : CGFloat = fontsize_Medium
 
@@ -123,8 +120,6 @@ let fontsize_CountdownTimerButton : CGFloat = fontsize_Medium
 // Defining font foreground color for all ui elements
 let fontForeGroundColor_Default : UIColor                   = UIColor.blackColor()
 
-let fontForeGroundColor_ApplicationTitleLabel : UIColor     = fontForeGroundColor_Default
-let fontForeGroundColor_ApplicationTitleSubtitleLabel : UIColor     = fontForeGroundColor_Default
 let fontForeGroundColor_CountdownTimerButton : UIColor      = fontForeGroundColor_Default
 let fontForeGroundColor_GameStatsLabel : UIColor            = fontForeGroundColor_Default
 
