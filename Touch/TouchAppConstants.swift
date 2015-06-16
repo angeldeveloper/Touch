@@ -16,14 +16,16 @@ let blackDotSize : CGFloat = 0.70 // it is a percentage size
 // ###################
 // Game Loop Duration
 //let intGameLoopDuration : Int = 3 // duration of each game play
-let intGameLoopDuration : Int = 6 // duration of each game play
+//let intGameLoopDuration : Int = 6 // duration of each game play
 //let intGameLoopDuration : Int = 10 // duration of each game play
-//let intGameLoopDuration : Int = 15 // duration of each game play
+let intGameLoopDuration : Int = 15 // duration of each game play
 //let intGameLoopDuration : Int = 60 // duration of each game play
 //let intGameLoopDuration : Int = 15000 // duration of each game play
 
 // ###################
-let numberRowsOrColumns = 4
+//let numberRowsOrColumns = 3
+//let numberRowsOrColumns = 4
+let numberRowsOrColumns = 5
 
 // ###################
 // Button Attributes
@@ -124,7 +126,11 @@ let fontForeGroundColor_CountdownTimerButton : UIColor      = fontForeGroundColo
 let fontForeGroundColor_GameStatsLabel : UIColor            = fontForeGroundColor_Default
 
 
-
+// ###################
+// NS User Defaults Keys
+let consNSUserDefaultsKey_dotscollected_alltime = "dotscollected_alltime"
+let consNSUserDefaultsKey_gamesplayed_alltime = "gamesplayed_alltime"
+let consNSUserDefaultsKey_highestscore_alltime = "highestscore_alltime"
 
 
 

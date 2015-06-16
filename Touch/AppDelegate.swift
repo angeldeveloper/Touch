@@ -21,6 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         boolJustLaunched = true
         
 //        var commonMon = CommonMonetizationClass()
+        var objCommon = CommonFunctions()
+
+        objCommon.userDefaults_createKeys()
         
         return true
     }

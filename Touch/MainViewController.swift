@@ -11,11 +11,13 @@ import UIKit
 class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // ################################################################################
+    // used for game stats labels' animations
     enum AnimationDirection : Int {
         case Positive = 1
         case Negative = -1
     }
     
+    // used for the circle element properties
     class ElementDetails : NSObject {
         var x_offset : CGFloat = 0
         var y_offset : CGFloat = 0
@@ -24,14 +26,20 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         var fillColor : UIColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1.0)
         var borderColor : UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
     }
-        
-    var intScore : Int = 0
     
+    // this indicates the dots collected in the current round of the game
+    var intDotsCollected : Int = 0
+    
+    // this is the place where newly created user elements are placed
+    // the only requirement is this should be outside the screen
+    // the values should NOT be the starting point of any animation
     var offscreenXValue: CGFloat = -500.0
     var offscreenYValue: CGFloat = -500.0
-    
+
+    // detect these and populate the values at init
     var screenWidth, screenHeight : CGFloat!
     
+    // as the name suggests
     var randomWinningElementPlacementInt = -1
     
     var animationInProgressGamePlayElements = false
@@ -46,12 +54,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
     var touchTimeStartAt = CFAbsoluteTimeGetCurrent() // the default will not be used
     
-    //let rainEmitter = SKEmitterNode(fileNamed: "rain.sks")
-//    let emitter = CAEmitterLayer()
-//    rainEmitter.position = CGPoint(x: 100, y: 100)
-//    addChild(rainEmitter)
     // ################################################################################
-    
     
     // ################################################################################
     // Timers
@@ -187,11 +190,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelHighestScoreValue_AllTimeCenterX : CGFloat = 0.40 // percentage of screen
     let consLabelHighestScoreValue_AllTimeCenterY : CGFloat = 0.40 // percentage of screen
     
-    
 //    var labelGameOver: UILabel!
 //    let consLabelGameOverCenterX : CGFloat = 0.50 // percentage of screen
 //    let consLabelGameOverCenterY : CGFloat = 0.30 // percentage of screen
-    
 
     var uiviewGameOverView_LastGame : UIView = UIView()
 
@@ -417,67 +418,70 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func eventGameLoop() {
         println(__FUNCTION__)
 
-        if timerCount < intGameLoopDuration {
-            timerCount += 1
-        }
+        // returning from here
+        return
         
-        // this needs to be animated somehow
-        // I will use an entirely different element to show this element
-        var objCommon = CommonFunctions()
-        //buttonCountdownTimer.titleLabel?.attributedText = objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small)
-        buttonCountdownTimer.setAttributedTitle(objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)",
-            fontSize:fontsize_CountdownTimerButton,
-            fontForeGroundColor: fontForeGroundColor_CountdownTimerButton),
-            
-            forState: UIControlState.Normal)
-
-        //buttonCountdownTimer.setTitle("\(intGameLoopDuration-timerCount)", forState: UIControlState.Normal)
-        
-        self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
-        
-
-        // game over in XXX seconds for testing only
-        if intGameLoopDuration == timerCount {
-            
-            // end in the next loop if animation is in progress
-            if animationInProgressGamePlayElements {
-                boolElementsDisabled = true
-                return
-            }
-            
-            println("Timer Count Reached")
-
-            // Game Loop Countdown Timer
-            timerCount = 0
-            
-            stopAllTimers()
-            
-            animateOutofGamePlayElements()
-            
-            animateOutofGamePlayElements_EverythingElse()
-            
-            // the above takes time so delay the following function
-            delay(seconds:animateOutofGamePlayElementsDuration + (4*animateGameStats_InAndOut), completion: {
-                
-                // Stroke End should be 0 now, as this game is over
-                self.uiviewCountdownTimerViewLayer.strokeEnd = 0.00
-
-                println("delay is over in counting and so calling remove game play elements")
-                
-                self.removeGamePlayElements()
-                
-                self.settingUpGameOverElements()
-                
-                self.animateIntoMainScreen()
-                
-                // now the buttons can be enabled again
-                // this current game loop is done
-                self.boolElementsDisabled = false
-                
-                self.resetScores()
-                
-            })
-        }
+//        if timerCount < intGameLoopDuration {
+//            timerCount += 1
+//        }
+//        
+//        // this needs to be animated somehow
+//        // I will use an entirely different element to show this element
+//        var objCommon = CommonFunctions()
+//        //buttonCountdownTimer.titleLabel?.attributedText = objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)", fontSize:fontsize_Small)
+//        buttonCountdownTimer.setAttributedTitle(objCommon.attributedTextForText("\(intGameLoopDuration-timerCount)",
+//            fontSize:fontsize_CountdownTimerButton,
+//            fontForeGroundColor: fontForeGroundColor_CountdownTimerButton),
+//            
+//            forState: UIControlState.Normal)
+//
+//        //buttonCountdownTimer.setTitle("\(intGameLoopDuration-timerCount)", forState: UIControlState.Normal)
+//        
+//        self.uiviewCountdownTimerViewLayer.strokeEnd = CGFloat(timerCount+1) / CGFloat(intGameLoopDuration)
+//        
+//
+//        // game over in XXX seconds for testing only
+//        if intGameLoopDuration == timerCount {
+//            
+//            // end in the next loop if animation is in progress
+//            if animationInProgressGamePlayElements {
+//                boolElementsDisabled = true
+//                return
+//            }
+//            
+//            println("Timer Count Reached")
+//
+//            // Game Loop Countdown Timer
+//            timerCount = 0
+//            
+//            stopAllTimers()
+//            
+//            animateOutofGamePlayElements()
+//            
+//            animateOutofGamePlayElements_EverythingElse()
+//            
+//            // the above takes time so delay the following function
+//            delay(seconds:animateOutofGamePlayElementsDuration + (4*animateGameStats_InAndOut), completion: {
+//                
+//                // Stroke End should be 0 now, as this game is over
+//                self.uiviewCountdownTimerViewLayer.strokeEnd = 0.00
+//
+//                println("delay is over in counting and so calling remove game play elements")
+//                
+//                self.removeGamePlayElements()
+//                
+//                self.settingUpGameOverElements()
+//                
+//                self.animateIntoMainScreen()
+//                
+//                // now the buttons can be enabled again
+//                // this current game loop is done
+//                self.boolElementsDisabled = false
+//                
+//                self.resetScores()
+//                
+//            })
+//        }
     }
 
     func eventMaxDurationToTouch()->() {
@@ -493,25 +497,72 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func settingUpGameOverElements()->() {
         var objCommon = CommonFunctions()
-//        labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
+//        labelObjectsTouchedValue.attributedText = objCommon.attributedTextForText("\(intDotsCollected)", fontSize:fontsize_Medium)
 //        labelSpeedValue.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(averageTimePerTouch), fontSize:fontsize_Medium)
 //
 //        // Calculate the Score based on total black dots collected and the average time of touches
 //        labelScoreValue.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(calculateRealScore()), fontSize:fontsize_Medium)
 
-        labelDotsCollectedValue_LastGame.attributedText = objCommon.attributedTextForText("\(intScore)", fontSize:fontsize_Medium)
+        labelDotsCollectedValue_LastGame.attributedText = objCommon.attributedTextForText("\(intDotsCollected)", fontSize:fontsize_Medium)
         labelDotsCollectedValue_LastGame.sizeToFit()
         
         labelScoreValue_LastGame.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(calculateRealScore()), fontSize:fontsize_Medium)
         labelScoreValue_LastGame.sizeToFit()
         
-        labelSpeedValue_LastGame.attributedText = labelGameStats2.attributedText
+        labelSpeedValue_LastGame.attributedText = objCommon.attributedTextForText(labelGameStats2.text!, fontSize:fontsize_Medium)
+        //labelGameStats2.attributedText
         labelSpeedValue_LastGame.sizeToFit()
+        
+        // update the nsuser defaults values
+        objCommon.userDefaults_incrementDotsCollected_AllTime(intDotsCollected)
+        objCommon.userDefaults_incrementGamesPlayed_AllTime()
+        objCommon.userDefaults_updateHighestScore_AllTime(Float (calculateRealScore()))
+        
+        
+        // update all time elements on the screen
+
+        labelDotsCollectedValue_AllTime.attributedText = objCommon.attributedTextForText("\(objCommon.userDefaults_getDotsCollected_AllTime())", fontSize:fontsize_Medium)
+        labelDotsCollectedValue_AllTime.sizeToFit()
+
+        labelGamesPlayedValue_AllTime.attributedText = objCommon.attributedTextForText("\(objCommon.userDefaults_getGamesPlayed_AllTime())", fontSize:fontsize_Medium)
+        labelGamesPlayedValue_AllTime.sizeToFit()
+        
+        labelHighestScoreValue_AllTime.attributedText = objCommon.attributedTextForText(returnFloatFormattedDecimals(CGFloat(objCommon.userDefaults_getHighestScore_AllTime())), fontSize:fontsize_Medium)
+        
+        labelHighestScoreValue_AllTime.sizeToFit()
+
+        // sizing all the elements
+        var bufferFromCenter : CGFloat = 7.0
+        
+        labelDotsCollectedValue_AllTime.center = CGPointMake(
+            uiviewGameOverView_AllTime.frame.size.width - labelDotsCollectedValue_AllTime.frame.size.width/2 - bufferFromCenter,
+            labelAllTime.center.y + bufferFromCenter + labelDotsCollectedValue_AllTime.frame.size.height)
+
+        labelDotsCollected_AllTime.center = CGPointMake(
+            labelDotsCollectedValue_AllTime.center.x - labelDotsCollectedValue_AllTime.frame.size.width/2 - bufferFromCenter - labelDotsCollected_AllTime.frame.size.width/2,
+            labelDotsCollectedValue_AllTime.center.y)
+
+        labelGamesPlayedValue_AllTime.center = CGPointMake(
+            uiviewGameOverView_AllTime.frame.size.width - labelGamesPlayedValue_AllTime.frame.size.width/2 - bufferFromCenter,
+            labelDotsCollectedValue_AllTime.center.y + bufferFromCenter + labelGamesPlayedValue_AllTime.frame.size.height)
+        
+        labelGamesPlayed_AllTime.center = CGPointMake(
+            labelGamesPlayedValue_AllTime.center.x - labelGamesPlayedValue_AllTime.frame.size.width/2 - bufferFromCenter - labelGamesPlayed_AllTime.frame.size.width/2,
+            labelGamesPlayedValue_AllTime.center.y)
+        
+        labelHighestScoreValue_AllTime.center = CGPointMake(
+            uiviewGameOverView_AllTime.frame.size.width - labelHighestScoreValue_AllTime.frame.size.width/2 - bufferFromCenter,
+            labelGamesPlayedValue_AllTime.center.y + bufferFromCenter + labelHighestScoreValue_AllTime.frame.size.height)
+        
+        labelHighestScore_AllTime.center = CGPointMake(
+            labelHighestScoreValue_AllTime.center.x - labelHighestScoreValue_AllTime.frame.size.width/2 - bufferFromCenter - labelHighestScore_AllTime.frame.size.width/2,
+            labelHighestScoreValue_AllTime.center.y)
+        
     }
     
     func calculateRealScore()->(CGFloat) {
         if 0 != averageTimePerTouch {
-            return (CGFloat(intScore) * 10) * (2 / averageTimePerTouch)
+            return (CGFloat(intDotsCollected) * 10) * (2 / averageTimePerTouch)
         } else {
             return CGFloat(0.00)
         }
@@ -519,7 +570,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func resetScores()->() {
-        intScore = 0
+        intDotsCollected = 0
         averageTimePerTouch = 0.00
     }
     
@@ -739,7 +790,11 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //        buttonCountdownTimer.addTarget(self, action: "tapCountdownTimerEvent:", forControlEvents: UIControlEvents.TouchUpInside)
 
         buttonCountdownTimer.alpha = 1.00
+        
+        buttonCountdownTimer.hidden = true
+        
         self.view.addSubview(buttonCountdownTimer)
+        
         
         // ================================================================================
         
@@ -946,22 +1001,23 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // ================================================================================
         // ================================================================================
         // All Time
-        uiviewGameOverView_AllTime = UIView(frame: CGRectMake(0, 0, sizeOfGameOverView_Width, sizeOfGameOverView_Height))
+        uiviewGameOverView_AllTime = UIView(frame: CGRectMake(0, 0, sizeOfGameOverView_Width/2, sizeOfGameOverView_Height))
         
         uiviewGameOverView_AllTime.backgroundColor = UIColor.redColor()
         uiviewGameOverView_AllTime.alpha = 1.0
         
-        uiviewGameOverView_AllTime.center = CGPointMake(self.screenWidth * 0.50, self.screenHeight * 0.71)
+        uiviewGameOverView_AllTime.center = CGPointMake(self.screenWidth * 0.32, self.screenHeight * 0.71)
         self.view.addSubview(uiviewGameOverView_AllTime)
 
+        
+        var bufferFromCenter : CGFloat = 7.0
         
         // ================================================================================
         labelAllTime = createLabel()
         labelAllTime.attributedText = objCommon.attributedTextForText("All Time", fontSize:fontsize_Medium)
         labelAllTime.sizeToFit()
         
-        //labelAllTime.frame = CGRectMake(labelAllTime.frame.origin.x, labelAllTime.frame.origin.y, labelAllTime.frame.width * 2.00, labelAllTime.frame.height * 1.10)
-        labelAllTime.center = CGPointMake(uiviewGameOverView_AllTime.frame.size.width/2, labelAllTime.frame.height/2)
+        labelAllTime.center = CGPointMake(uiviewGameOverView_AllTime.frame.size.width - labelAllTime.frame.size.width/2 - bufferFromCenter, labelAllTime.frame.height/2)
         
         labelAllTime.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_AllTime.addSubview(labelAllTime)
@@ -969,90 +1025,94 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         
         
         // ================================================================================
+        
+        labelDotsCollectedValue_AllTime = createLabel()
+        labelDotsCollectedValue_AllTime.attributedText = objCommon.attributedTextForText("\(objCommon.userDefaults_getDotsCollected_AllTime())", fontSize:fontsize_Medium)
+        labelDotsCollectedValue_AllTime.sizeToFit()
+        
+        labelDotsCollectedValue_AllTime.center = CGPointMake(
+            uiviewGameOverView_AllTime.frame.size.width - labelDotsCollectedValue_AllTime.frame.size.width/2 - bufferFromCenter,
+            labelAllTime.center.y + bufferFromCenter + labelDotsCollectedValue_AllTime.frame.size.height)
+        
+        labelDotsCollectedValue_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
+        uiviewGameOverView_AllTime.addSubview(labelDotsCollectedValue_AllTime)
+
+        
         labelDotsCollected_AllTime = createLabel()
         labelDotsCollected_AllTime.attributedText = objCommon.attributedTextForText("DOTS COLLECTED:", fontSize:fontsize_Medium)
         labelDotsCollected_AllTime.sizeToFit()
         
         labelDotsCollected_AllTime.center = CGPointMake(
-            uiviewGameOverView_AllTime.frame.size.width/2,
-            labelAllTime.center.y + labelDotsCollected_AllTime.frame.height + verticalSeperation)
+            labelDotsCollectedValue_AllTime.center.x - labelDotsCollectedValue_AllTime.frame.size.width/2 - bufferFromCenter - labelDotsCollected_AllTime.frame.size.width/2,
+            labelDotsCollectedValue_AllTime.center.y)
         
         labelDotsCollected_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_AllTime.addSubview(labelDotsCollected_AllTime)
         
-        labelDotsCollectedValue_AllTime = createLabel()
-        labelDotsCollectedValue_AllTime.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
-        labelDotsCollectedValue_AllTime.sizeToFit()
-        
-        labelDotsCollectedValue_AllTime.center = CGPointMake(
-            labelDotsCollected_AllTime.center.x + labelDotsCollected_AllTime.frame.size.width/2 + horizontalSeperation,
-            labelDotsCollected_AllTime.center.y)
-        
-        labelDotsCollectedValue_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
-        uiviewGameOverView_AllTime.addSubview(labelDotsCollectedValue_AllTime)
         
 
         
         // ================================================================================
+        labelGamesPlayedValue_AllTime = createLabel()
+        labelGamesPlayedValue_AllTime.attributedText = objCommon.attributedTextForText("\(objCommon.userDefaults_getGamesPlayed_AllTime())", fontSize:fontsize_Medium)
+        labelGamesPlayedValue_AllTime.sizeToFit()
+        
+        labelGamesPlayedValue_AllTime.center = CGPointMake(
+            uiviewGameOverView_AllTime.frame.size.width - labelGamesPlayedValue_AllTime.frame.size.width/2 - bufferFromCenter,
+            labelDotsCollectedValue_AllTime.center.y + bufferFromCenter + labelGamesPlayedValue_AllTime.frame.size.height)
+        
+        labelGamesPlayedValue_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
+        uiviewGameOverView_AllTime.addSubview(labelGamesPlayedValue_AllTime)
+        
+
         labelGamesPlayed_AllTime = createLabel()
         labelGamesPlayed_AllTime.attributedText = objCommon.attributedTextForText("GAMES PLAYED:", fontSize:fontsize_Medium)
         labelGamesPlayed_AllTime.sizeToFit()
         
         labelGamesPlayed_AllTime.center = CGPointMake(
-            uiviewGameOverView_AllTime.frame.size.width/2,
-            labelDotsCollected_AllTime.center.y + labelGamesPlayed_AllTime.frame.height + verticalSeperation)
+            labelGamesPlayedValue_AllTime.center.x - labelGamesPlayedValue_AllTime.frame.size.width/2 - bufferFromCenter - labelGamesPlayed_AllTime.frame.size.width/2,
+            labelGamesPlayedValue_AllTime.center.y)
         
         labelGamesPlayed_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_AllTime.addSubview(labelGamesPlayed_AllTime)
 
-        labelGamesPlayedValue_AllTime = createLabel()
-        labelGamesPlayedValue_AllTime.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
-        labelGamesPlayedValue_AllTime.sizeToFit()
-        
-        labelGamesPlayedValue_AllTime.center = CGPointMake(
-            labelGamesPlayed_AllTime.center.x + labelGamesPlayed_AllTime.frame.width/2 + horizontalSeperation,
-            labelGamesPlayed_AllTime.center.y)
-        
-        labelGamesPlayedValue_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
-        uiviewGameOverView_AllTime.addSubview(labelGamesPlayedValue_AllTime)
-
         
         // ================================================================================
+        labelHighestScoreValue_AllTime = createLabel()
+        labelHighestScoreValue_AllTime.attributedText = objCommon.attributedTextForText("\(objCommon.userDefaults_getHighestScore_AllTime())", fontSize:fontsize_Medium)
+        labelHighestScoreValue_AllTime.sizeToFit()
+        
+        labelHighestScoreValue_AllTime.center = CGPointMake(
+            uiviewGameOverView_AllTime.frame.size.width - labelHighestScoreValue_AllTime.frame.size.width/2 - bufferFromCenter,
+            labelGamesPlayedValue_AllTime.center.y + bufferFromCenter + labelHighestScoreValue_AllTime.frame.size.height)
+        
+        labelHighestScoreValue_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
+        uiviewGameOverView_AllTime.addSubview(labelHighestScoreValue_AllTime)
+        
+
+        
         labelHighestScore_AllTime = createLabel()
         labelHighestScore_AllTime.attributedText = objCommon.attributedTextForText("HIGHEST SCORE:", fontSize:fontsize_Medium)
         labelHighestScore_AllTime.sizeToFit()
         
         labelHighestScore_AllTime.center = CGPointMake(
-            uiviewGameOverView_AllTime.frame.size.width/2,
-            labelGamesPlayed_AllTime.center.y + labelHighestScore_AllTime.frame.height + verticalSeperation)
+            labelHighestScoreValue_AllTime.center.x - labelHighestScoreValue_AllTime.frame.size.width/2 - bufferFromCenter - labelHighestScore_AllTime.frame.size.width/2,
+            labelHighestScoreValue_AllTime.center.y)
         
         labelHighestScore_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_AllTime.addSubview(labelHighestScore_AllTime)
 
         
-        labelHighestScoreValue_AllTime = createLabel()
-        labelHighestScoreValue_AllTime.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
-        labelHighestScoreValue_AllTime.sizeToFit()
-        
-        labelHighestScoreValue_AllTime.center = CGPointMake(
-            labelHighestScore_AllTime.center.x + labelHighestScore_AllTime.frame.width/2 + horizontalSeperation,
-            labelHighestScore_AllTime.center.y)
-        
-        labelHighestScoreValue_AllTime.layer.backgroundColor = UIColor.greenColor().CGColor
-        uiviewGameOverView_AllTime.addSubview(labelHighestScoreValue_AllTime)
-        
         
         
         // ================================================================================
         // Last Game
-        uiviewGameOverView_LastGame = UIView(frame: CGRectMake(0, 0, sizeOfGameOverView_Width, sizeOfGameOverView_Height))
+        uiviewGameOverView_LastGame = UIView(frame: CGRectMake(0, 0, sizeOfGameOverView_Width/2, sizeOfGameOverView_Height))
         
         uiviewGameOverView_LastGame.backgroundColor = UIColor.redColor()
         uiviewGameOverView_LastGame.alpha = 1.0
         
-        uiviewGameOverView_LastGame.center = CGPointMake(
-            self.screenWidth * 0.50,
-            self.screenHeight * 0.85)
+        uiviewGameOverView_LastGame.center = CGPointMake(self.screenWidth * 0.68, self.screenHeight * 0.71)
         
         self.view.addSubview(uiviewGameOverView_LastGame)
         
@@ -1063,7 +1123,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelLastGame.sizeToFit()
         
         //labelLastGame.frame = CGRectMake(labelLastGame.frame.origin.x, labelLastGame.frame.origin.y, labelLastGame.frame.width * 2.00, labelLastGame.frame.height * 1.10)
-        labelLastGame.center = CGPointMake(uiviewGameOverView_LastGame.frame.size.width/2, labelLastGame.frame.height/2)
+        labelLastGame.center = CGPointMake(labelLastGame.frame.size.width/2 + bufferFromCenter, labelLastGame.frame.height/2)
         
         labelLastGame.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_LastGame.addSubview(labelLastGame)
@@ -1074,25 +1134,25 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelDotsCollected_LastGame.sizeToFit()
         
         labelDotsCollected_LastGame.center = CGPointMake(
-            uiviewGameOverView_LastGame.frame.size.width/2,
-            labelLastGame.center.y + labelDotsCollected_LastGame.frame.height + verticalSeperation)
+            labelDotsCollected_LastGame.frame.size.width/2 + bufferFromCenter,
+            labelLastGame.center.y + labelLastGame.frame.size.height/2 + bufferFromCenter + labelDotsCollected_LastGame.frame.size.height/2)
         
         labelDotsCollected_LastGame.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_LastGame.addSubview(labelDotsCollected_LastGame)
 
-
+        
         labelDotsCollectedValue_LastGame = createLabel()
         labelDotsCollectedValue_LastGame.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
         labelDotsCollectedValue_LastGame.sizeToFit()
         
         labelDotsCollectedValue_LastGame.center = CGPointMake(
-            labelDotsCollected_LastGame.center.x + labelDotsCollected_LastGame.frame.size.width/2 + horizontalSeperation,
+            labelDotsCollected_LastGame.center.x + labelDotsCollected_LastGame.frame.size.width/2 + bufferFromCenter + labelDotsCollectedValue_LastGame.frame.size.width/2,
             labelDotsCollected_LastGame.center.y)
         
         labelDotsCollectedValue_LastGame.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_LastGame.addSubview(labelDotsCollectedValue_LastGame)
 
-        
+
         
         
         // ================================================================================
@@ -1101,18 +1161,19 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelScore_LastGame.sizeToFit()
         
         labelScore_LastGame.center = CGPointMake(
-            uiviewGameOverView_LastGame.frame.size.width/2,
-            labelDotsCollected_LastGame.center.y + labelScore_LastGame.frame.height + verticalSeperation)
+            labelScore_LastGame.frame.size.width/2 + bufferFromCenter,
+            labelDotsCollected_LastGame.center.y + labelDotsCollected_LastGame.frame.size.height/2 + bufferFromCenter + labelScore_LastGame.frame.size.height/2)
         
         labelScore_LastGame.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_LastGame.addSubview(labelScore_LastGame)
+        
         
         labelScoreValue_LastGame = createLabel()
         labelScoreValue_LastGame.attributedText = objCommon.attributedTextForText("0", fontSize:fontsize_Medium)
         labelScoreValue_LastGame.sizeToFit()
         
         labelScoreValue_LastGame.center = CGPointMake(
-            labelScore_LastGame.center.x + labelScore_LastGame.frame.width/2 + horizontalSeperation,
+            labelScore_LastGame.center.x + labelScore_LastGame.frame.size.width/2 + bufferFromCenter + labelScoreValue_LastGame.frame.size.width/2,
             labelScore_LastGame.center.y)
         
         labelScoreValue_LastGame.layer.backgroundColor = UIColor.greenColor().CGColor
@@ -1125,8 +1186,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelSpeed_LastGame.sizeToFit()
         
         labelSpeed_LastGame.center = CGPointMake(
-            uiviewGameOverView_AllTime.frame.size.width/2,
-            labelScore_LastGame.center.y + labelSpeed_LastGame.frame.height + verticalSeperation)
+            labelSpeed_LastGame.frame.size.width/2 + bufferFromCenter,
+            labelScore_LastGame.center.y + labelScore_LastGame.frame.size.height/2 + bufferFromCenter + labelSpeed_LastGame.frame.size.height/2)
         
         labelSpeed_LastGame.layer.backgroundColor = UIColor.greenColor().CGColor
         uiviewGameOverView_LastGame.addSubview(labelSpeed_LastGame)
@@ -1137,7 +1198,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         labelSpeedValue_LastGame.sizeToFit()
         
         labelSpeedValue_LastGame.center = CGPointMake(
-            labelSpeed_LastGame.center.x + labelSpeed_LastGame.frame.width/2 + horizontalSeperation,
+            labelSpeed_LastGame.center.x + labelSpeed_LastGame.frame.size.width/2 + bufferFromCenter + labelSpeedValue_LastGame.frame.size.width/2,
             labelSpeed_LastGame.center.y)
         
         labelSpeedValue_LastGame.layer.backgroundColor = UIColor.greenColor().CGColor
@@ -1355,6 +1416,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // translate it 90 degress anticlockwise to start the look at 12 o clock
         self.uiviewCountdownTimerView.transform = CGAffineTransformMakeRotation(-1.57)
         
+        self.uiviewCountdownTimerView.hidden = true
+        self.uiviewCountdownTimerViewLayer.hidden = true
     }
     
     
@@ -2255,9 +2318,49 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                     // =============================================
                     
                 } else {
-                    // nothing to do here
+                    // april 8th update - you are ending the game here
+                    // do everything as if the loop of the game has ended
+                    // there is no other place for the game to end
                     //println("You Lose")
                     //handleOneRoundLose()
+                    
+                    // ##########
+                    
+                    // Game Loop Countdown Timer
+                    timerCount = 0
+                
+                    stopAllTimers()
+                    
+                    animateOutofGamePlayElements()
+            
+                    animateOutofGamePlayElements_EverythingElse()
+            
+                    // the above takes time so delay the following function
+                    delay(seconds:animateOutofGamePlayElementsDuration + (4*animateGameStats_InAndOut), completion: {
+
+                        // Stroke End should be 0 now, as this game is over
+                        //self.uiviewCountdownTimerViewLayer.strokeEnd = 0.00
+
+                        //println("delay is over in counting and so calling remove game play elements")
+
+                        self.removeGamePlayElements()
+
+                        self.settingUpGameOverElements()
+                        
+                        self.animateIntoMainScreen()
+                        
+                        // now the buttons can be enabled again
+                        // this current game loop is done
+                        self.boolElementsDisabled = false
+                        
+                        self.resetScores()
+                        
+                    })
+
+                    
+                    return
+                    
+                    
                 }
             }
         }
@@ -2328,20 +2431,20 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 
         // ================================================================================
         // Increase the Score - Total Correctly Touched Objects
-        intScore++
+        intDotsCollected++
 
         // simple change of label text
-        //labelGameStats1.text = "\(intScore)"
+        //labelGameStats1.text = "\(intDotsCollected)"
         
-        cubeTransition(labelGameStats1, text: "\(intScore)", fontColor: fontForeGroundColor_GameStatsLabel, direction: AnimationDirection.Negative)
+        cubeTransition(labelGameStats1, text: "\(intDotsCollected)", fontColor: fontForeGroundColor_GameStatsLabel, direction: AnimationDirection.Negative)
         
-//        cubeTransition(labelGameStats2, text: "\(intScore)", direction: AnimationDirection.Negative)
-//        cubeTransition(labelGameStats3, text: "\(intScore)", direction: AnimationDirection.Negative)
-//        cubeTransition(labelGameStats4, text: "\(intScore)", direction: AnimationDirection.Negative)
+//        cubeTransition(labelGameStats2, text: "\(intDotsCollected)", direction: AnimationDirection.Negative)
+//        cubeTransition(labelGameStats3, text: "\(intDotsCollected)", direction: AnimationDirection.Negative)
+//        cubeTransition(labelGameStats4, text: "\(intDotsCollected)", direction: AnimationDirection.Negative)
 
-//        labelGameStats2.text = "\(intScore)"
-//        labelGameStats3.text = "\(intScore)"
-//        labelGameStats4.text = "\(intScore)"
+//        labelGameStats2.text = "\(intDotsCollected)"
+//        labelGameStats3.text = "\(intDotsCollected)"
+//        labelGameStats4.text = "\(intDotsCollected)"
 
         //buttonCountdownTimer.setTitle("\(timerCount)", forState: UIControlState.Normal)
         // update all other game statistics
@@ -2447,16 +2550,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     */
     
     func tapPlayEvent(sender: AnyObject) {
-        
         var objCommon = CommonFunctions()
         objCommon.playBackgroundMusic("dfd") // this parameter is not used....
 
-        //
-//        // testing
-//        
-//        return
-//            
-        
         resetGameStatsLabels()
         
         animateOutofMainScreen()
@@ -2469,11 +2565,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.createGameElementsForNextRound()
             
             self.delay(seconds:animateIntoGamePlayScreenDuration+(4*animateGameStats_InAndOut)+animateIntoGamePlayElementsDuration, completion: {
-                
                 self.startAllTimers()
-                
             })
-            
         })
     }
     
