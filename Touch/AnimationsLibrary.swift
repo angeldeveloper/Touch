@@ -9,12 +9,7 @@
 import Foundation
 
 class CoolAnimations : NSObject {
-
-    
-    
-    
-    
-    
+    // todo
 }
 
 

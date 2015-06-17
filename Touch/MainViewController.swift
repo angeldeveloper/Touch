@@ -17,6 +17,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         case Negative = -1
     }
     
+
     // used for the circle element properties
     class ElementDetails : NSObject {
         var x_offset : CGFloat = 0
@@ -129,7 +130,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelGameStatsTitle3CenterY : CGFloat = 0.85 //
     
 
-    //    let consLabelGameStats4CenterX : CGFloat = 0.70 //
+//    let consLabelGameStats4CenterX : CGFloat = 0.70 //
 //    let consLabelGameStats4CenterY : CGFloat = 0.80 //
     
     var uiviewCountdownTimerView : UIView = UIView()
@@ -224,8 +225,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     let consLabelSpeedValue_LastGameCenterX : CGFloat = 0.40 // percentage of screen
     let consLabelSpeedValue_LastGameCenterY : CGFloat = 0.40 // percentage of screen
 
-    
-    
+
 //    var labelObjectsTouched: UILabel!
 //    let consLabelObjectsTouchedCenterX : CGFloat = 0.40 // percentage of screen
 //    let consLabelObjectsTouchedCenterY : CGFloat = 0.40 // percentage of screen
@@ -335,7 +335,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
         // Play background music
         //var objCommon = CommonFunctions()
         //objCommon.playBackgroundMusic("Wallpaper")
-
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -1547,7 +1546,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.buttonCountdownTimer.center = CGPointMake(self.buttonCountdownTimer.center.x - movementCountdownTimerView, self.buttonCountdownTimer.center.y)
             
             }, completion: {_ in
-                NSLog("11111 Completed animation: \(__FUNCTION__)")
+                NSLog("11 Completed animation: \(__FUNCTION__)")
         })
 
         
@@ -1565,7 +1564,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.labelGameStatsTitle1.center = CGPointMake(self.labelGameStatsTitle1.center.x, self.labelGameStatsTitle1.center.y - movementGameStatsLabel)
             
             }, completion: { _ in
-                NSLog("22222 Completed animation: \(__FUNCTION__)")
+                NSLog("22 Completed animation: \(__FUNCTION__)")
         })
         
         
@@ -1574,7 +1573,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //            self.labelGameStats2.center = CGPointMake(self.labelGameStats2.center.x, self.labelGameStats2.center.y - movementGameStatsLabel)
 //
 //            }, completion: {_ in
-//                NSLog("33333 Completed animation: \(__FUNCTION__)")
+//                NSLog("33 Completed animation: \(__FUNCTION__)")
 //        })
 
         UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: Double(2) * animateGameStats_InAndOut, usingSpringWithDamping: dampingValue, initialSpringVelocity: 0.00, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1583,7 +1582,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.labelGameStatsTitle2.center = CGPointMake(self.labelGameStatsTitle2.center.x, self.labelGameStatsTitle2.center.y - movementGameStatsLabel)
             
             }, completion: {_ in
-                NSLog("33333 Completed animation: \(__FUNCTION__)")
+                NSLog("33 Completed animation: \(__FUNCTION__)")
         })
         
 //        UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: Double(3) * animateGameStats_InAndOut, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1591,7 +1590,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //            self.labelGameStats3.center = CGPointMake(self.labelGameStats3.center.x, self.labelGameStats3.center.y - movementGameStatsLabel)
 //            
 //            }, completion: {_ in
-//                NSLog("44444 Completed animation: \(__FUNCTION__)")
+//                NSLog("44 Completed animation: \(__FUNCTION__)")
 //        })
 
         UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: Double(3) * animateGameStats_InAndOut, usingSpringWithDamping: dampingValue, initialSpringVelocity: 0.00, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1600,7 +1599,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.labelGameStatsTitle3.center = CGPointMake(self.labelGameStatsTitle3.center.x, self.labelGameStatsTitle3.center.y - movementGameStatsLabel)
 
             }, completion: {_ in
-                NSLog("44444 Completed animation: \(__FUNCTION__)")
+                NSLog("44 Completed animation: \(__FUNCTION__)")
         })
         
 //        UIView.animateWithDuration(animateIntoGamePlayScreenDuration, delay: Double(4) * animateGameStats_InAndOut, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1608,7 +1607,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //            self.labelGameStats4.center = CGPointMake(self.labelGameStats4.center.x, self.labelGameStats4.center.y - movementGameStatsLabel)
 //            
 //            }, completion: {_ in
-//                NSLog("55555 Completed animation: \(__FUNCTION__)")
+//                NSLog("55 Completed animation: \(__FUNCTION__)")
 //        })
 
         /*
@@ -1617,7 +1616,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
             self.labelGameStats4.center = CGPointMake(self.labelGameStats4.center.x, self.labelGameStats4.center.y - movementGameStatsLabel)
             
             }, completion: {_ in
-                NSLog("55555 Completed animation: \(__FUNCTION__)")
+                NSLog("55 Completed animation: \(__FUNCTION__)")
         })
 */
 
@@ -1711,7 +1710,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateOutofGamePlayElements()->() {
         println(__FUNCTION__)
 
-        // THIRD TRY
+        // THIRD TRY - works as intended.
         
         UIView.animateWithDuration(animateOutofGamePlayElementsDuration, delay: 0.00, options: .CurveEaseOut, animations: {
             
@@ -1768,7 +1767,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.buttonCountdownTimer.center.y)
             
             }, completion: {_ in
-                NSLog("1111")
+                NSLog("11")
         })
 
         UIView.animateWithDuration(animateOutofGamePlayElementsDuration, delay: Double(4) * animateGameStats_InAndOut, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1780,7 +1779,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.screenHeight * self.consLabelGameStatsTitle1CenterY + movementGameStatsLabel)
             
             }, completion: {_ in
-                NSLog("2222")
+                NSLog("22")
         })
 
         UIView.animateWithDuration(animateOutofGamePlayElementsDuration, delay: Double(3) * animateGameStats_InAndOut, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1792,7 +1791,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.screenHeight * self.consLabelGameStatsTitle2CenterY + movementGameStatsLabel)
             
             }, completion: {_ in
-                NSLog("33333")
+                NSLog("33")
         })
 
         UIView.animateWithDuration(animateOutofGamePlayElementsDuration, delay: Double(2) * animateGameStats_InAndOut, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1804,7 +1803,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.screenHeight * self.consLabelGameStatsTitle3CenterY + movementGameStatsLabel)
 
             }, completion: {_ in
-                NSLog("44444")
+                NSLog("44")
         })
 
 /*        UIView.animateWithDuration(animateOutofGamePlayElementsDuration, delay: Double(1) * animateGameStats_InAndOut, options: UIViewAnimationOptions.CurveLinear, animations: {
@@ -1813,7 +1812,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.screenHeight * self.consLabelGameStats4CenterY + movementGameStatsLabel)
             
             }, completion: {_ in
-                NSLog("55555")
+                NSLog("55")
         })*/
         
     }
@@ -2318,9 +2317,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
                     // =============================================
                     
                 } else {
-                    // april 8th update - you are ending the game here
-                    // do everything as if the loop of the game has ended
-                    // there is no other place for the game to end
+
                     //println("You Lose")
                     //handleOneRoundLose()
                     
@@ -2551,7 +2548,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func tapPlayEvent(sender: AnyObject) {
         var objCommon = CommonFunctions()
-        objCommon.playBackgroundMusic("dfd") // this parameter is not used....
+        objCommon.playBackgroundMusic("dfd") // this parameter is not used currently....
 
         resetGameStatsLabels()
         
