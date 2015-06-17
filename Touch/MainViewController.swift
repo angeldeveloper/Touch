@@ -313,6 +313,8 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate {
 //        UIColor(red: 153.00/255.00, green: 102.00/255.00, blue: 153.00/255.00, alpha: 1.0),
 //        UIColor(red:   0.00/255.00, green: 255.00/255.00, blue: 153.00/255.00, alpha: 1.0),
 //        UIColor(red: 204.00/255.00, green: 204.00/255.00, blue: 204.00/255.00, alpha: 1.0)
+        
+        // more colors can be added to this array
     ]
     
     
