@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import QuartzCore
 
+
 class GameElement: UIView {
     let circleLayer = CAShapeLayer()
 }
